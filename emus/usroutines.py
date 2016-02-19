@@ -5,7 +5,7 @@ Helper routines for EMUS
 import numpy as np
 import linalg_methods as lm
 
-def neighbors_harmonic(cntrs,fks,kTs,periodicity=None,nsig=4):
+def neighbors_harmonic(cntrs,fks,kTs,period=None,nsig=4):
     """
     Calculates neighborlist for harmonic windows.  Neighbors are chosen 
     such that neighboring umbrellas are no more than nsig standard
@@ -23,10 +23,10 @@ def neighbors_harmonic(cntrs,fks,kTs,periodicity=None,nsig=4):
         nbrs_i = []
         for j, cntr_j in enumerate(cntrs):
             rv = cntr_j-cntr_i
-            if periodicity is not None:
+            if period is not None:
                 for compi, component in enumerate(rv):
-                    if (periodicity[compi] is not 0.0) or (periodicity[compi] is not None):
-                        rv[compi] = minimage(component,periodicity[compi])
+                    if (period[compi] is not 0.0) or (period[compi] is not None):
+                        rv[compi] = minimage(component,period[compi])
             if np.linalg.norm(rv) < rad_i:
                 nbrs_i.append(j)
         nbrs.append(nbrs_i)
@@ -273,7 +273,7 @@ def calcWeightSubproblem(importances,N_is,newWork):
         weights[ind] = val/constSum*(newWork+totalWork)-N_is[ind]
     return weights
 
-def calc_psis(xtraj, centers, fks, kTs ,periodicity = None):
+def calc_psis(xtraj, centers, fks, kTs ,period = None):
     """
     Calculates the values of each bias function from a trajectory of points.
     Currently, this assumes a 1D  umbrella system.
@@ -284,7 +284,7 @@ def calc_psis(xtraj, centers, fks, kTs ,periodicity = None):
         centers : ndarray, the locations of the centers of each umbrella.
         forceconstant : float, the value of the force constant of each umbrella.  This assumes that each umbrella has the same force constant (Might want to change this later).
         kT : Float, the Boltzmann factor.
-        periodicity : Either None or a number.  If None, this indicates that the collective variable is aperiodicy.  If number, indicates the width of the periodic boundary.
+        period : Either None or a number.  If None, this indicates that the collective variable is aperiodicy.  If number, indicates the width of the periodic boundary.
 
     Returns
     -------
@@ -294,7 +294,7 @@ def calc_psis(xtraj, centers, fks, kTs ,periodicity = None):
     L = len(centers)
     qvals = np.zeros((len(xtraj),L))
     forceprefacs = -0.5*np.array([fks[i]/kTs[i] for i in xrange(L)])
-    qtraj = [getqvals(coord,centers,forceprefacs,periodicity) for coord in xtraj]
+    qtraj = [getqvals(coord,centers,forceprefacs,period) for coord in xtraj]
     return qtraj
 
 def getqvals( coord,centers,forceprefacs,period=360):

@@ -175,17 +175,25 @@ def _printmessage():
  
 def main():
     """
-    EMUS MAIN
+    Method that calls EMUS from command line.
     """
     # Read in command line args
     parser = _def_arg_parser()  #Container method for defining cmdline args.
     args = parser.parse_args()
+    emus1d(args.metadatafile,args.histinfo,args.period,args.kB,
+        args.T,args.neighbor,args.zasymptoticvar)
+
+    
+def emus1d(metadatafile,histinfo,period=None,kB=_DEFAULT_kB,
+        T=_DEFAULT_TEMP,neighbor=None,zasymptoticvar=None):
+    """
+    Performs 1D EMUS calculation.
+    """
 
     # Define variables for the purposes of code readibility
-    period = args.period # periodicity of collective variable
-    dim = len(args.histinfo)/3 # Number of Dimensions in cv space.
+    dim = len(histinfo)/3 # Number of Dimensions in cv space.
     try:
-        histdata = np.reshape(np.array(args.histinfo),(dim,3))
+        histdata = np.reshape(np.array(histinfo),(dim,3))
     except ValueError:
         raise IOError("Error reading in histogram specifications: "
              "check if values are missing.")
@@ -196,25 +204,19 @@ def main():
     _printmessage()
 #    with open('asciiemus.txt','r') as finalmessage:
 #        print finalmessage.read()
-    trajlocs, ks, cntrs, corrts, temps  = parse_metafile(args.metadatafile,dim)
+    trajlocs, ks, cntrs, corrts, temps  = parse_metafile(metadatafile,dim)
     L = len(trajlocs) # Number of states
     
     # Set kT corresponding to user input.
-    kB = args.kB
-    if kB is None:
-        kB = _DEFAULT_kB
     if len(temps) is 0: # If temperature values not provided in meta file.
         temps = np.ones(len(trajlocs))
-        if args.T is None:
-            temps *= _DEFAULT_TEMP
-        else:
-            temps *= args.T
+        temps *= T
     kTs = temps*kB
 
     # Calculate Umbrella neighbors is specified.
-    if args.neighbor is not None:
+    if neighbor is not None:
         print period
-        nbrs = usr.neighbors_harmonic(cntrs,ks,kTs,periodicity=period,nsig=args.neighbor)
+        nbrs = usr.neighbors_harmonic(cntrs,ks,kTs,period=period,nsig=neighbor)
     else:
         nbrs = [np.arange(L) for i in range(L)] 
 
@@ -229,7 +231,7 @@ def main():
     print "#### Calculating Bias Fxns ####"
     for i in xrange(L):
         nbcenters = cntrs[nbrs[i]]
-        psis.append(usr.calc_psis(trajs[i],nbcenters,ks,kTs,periodicity=period))
+        psis.append(usr.calc_psis(trajs[i],nbcenters,ks,kTs,period=period))
         print "# Calculated biases for window %d"%i
 
     # Calculate the weights,
@@ -241,9 +243,9 @@ def main():
         print "Window_FE: %d %f"%(i,wfes_i)
 
     # Calculate any window importances.
-    if args.zasymptoticvar is not None:
+    if zasymptoticvar is not None:
         print "#### Calculating Window Importances ####"
-        (um1, um2) = args.zasymptoticvar
+        (um1, um2) = zasymptoticvar
         print "Calculation importances for FE difference between windows %i, %i"%(um1,um2)
         errs, taus = usr.avar_zfe(psis,nbrs,um1,um2)
         print "Estimated Free Energy, Asymptotic Variance:"
