@@ -4,6 +4,7 @@ Helper routines for EMUS
 """
 import numpy as np
 import linalg_methods as lm
+import acor
 
 def neighbors_harmonic(cntrs,fks,kTs,period=None,nsig=4):
     """
@@ -60,67 +61,67 @@ def unpackNbrs(compd_array,neighbors,L):
         expd_array[n_val] = compd_array[n_ind]
     return expd_array
 
-def makeFrow(psi_traj):
-    """
-    Makes the i'th row of the F matrix from the trajectory of bias
-    function values of neighboring windows, evaluated from data in
-    window i.
-    
-    Parameters
-    ----------
-        psi_traj : ndarray
-            the values of the bias function for each point, calculated 
-            using data from window i.  Data format assumed to be 
-            N_i x L, where N_i is the number of data points in the i'th
-            window and L is the total number of neighboring windows.
+#def makeFrow(psi_traj):
+#    """
+#    Makes the i'th row of the F matrix from the trajectory of bias
+#    function values of neighboring windows, evaluated from data in
+#    window i.
+#    
+#    Parameters
+#    ----------
+#        psi_traj : ndarray
+#            the values of the bias function for each point, calculated 
+#            using data from window i.  Data format assumed to be 
+#            N_i x L, where N_i is the number of data points in the i'th
+#            window and L is the total number of neighboring windows.
+#
+#    Returns
+#    -------
+#        F_i : ndarray
+#            i'th row in the matrix F in the Stochastic Matrix Method.
+#    """
+#    q_i = np.array(psi_traj) # Typecast to numpy to use advanced indexing
+#    L = len(q_i[0]) # Number of neighboring states
+#    F_i = np.zeros(L)
+#    q_i_sum = np.sum(q_i,axis=1)
+#    # Calculate the averages
+#    for j in xrange(L):
+#        qijtraj = q_i[:,j]/q_i_sum
+#        F_i[j] = np.average(qijtraj)
+#    return F_i
 
-    Returns
-    -------
-        F_i : ndarray
-            i'th row in the matrix F in the Stochastic Matrix Method.
-    """
-    q_i = np.array(psi_traj) # Typecast to numpy to use advanced indexing
-    L = len(q_i[0]) # Number of neighboring states
-    F_i = np.zeros(L)
-    q_i_sum = np.sum(q_i,axis=1)
-    # Calculate the averages
-    for j in xrange(L):
-        qijtraj = q_i[:,j]/q_i_sum
-        F_i[j] = np.average(qijtraj)
-    return F_i
 
-
-def EMUS_weights(qs,neighbors=None):
-    """
-    Calculates the normalization constants according to the EMUS method.
-
-    Parameters
-    ----------
-    qs : list 
-    the trajectories of bias functions from each window.  Each 
-    element in the list is a list or array of size N_i x L,
-    where N_i is the number of points in the trajectory of that
-    window, and L is the number of neighboring windows
-
-    neighbors : list
-    A list containing information about the neighboring windows.
-    If none, assumes qs is evaluated for every window.  Else,
-    each elemint is a list with the indexes of the neighboring
-    windows.  Ordering in qs must be the same as in that list.
-    """
-    # We first make the matrix F
-    L = len(qs)
-    F = np.zeros((L,L))
-    for i in xrange(L):
-        q_i = qs[i]
-        F_i_compd = makeFrow(q_i)
-        if neighbors is None:
-            F[i] = F_i_compd
-        else:
-            neighb_i = neighbors[i]
-            F[i] = unpackNbrs(F_i_compd,neighb_i,L)
-    z = lm.stationary_distrib(F)
-    return z,F
+#def EMUS_weights(qs,neighbors=None):
+#    """
+#    Calculates the normalization constants according to the EMUS method.
+#
+#    Parameters
+#    ----------
+#    qs : list 
+#    the trajectories of bias functions from each window.  Each 
+#    element in the list is a list or array of size N_i x L,
+#    where N_i is the number of points in the trajectory of that
+#    window, and L is the number of neighboring windows
+#
+#    neighbors : list
+#    A list containing information about the neighboring windows.
+#    If none, assumes qs is evaluated for every window.  Else,
+#    each elemint is a list with the indexes of the neighboring
+#    windows.  Ordering in qs must be the same as in that list.
+#    """
+#    # We first make the matrix F
+#    L = len(qs)
+#    F = np.zeros((L,L))
+#    for i in xrange(L):
+#        q_i = qs[i]
+#        F_i_compd = makeFrow(q_i)
+#        if neighbors is None:
+#            F[i] = F_i_compd
+#        else:
+#            neighb_i = neighbors[i]
+#            F[i] = unpackNbrs(F_i_compd,neighb_i,L)
+#    z = lm.stationary_distrib(F)
+#    return z,F
 
 
 def avar_zfe(qdata,neighbors,um1,um2,returntrajs=False,taumethod='acor'):
@@ -273,7 +274,7 @@ def calcWeightSubproblem(importances,N_is,newWork):
         weights[ind] = val/constSum*(newWork+totalWork)-N_is[ind]
     return weights
 
-def calc_psis(xtraj, centers, fks, kTs ,period = None):
+def calc_harmonic_psis(xtraj, centers, fks, kTs ,period = None):
     """
     Calculates the values of each bias function from a trajectory of points.
     Currently, this assumes a 1D  umbrella system.
@@ -304,6 +305,83 @@ def getqvals( coord,centers,forceprefacs,period=360):
     else:
         rvmin = rv
     return np.exp(np.sum(forceprefacs*(rvmin)**2,axis=1))
+
+def emus_iter(qtraj, Avals=None, neighbors=None, return_taus = False):
+    """
+    UPDATE THE DOCUMENTATION!!!!
+
+    Returns the normalization constants of the umbrellas, calculated according
+    to the power law estimator method with power 1. (see Meng and Wong).
+    
+    Parameters
+    ----------
+    
+    q_traj : A list of two dimensional arrays, with each list representing data
+    from one source.  Each row of one of these arrays represents a time point,
+    and each column represents the value of that ponit in another unnormalized
+    probability density.
+    
+    Avals : An inverse coefficient to scale data from each umbrella with.  For 
+    MBAR, this is N_i/(z_i \tau_i), where c is the normalization constant for 
+    each umbrella and tau is an estimate of the autocorrelation time of the
+    umbrella.
+    
+    use_Nj : Whether to scale parts of the power law estimator by the number of
+    samples.  Takes as options True or False (estimate the
+    autocorrelation time of the trajectory using acor)
+        
+    Returns
+    -------
+    
+    z : array of the partition functions for each state.
+    
+    F : the stochastic matrix for the eigenproblem.
+    """
+    
+    # Initialize variables
+    L = len(qtraj) # Number of Windows
+    F = np.zeros((L,L)) # Initialize F Matrix
+    if return_taus:
+        taumat = np.ones((L,L))
+    
+    if Avals is None:
+        Avals = np.ones((L,L))
+    
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
+        
+    # Calculate Fi: for each i
+    for i in xrange(L):
+        Avi = Avals[i]
+        nbrs_i = neighbors[i]
+        qi_data = qtraj[i]
+#        print nbrs_i
+#        print Avi
+        A_nbs = Avi[nbrs_i]
+#        print A_nbs, "A_nbs"
+#        print np.shape(A_nbs),np.shape(qi_data)
+        denom = np.dot(qi_data,A_nbs)
+#        print np.max(denom), np.shape(denom), "DENOM"
+        for j_index, j in enumerate(nbrs_i):
+            Ftraj = qi_data[:,j_index]/denom
+            Fijunnorm = np.average(Ftraj)
+            F[i,j] = Fijunnorm*Avi[i]
+#            print "i j max(Ftraj) avg(Ftraj)"
+#            print i,j,np.max(Ftraj),np.average(Ftraj)
+            if return_taus:
+                tau = acor.acor(Ftraj)[0]
+                if not np.isnan(tau):
+                    taumat[i,j] = acor.acor(Ftraj)[0]
+#    print "F"
+#    for row in F:
+#        print row
+#    print "F"
+#    print np.sum(F,axis=1), "FSUM"
+    z = lm.stationary_distrib(F)
+    if return_taus:
+        return z, F, taumat
+    else:
+        return z, F
 
 def minimage(rv,period):
     return rv - period * np.rint(rv/period)
