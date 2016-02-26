@@ -24,11 +24,14 @@ class emus:
             print "-------------------------------------"
             print self.neighborlist
             print "-------------------------------------"
-        self.xtrajs =xtrajs 
+        self.xtrajs = xtrajs 
         self.ftrajs = ftrajs
         self.kB = kB
         self.T = T
         self.tol = tol
+        self.z = None
+        self.EMUS_F = None
+        self.MBAR_F = None
 
     def calc_zs(self,zguess=None,tol=1.E-8,npolish=0,usetaus=True,taus=None):
         """
@@ -55,6 +58,7 @@ class emus:
                     zguess, F = usr.emus_iter(self.psitrajs,neighbors=self.neighborlist,return_taus=False)
                     taumat = np.ones((L,L))
 
+        self.EMUS_F = F
         z_new = zguess
         # we perform the self-consistent polishing iteration
         z_old = zguess
@@ -83,12 +87,18 @@ class emus:
             print n
         self.z = z_new
         return z_new
-        
 
+    def asymptotic_var_zfe(self,um1,um2):
+        """
+        Calculates the asymptotic variance for the free energy difference
+        between windows indexed um1 and um2
+        """
+        errs, taus = usr.avar_zfe(self.psitrajs,self.neighborlist,self.z,self.EMUS_F,um1,um2)
+        return errs, taus
 
-#    def compute(self,z=True,avar_fxn=None,avar_fe=None,avar_wfe=None,niter=1
-#        """
-#        Interface Code the user calls to compute quantities with EMUS.  By 
-#        choosing various options, the user specifies 
-#        """
-#    def iteration():
+    def pmf(self,domain,nbins=100):
+        """
+        Calculates the potential of mean force for the system
+        """
+        pmf = usr.makeFEsurface(self.xtrajs,self.psitrajs,domain,self.z,kT=self.kB*self.T)
+        return pmf

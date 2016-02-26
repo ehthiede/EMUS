@@ -18,6 +18,10 @@ def neighbors_harmonic(cntrs,fks,kTs,period=None,nsig=4):
         FINISH DOCUMENTATION
     """
     rad = nsig*np.sqrt(kTs/np.amax(fks,axis=1)) #TIGHTEN THIS UP!!
+    if period is not None:
+        if not hasattr(period,'__iter__'):
+            period = [period]
+
     nbrs = []
     for i,cntr_i in enumerate(cntrs):
         rad_i = rad[i]
@@ -61,70 +65,8 @@ def unpackNbrs(compd_array,neighbors,L):
         expd_array[n_val] = compd_array[n_ind]
     return expd_array
 
-#def makeFrow(psi_traj):
-#    """
-#    Makes the i'th row of the F matrix from the trajectory of bias
-#    function values of neighboring windows, evaluated from data in
-#    window i.
-#    
-#    Parameters
-#    ----------
-#        psi_traj : ndarray
-#            the values of the bias function for each point, calculated 
-#            using data from window i.  Data format assumed to be 
-#            N_i x L, where N_i is the number of data points in the i'th
-#            window and L is the total number of neighboring windows.
-#
-#    Returns
-#    -------
-#        F_i : ndarray
-#            i'th row in the matrix F in the Stochastic Matrix Method.
-#    """
-#    q_i = np.array(psi_traj) # Typecast to numpy to use advanced indexing
-#    L = len(q_i[0]) # Number of neighboring states
-#    F_i = np.zeros(L)
-#    q_i_sum = np.sum(q_i,axis=1)
-#    # Calculate the averages
-#    for j in xrange(L):
-#        qijtraj = q_i[:,j]/q_i_sum
-#        F_i[j] = np.average(qijtraj)
-#    return F_i
 
-
-#def EMUS_weights(qs,neighbors=None):
-#    """
-#    Calculates the normalization constants according to the EMUS method.
-#
-#    Parameters
-#    ----------
-#    qs : list 
-#    the trajectories of bias functions from each window.  Each 
-#    element in the list is a list or array of size N_i x L,
-#    where N_i is the number of points in the trajectory of that
-#    window, and L is the number of neighboring windows
-#
-#    neighbors : list
-#    A list containing information about the neighboring windows.
-#    If none, assumes qs is evaluated for every window.  Else,
-#    each elemint is a list with the indexes of the neighboring
-#    windows.  Ordering in qs must be the same as in that list.
-#    """
-#    # We first make the matrix F
-#    L = len(qs)
-#    F = np.zeros((L,L))
-#    for i in xrange(L):
-#        q_i = qs[i]
-#        F_i_compd = makeFrow(q_i)
-#        if neighbors is None:
-#            F[i] = F_i_compd
-#        else:
-#            neighb_i = neighbors[i]
-#            F[i] = unpackNbrs(F_i_compd,neighb_i,L)
-#    z = lm.stationary_distrib(F)
-#    return z,F
-
-
-def avar_zfe(qdata,neighbors,um1,um2,returntrajs=False,taumethod='acor'):
+def avar_zfe(qdata,neighbors,z,F,um1,um2,returntrajs=False,taumethod='acor'):
     """
     Estimates the asymptotic variance in the free energy difference 
     between windows um2 and um1, -k_B T log(z_2/z_1). In the code, we
@@ -168,8 +110,6 @@ def avar_zfe(qdata,neighbors,um1,um2,returntrajs=False,taumethod='acor'):
     trajs = []
 
     # First we calculate the values of the normalization constants.
-    z, F = EMUS_weights(qdata,neighbors)
-    # Calculate dAdFij
     groupInv = lm.groupInverse(np.eye(L)-F)
     partial_pt1 = (1./z[um2])*groupInv[:,um2] - (1./z[um1])*groupInv[:,um1]
     dAdFij = np.outer(z,partial_pt1) # Partial of FE difference w.r.t. Fij
@@ -222,19 +162,15 @@ def makeFEsurface(xtraj, qtraj, domain, zvals, nbins = 100,kT=0.616033):
     hist = np.zeros(nbins)
     for i,xtraj_i in enumerate(xtraj):
         xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]
-#        print "Histogramming umbrella %d" % i
         hist_i = np.zeros(nbins) # Histogram of umbrella i
         for n,coord in enumerate(xtraj_i):
             qs = qtraj[i][n]
             # We find the coordinate of the bin we land in.
             coordbins = (coord - domain[:,0])/domainwdth*nbins
             coordbins = tuple(coordbins.astype(int))
-#            print coordbins, 'cbins'
             weight = 1./np.sum(qs)
             hist_i[coordbins] += weight
-#            print hist_i[coordbins]
         hist+=hist_i/len(xtraj_i)*zvals[i]
-#        print hist
     pmf = -kT * np.log(hist)
     pmf -= min(pmf.flatten())
     return pmf
@@ -247,13 +183,13 @@ def getAllocations(importances,N_is,newWork):
     """
     errs = np.copy(importances)
     ns = np.copy(N_is)
-    testWeights = calcWeightSubproblem(errs,ns,newWork)
+    testWeights = _calcWeightSubproblem(errs,ns,newWork)
     negativity = np.array([ weit < 0.0 for weit in testWeights])
 #    print negativity
     while(any(negativity) == True):
         errs*=( 1.0-negativity)
         ns*=(1.0-negativity)
-        newWeights = calcWeightSubproblem(errs,ns,newWork)
+        newWeights = _calcWeightSubproblem(errs,ns,newWork)
 #        print min(testWeights*newWeights)
         testWeights = newWeights
         negativity = np.array([ weit < 0.0 for weit in testWeights])
@@ -261,7 +197,7 @@ def getAllocations(importances,N_is,newWork):
     return map(int, map( round, testWeights ))
 
 
-def calcWeightSubproblem(importances,N_is,newWork):
+def _calcWeightSubproblem(importances,N_is,newWork):
     """
     Calculates the sampling weights of each region, according to the method using Lagrange Modifiers.
     """
@@ -295,10 +231,10 @@ def calc_harmonic_psis(xtraj, centers, fks, kTs ,period = None):
     L = len(centers)
     qvals = np.zeros((len(xtraj),L))
     forceprefacs = -0.5*np.array([fks[i]/kTs[i] for i in xrange(L)])
-    qtraj = [getqvals(coord,centers,forceprefacs,period) for coord in xtraj]
+    qtraj = [_getqvals(coord,centers,forceprefacs,period) for coord in xtraj]
     return qtraj
 
-def getqvals( coord,centers,forceprefacs,period=360):
+def _getqvals( coord,centers,forceprefacs,period=360):
     rv = np.array(coord)-np.array(centers)
     if period is not None:
         rvmin = minimage(rv,period)
@@ -355,33 +291,64 @@ def emus_iter(qtraj, Avals=None, neighbors=None, return_taus = False):
         Avi = Avals[i]
         nbrs_i = neighbors[i]
         qi_data = qtraj[i]
-#        print nbrs_i
-#        print Avi
         A_nbs = Avi[nbrs_i]
-#        print A_nbs, "A_nbs"
-#        print np.shape(A_nbs),np.shape(qi_data)
         denom = np.dot(qi_data,A_nbs)
-#        print np.max(denom), np.shape(denom), "DENOM"
         for j_index, j in enumerate(nbrs_i):
             Ftraj = qi_data[:,j_index]/denom
             Fijunnorm = np.average(Ftraj)
             F[i,j] = Fijunnorm*Avi[i]
-#            print "i j max(Ftraj) avg(Ftraj)"
-#            print i,j,np.max(Ftraj),np.average(Ftraj)
             if return_taus:
                 tau = acor.acor(Ftraj)[0]
                 if not np.isnan(tau):
                     taumat[i,j] = acor.acor(Ftraj)[0]
-#    print "F"
-#    for row in F:
-#        print row
-#    print "F"
-#    print np.sum(F,axis=1), "FSUM"
     z = lm.stationary_distrib(F)
     if return_taus:
         return z, F, taumat
     else:
         return z, F
+
+def parse_metafile(filestr,dim):
+    """
+    Parses the meta file located at filestr.
+    Assumes Whamlike Syntax
+
+    Parameters
+    ----------
+    filestr : string
+        The path to the meta file.
+    dim : int
+        The number of dimensions in the cv space.
+
+    Returns
+    -------
+    ks : array of strings
+        Array, element i is the location of the cv trajectory for 
+        window i.
+
+    #### FINISH THE DOCUMENTATION!!!!!
+
+    """
+    trajlocs = []
+    ks = []
+    cntrs = []
+    corrts = []
+    temps = []
+    with open(filestr,'r') as f:
+        for line in f:
+            windowparams = line.split(' ')
+            trajlocs.append(windowparams[0])
+            cntrs.append(windowparams[1:1+dim])
+            ks.append(windowparams[1+dim:1+2*dim])
+            if len(windowparams) > 1+2*dim: # If Correlation Time provided
+                corrts.append(windowparams[2+2*dim])
+            if len(windowparams) > 2+2*dim: # If Temperature is provided
+                temps.append(windowparams[3+2*dim])
+    # Move to numpy arrays, convert to appropriate data types
+    ks = np.array(ks).astype('float')
+    cntrs = np.array(cntrs).astype('float')
+    corrts = np.array(corrts).astype('float')
+    temps = np.array(temps).astype('float')
+    return trajlocs,ks,cntrs,corrts,temps
 
 def minimage(rv,period):
     return rv - period * np.rint(rv/period)
