@@ -27,15 +27,15 @@ def ipce(timeseries,lagmax=None):
     while i < 0.5*lagmax:
         gamma =  corrfxn[2*i] + corrfxn[2*i+1]
         if gamma < 0.0:
-            print 'stop at ',2*i
+#            print 'stop at ',2*i
             break
         else:
             t += gamma 
         i += 1
     tau = 2*t - 1
-    std = np.std(timeseries)
+    var = np.var(timeseries)
     mean = np.average(timeseries)
-    sigma = std * tau / len(timeseries)
+    sigma = np.sqrt(var * tau / len(timeseries))
     return tau, mean, sigma
     
 def icce(timeseries,lagmax=None):
@@ -50,7 +50,7 @@ def icce(timeseries,lagmax=None):
     i = 1
     gammapast = t
     gamma = corrfxn[2*i] = corrfxn[2*i+1]
-    while i < 0.5*lagmax:
+    while i < 0.5*lagmax-2:
         gammafuture =  corrfxn[2*i+2] + corrfxn[2*i+3]
         if gamma > 0.5*(gammapast+gammafuture) :
             print 'stop at ',2*i
@@ -61,8 +61,8 @@ def icce(timeseries,lagmax=None):
             gamma = gammafuture
         i += 1
     tau = 2*t - 1
-    std = np.std(timeseries)
+    var = np.var(timeseries)
     mean = np.average(timeseries)
-    sigma = std * tau / len(timeseries)
+    sigma = np.sqrt(var * tau / len(timeseries))
     return tau, mean, sigma
 
