@@ -66,7 +66,7 @@ class emus:
             print z_old, "z_old start iter"
             Apart = Npnts/z_old
             Amat = np.outer(np.ones(L),Apart)
-            # UNcommented Code
+            # Uncommented Code
             print np.max(taumat), np.min(taumat), "Taumat"
             if usetaus is True:
                 Amat /= taumat
@@ -78,22 +78,25 @@ class emus:
             print z_new, z_old
             print "z"
             if np.max(np.abs(z_new-z_old)/z_old) < tol:
-#                print "Flag"
-#                print tol, np.abs(z_new-z_old)/z_old
-#                print z_old
-#                print "Flag"
                 break
             z_old = z_new
             print n
         self.z = z_new
         return z_new
 
-    def asymptotic_var_zfe(self,um1,um2):
+    def calc_obs(self,fdata):
+        """
+        
+        """
+        favg = usr.calc_obs(self.psitrajs,self.z,self.EMUS_F,fdata)
+        return favg
+
+    def asymptotic_var_zfe(self,um1,um2,iat='ipce'):
         """
         Calculates the asymptotic variance for the free energy difference
         between windows indexed um1 and um2
         """
-        errs, taus = usr.avar_zfe(self.psitrajs,self.neighborlist,self.z,self.EMUS_F,um1,um2)
+        errs, taus = usr.avar_zfe(self.psitrajs,self.neighborlist,self.z,self.EMUS_F,um1,um2,iat=iat)
         return errs, taus
 
     def pmf(self,domain,nbins=100):

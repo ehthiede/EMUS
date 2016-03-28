@@ -4,7 +4,7 @@ Helper routines for EMUS
 """
 import numpy as np
 import linalg_methods as lm
-import acor
+# import acor
 
 def neighbors_harmonic(cntrs,fks,kTs,period=None,nsig=4):
     """
@@ -14,10 +14,32 @@ def neighbors_harmonic(cntrs,fks,kTs,period=None,nsig=4):
 
     Parameters
     ----------
-        cntrs
-        FINISH DOCUMENTATION
+        cntrs : ndarray
+            Numpy array or iterable of shape Lxd, where L is the
+            number of windows and d is the dimension of the cv space.
+        fks : ndarray
+            Numpy array or iterable containing the force constant for
+            each harmonic window.  Shape is Lxd, as with centers.
+        kTs : ndarray
+            1D array with the Boltzmann factor in each window.
+        period : optional iterable, scalar, or None
+            Periodicity of the collective variable. If None, all
+            collective variables are taken to be aperiodic.  If scalar,
+            assumed to be 1D US calculation with period of scalar.
+            If 1D iterable with each value a scalar or None, each
+            cv has periodicity of that size.
+        nsig : optional scalar
+            Number of standard deviations of the gaussians to include
+            in the neighborlist.
+
+    Returns
+    -------
+        nbrs : 2dlist
+            List where element i is a list with the indices of all 
+            windows neighboring window i.
+
     """
-    rad = nsig*np.sqrt(kTs/np.amax(fks,axis=1)) #TIGHTEN THIS UP!!
+    rad = nsig*np.sqrt(kTs/np.amax(fks,axis=1)) #TIGHTEN UP NBRS?
     if period is not None:
         if not hasattr(period,'__iter__'):
             period = [period]
@@ -65,31 +87,231 @@ def unpackNbrs(compd_array,neighbors,L):
         expd_array[n_val] = compd_array[n_ind]
     return expd_array
 
+def calc_obs(qdata,z,F,f1data,f2data=None):
+    """
+    Estimates the value of an observable.
+    """
+    f1avg = 0
+    f2avg = 0
+    for i,q_i in enumerate(qdata):
+        q_xi = np.array(q_i)
+        q_i_sum = np.sum(q_xi,axis=1)
+        f1_i = np.array(f1data[i])/q_i_sum
+        if f2data is None:
+            f2_i = 1./q_i_sum
+        else:
+            f2_i = np.array(f2data[i])/q_i_sum
+        f1avg_i = np.average(f1_i)
+        f2avg_i = np.average(f2_i)
+        f1avg += z[i]*f1avg_i
+        f2avg += z[i]*f2avg_i
+    return f1avg / f2avg
 
-def avar_zfe(qdata,neighbors,z,F,um1,um2,returntrajs=False,taumethod='acor'):
+        
+def avar_obs_diff(qdata,neighbors,z,F,f1data,g1data,f2data=None,g2data=None,returntrajs=False,iat='ipce'):
+    """
+    Estimates the asymptotic variance in the difference ratio of two observables.
+    If f2data is not given, it just calculates the asymptotic variance
+    associatied with the average of f1.
+    """
+    tauroutine = _get_tau_method(iat)
+    L = len(qdata)
+    errvals = np.zeros(L)
+    tauvals = np.zeros(L)
+    trajs = []
+
+    f1trajs = []
+    f2trajs = []
+    f1avgs = np.zeros(L)
+    f2avgs = np.zeros(L)
+    g1trajs = []
+    g2trajs = []
+    g1avgs = np.zeros(L)
+    g2avgs = np.zeros(L)
+    normedqdata = []
+    # Normalize f1, f2,g1,g2, psi trajectories by \sum_k psi_k
+    for i,q_i in enumerate(qdata):
+        Lneighb = len(neighbors[i]) # Number of neighbors
+        q_xi = np.array(q_i)
+        q_i_sum = np.sum(q_xi,axis=1)
+        f1_i = np.array(f1data[i])/q_i_sum
+        if f2data is None:
+            f2_i = 1./q_i_sum
+        else:
+            f2_i = np.array(f2data[i])/q_i_sum
+        g1_i = np.array(g1data[i])/q_i_sum
+        if g2data is None:
+            g2_i = 1./q_i_sum
+        else:
+            g2_i = np.array(g2data[i])/q_i_sum
+
+        f1trajs.append(f1_i)
+        f2trajs.append(f2_i)
+        f1avgs[i] = np.average(f1_i)
+        f2avgs[i] = np.average(f2_i)
+        g1trajs.append(g1_i)
+        g2trajs.append(g2_i)
+        g1avgs[i] = np.average(g1_i)
+        g2avgs[i] = np.average(g2_i)
+        nqd_i = np.zeros(np.shape(qdata[i]))
+        for j in xrange(Lneighb):
+            nqd_i[:,j] = q_xi[:,j]/q_i_sum
+        normedqdata.append(nqd_i)
+    fnumer_avg = np.dot(z,f1avgs)
+    fdenom_avg = np.dot(z,f2avgs)
+    favg = fnumer_avg / fdenom_avg
+    gnumer_avg = np.dot(z,g1avgs)
+    gdenom_avg = np.dot(z,g2avgs)
+    gavg = gnumer_avg / gdenom_avg
+    diff_avg = favg-gavg
+    
+    # Calculate Group Inverse of I-F 
+    groupInv = lm.groupInverse(np.eye(L)-F)
+    if returntrajs:
+        traj_collection = []
+    for i in xrange(L):
+        neighb_i = neighbors[i]
+        # Calculate partials w.r.t. F_ij
+        partials_Fij = np.zeros(np.shape(neighb_i))
+        for j_ind, j in enumerate(neighb_i):
+            fac1 = f1avgs-favg*f2avgs
+            dBdFij = np.dot(groupInv[j,:],fac1)*z[i]/fdenom_avg
+            fac2 = g1avgs-gavg*g2avgs
+            dBdFij_2 = np.dot(groupInv[j,:],fac2)*z[i]/gdenom_avg
+            partials_Fij[j_ind] = dBdFij - dBdFij_2
+        # Calculate partials w.r.t. f1,f2
+        partial_f1 = z[i]/fdenom_avg 
+        partial_f2 =-1.*favg/fdenom_avg*z[i]
+        partial_g1 = -1.*z[i]/gdenom_avg 
+        partial_g2 = gavg/gdenom_avg*z[i]
+        # Compute time series encoding error.
+        err_tseries = np.dot(normedqdata[i],partials_Fij)
+#        print err_tseries
+        err_tseries += f1trajs[i]*partial_f1
+#        print err_tseries
+        err_tseries += f2trajs[i]*partial_f2
+        err_tseries += g1trajs[i]*partial_g1
+        err_tseries += g2trajs[i]*partial_g2
+#        print err_tseries
+
+        tau, mean, sigma = tauroutine(err_tseries)
+        errvals[i] = sigma
+        tauvals[i] = tau
+        if returntrajs:
+            traj_collection.append(err_tseries)
+
+    if returntrajs:
+        return errvals, tauvals, trajs
+    else:
+        return errvals, tauvals
+
+def avar_obs(qdata,neighbors,z,F,f1data,f2data=None,returntrajs=False,iat='ipce'):
+    """
+    Estimates the asymptotic variance in the ratio of two observables.
+    If f2data is not given, it just calculates the asymptotic variance
+    associatied with the average of f1.
+    """
+    tauroutine = _get_tau_method(iat)
+    L = len(qdata)
+    errvals = np.zeros(L)
+    tauvals = np.zeros(L)
+    trajs = []
+
+    f1trajs = []
+    f2trajs = []
+    f1avgs = np.zeros(L)
+    f2avgs = np.zeros(L)
+    normedqdata = []
+    # Normalize f1, f2, psi trajectories by \sum_k psi_k
+    for i,q_i in enumerate(qdata):
+        Lneighb = len(neighbors[i]) # Number of neighbors
+        q_xi = np.array(q_i)
+        q_i_sum = np.sum(q_xi,axis=1)
+        f1_i = np.array(f1data[i])/q_i_sum
+        if f2data is None:
+            f2_i = 1./q_i_sum
+        else:
+            f2_i = np.array(f2data[i])/q_i_sum
+
+        f1trajs.append(f1_i)
+        f2trajs.append(f2_i)
+        f1avgs[i] = np.average(f1_i)
+        f2avgs[i] = np.average(f2_i)
+        nqd_i = np.zeros(np.shape(qdata[i]))
+        for j in xrange(Lneighb):
+            nqd_i[:,j] = q_xi[:,j]/q_i_sum
+        normedqdata.append(nqd_i)
+    numer_avg = np.dot(z,f1avgs)
+    denom_avg = np.dot(z,f2avgs)
+    favg = numer_avg / denom_avg
+    
+    # Calculate Group Inverse of I-F 
+    groupInv = lm.groupInverse(np.eye(L)-F)
+    if returntrajs:
+        traj_collection = []
+    for i in xrange(L):
+        neighb_i = neighbors[i]
+        # Calculate partials w.r.t. F_ij
+        partials_Fij = np.zeros(np.shape(neighb_i))
+        for j_ind, j in enumerate(neighb_i):
+            fac1 = f1avgs-favg*f2avgs
+            dBdFij = np.dot(groupInv[j,:],fac1)*z[i]/denom_avg
+            partials_Fij[j_ind] = dBdFij
+        # Calculate partials w.r.t. f1,f2
+        partial_f1 = z[i]/denom_avg 
+        partial_f2 =-1.*favg/denom_avg*z[i]
+        # Compute time series encoding error.
+        err_tseries = np.dot(normedqdata[i],partials_Fij)
+#        print err_tseries
+        err_tseries += f1trajs[i]*partial_f1
+#        print err_tseries
+        err_tseries += f2trajs[i]*partial_f2
+#        print err_tseries
+
+        tau, mean, sigma = tauroutine(err_tseries)
+        errvals[i] = sigma
+        tauvals[i] = tau
+        if returntrajs:
+            traj_collection.append(err_tseries)
+
+    if returntrajs:
+        return errvals, tauvals, trajs
+    else:
+        return errvals, tauvals
+
+def avar_zfe(qdata,neighbors,z,F,um1,um2,returntrajs=False,iat='ipce'):
     """
     Estimates the asymptotic variance in the free energy difference 
     between windows um2 and um1, -k_B T log(z_2/z_1). In the code, we
     arbitrarily denote um2 as 'k' and um1 as 'l' for readability.
 
-    REQUIRES ACOR TO BE INSTALLED!
+    REQUIRES ACOR TO BE INSTALLED FOR iat='acor'
 
     # REWRITE TO INCLUDE TO COMPONENTWISE?
 
     Parameters
     ----------
     qdata : ndarray or list of ndarrays
-    The value of the bias on the probability density for each window.
-    Expected 3d object, with indices inj, where i is the state the 
-    data point comes frome, n is the number point it is, and j is the
-    value of the j'th probability bias evaluated at that point.
+        The value of the bias on the probability density for each window.
+        Expected 3d object, with indices inj, where i is the state the 
+        data point comes frome, n is the number point it is, and j is the
+        value of the j'th probability bias evaluated at that point.
     neighbors : ndarray or list
-    The list or array of ints, containing the indices of the 
-    neighboring windows
-    um1 : the index of the first window we are interested in.
-    um2 : the index of the second window we are interested in.
-    returntrajs : Whether or not to return an array containing the
-    trajectories computed that quantify the error.
+        The list or array of ints, containing the indices of the 
+        neighboring windows
+    um1 : int
+        the index of the first window we are interested in.
+    um2 : int
+        the index of the second window we are interested in.
+    returntrajs : optional Boolean
+        Whether or not to return an array containing the
+        trajectories computed that quantify the error.
+    iat : optional string
+        Method used to estimate autocorrelation time.  Default is 
+        initial positive correlation estimator ('ipce'), but also
+        supported is initial convex correlation estimator ('icce')
+        and the acor algorithm ('acor')  See Geyer, Stat. Sci. 1992
+        and Jonathan Goodman's acor documentation for reference.
 
 
     Returns
@@ -98,12 +320,7 @@ def avar_zfe(qdata,neighbors,z,F,um1,um2,returntrajs=False,taumethod='acor'):
     Array of length L (no. windows) where the i'th value corresponds
     to the contribution to the error from window i.
     """
-    if taumethod=='acor':
-        from acor import acor
-        tairoutine = acor
-    elif taumethod == 'ipce':
-        from autocorrelation import ipce
-        tairoutine = ipce
+    tauroutine = _get_tau_method(iat)
     L = len(qdata)
     errvals = np.zeros(L)
     tauvals = np.zeros(L)
@@ -124,7 +341,7 @@ def avar_zfe(qdata,neighbors,z,F,um1,um2,returntrajs=False,taumethod='acor'):
             normedqdata[:,j] = q_xi[:,j]/qsum
         err_tseries = np.dot(normedqdata,dAdFij[i][neighbors[i]]) #Error time series
         # Calculate the error
-        tau, mean, sigma = tairoutine(err_tseries)
+        tau, mean, sigma = tauroutine(err_tseries)
         errvals[i] = sigma
         tauvals[i] = tau
         if returntrajs:
@@ -240,9 +457,12 @@ def _getqvals( coord,centers,forceprefacs,period=360):
         rvmin = minimage(rv,period)
     else:
         rvmin = rv
-    return np.exp(np.sum(forceprefacs*(rvmin)**2,axis=1))
+    try:
+        return np.exp(np.sum(forceprefacs*rvmin*rvmin,axis=1))
+    except:
+        return np.exp(forceprefacs*rvmin*rvmin)
 
-def emus_iter(qtraj, Avals=None, neighbors=None, return_taus = False):
+def emus_iter(qtraj, Avals=None, neighbors=None, return_taus = False,iat_routine='ipce'):
     """
     UPDATE THE DOCUMENTATION!!!!
 
@@ -279,6 +499,8 @@ def emus_iter(qtraj, Avals=None, neighbors=None, return_taus = False):
     F = np.zeros((L,L)) # Initialize F Matrix
     if return_taus:
         taumat = np.ones((L,L))
+        tauroutine=_get_tau_method(iat_routine)
+        
     
     if Avals is None:
         Avals = np.ones((L,L))
@@ -290,7 +512,7 @@ def emus_iter(qtraj, Avals=None, neighbors=None, return_taus = False):
     for i in xrange(L):
         Avi = Avals[i]
         nbrs_i = neighbors[i]
-        qi_data = qtraj[i]
+        qi_data = np.array(qtraj[i])
         A_nbs = Avi[nbrs_i]
         denom = np.dot(qi_data,A_nbs)
         for j_index, j in enumerate(nbrs_i):
@@ -298,9 +520,9 @@ def emus_iter(qtraj, Avals=None, neighbors=None, return_taus = False):
             Fijunnorm = np.average(Ftraj)
             F[i,j] = Fijunnorm*Avi[i]
             if return_taus:
-                tau = acor.acor(Ftraj)[0]
+                tau = tauroutine(Ftraj)[0]
                 if not np.isnan(tau):
-                    taumat[i,j] = acor.acor(Ftraj)[0]
+                    taumat[i,j] = tauroutine(Ftraj)[0]
     z = lm.stationary_distrib(F)
     if return_taus:
         return z, F, taumat
@@ -349,6 +571,19 @@ def parse_metafile(filestr,dim):
     corrts = np.array(corrts).astype('float')
     temps = np.array(temps).astype('float')
     return trajlocs,ks,cntrs,corrts,temps
+
+def _get_tau_method(taumethod):
+    if taumethod=='acor':
+        from acor import acor
+        tauroutine = acor
+    elif taumethod == 'ipce':
+        from autocorrelation import ipce
+        tauroutine = ipce
+    elif taumethod == 'icce':
+        from autocorrelation import icce
+        tauroutine = icce
+    return tauroutine
+    
 
 def minimage(rv,period):
     return rv - period * np.rint(rv/period)

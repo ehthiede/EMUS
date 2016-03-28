@@ -28,6 +28,7 @@ def main():
     trajs = []
     for i, trajloc in enumerate(trajlocs):
         trajs.append(np.loadtxt(trajloc)[:,1:]) 
+    print np.shape(trajs)
     # Calculate psi values
     psis = []
     for i in xrange(L):

@@ -46,7 +46,7 @@ def stationary_distrib(F,residtol = 1.E-10,max_iter=100):
     # Polish solution using power method.
     for itr in xrange(max_iter):
         znew = np.dot(z,F)
-        maxresid = np.max((znew - z)/z) # Convergence Criterion 
+        maxresid = np.max(np.abs(znew - z)/z) # Convergence Criterion 
         if maxresid < residtol:
             break
         else:
@@ -72,7 +72,7 @@ def old_stationary_distrib(F,fix=None,residtol = 1.E-10,max_iter=100):
     # Polish solution using power method.
     for itr in xrange(max_iter):
         znew = np.dot(z,F)
-        maxresid = np.max((znew - z)/z) # Convergence Criterion 
+        maxresid = np.max(np.abs(znew - z)/z) # Convergence Criterion 
         if maxresid < residtol:
             break
         else:
