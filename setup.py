@@ -12,6 +12,6 @@ setup(name='EMUS',
         'Topic :: Scientific/Engineering'
         ],
     packages=['emus'],
-    install_requires=['acor'], # Does this do what you think?
+    install_requires=['acor'], # Does this do what you think, Erik?
 
     )
