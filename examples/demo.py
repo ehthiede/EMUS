@@ -1,6 +1,6 @@
 import numpy as np
 import emus
-import umbrellautils as uu
+import umbutils as uu
 import matplotlib
 matplotlib.use('Qt4Agg')
 import matplotlib.pyplot as plt
