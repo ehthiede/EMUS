@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Container for the primary EMUS routines
+Container for the primary EMUS routines.
 """
 import numpy as np
 import linalg_methods as lm
 
 def calc_obs(psis,z,f1data,f2data=None):
-    """
-    Estimates the value of an observable or ratio of observables.
+    """Estimates the value of an observable or ratio of observables.
     Args:
         psis (3D data struct): Data structure containing psi values.
             See documentation in emus.py for a detailed explanation.
@@ -42,8 +41,7 @@ def calc_obs(psis,z,f1data,f2data=None):
     return f1avg / f2avg
 
 def makeFEsurface(cv_trajectories, psis, domain, z, nbins = 100,kT=1.):
-    """
-    Calculates the free energy surface for an umbrella sampling run.
+    """Calculates the free energy surface for an umbrella sampling run.
 
     Args:
         cv_trajectories (2D data struct): Data structure containing 
@@ -90,9 +88,9 @@ def makeFEsurface(cv_trajectories, psis, domain, z, nbins = 100,kT=1.):
     pmf -= min(pmf.flatten())
     return pmf
 
-def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_routine='ipce'):
-    """
-    Performs one step of the the EMUS iteration.
+
+def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='ipce'):
+    """Performs one step of the the EMUS iteration.
     
     Args:
         psis (3D data struct): Data structure containing psi values.
@@ -104,7 +102,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_routine=
             See neighbors_harmonic in umbrellautils. 
         return_iats (Bool): whether or not to calculate integrated
             autocorrelation times of :math:`\psi_ii^*` for each window.
-        iat_routine (string): routine to use for calculating said iats.
+        iat_method (string): routine to use for calculating said iats.
             Accepts 'ipce', 'acor', and 'icce'.
     
     Returns:
@@ -120,7 +118,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_routine=
     F = np.zeros((L,L)) # Initialize F Matrix
     if return_iats:
         iats = np.ones((L))
-        iatroutine=_get_iat_method(iat_routine)
+        iatroutine=_get_iat_method(iat_method)
         
     
     if Avals is None:
@@ -151,6 +149,19 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_routine=
         return z, F
 		
 def _get_iat_method(iatmethod):
+    """Control routine for selecting the method used to calculate integrated
+    autocorrelation times (iat)
+
+    Args:
+        iatmethod (string): The algorithm to be used to calculate the iat.
+            Options are 'acor', 'ipce', and 'icce'.  See autocorrelation.py
+            for a description of the various methods.
+    
+    Returns:
+        iatroutine (function): The function to be called to estimate the 
+            integrated autocorrelation time.
+
+    """
     if iatmethod=='acor':
         from acor import acor
         iatroutine = acor

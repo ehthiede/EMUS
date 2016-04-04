@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Library with routines for estimating the asymptotic variance of the
-first EMUS iteration.
+Library with routines associated with the asymptotic variance of the
+first EMUS iteration.  These estimates rely on estimates of 
 
 THIS CODE NEEDS CLEANING!
 """
@@ -11,14 +11,44 @@ import linalg_methods as lm
 
 
 
-def avar_obs_diff(psis,neighbors,z,F,f1data,g1data,f2data=None,g2data=None,returntrajs=False,iat='ipce'):
+def avar_obs_diff(psis,z,F,f1data,g1data,f2data=None,g2data=None,
+        neighbors=None,iat_method='ipce'):
+    """Estimates the asymptotic variance of the estimate of the ratio 
+    :math:`<f_1>/<f_2>-<g_1>/<g_2>` observables.  If f2data and g2data are not
+    given, they are set to 1.
+
+    Args:
+        psis (3D data struct): Data structure containing psi values.  See 
+            documentation in emus.py for a detailed explanation.
+        z (1D array): Array containing the normalization constants
+        F (2D array): Overlap matrix for the first EMUS iteration.
+        f1data (2D data struct): trajectory of observable in numerator in the
+            first term of the difference.  First dimension corresponds to the
+            umbrella index and the second to the point in the trajectory.
+        g1data (2D data struct): trajectory of observable in numerator in the
+            second term of the difference.  
+
+    Optional Args:
+        f2data (2D data struct): trajectory of observable in denominator in the
+            first term of the difference.  
+        g2data (2D data struct): trajectory of observable in denominator in the
+            second term of the difference.  
+        neighbors (2D array): list showing which states neighbor which.
+            See neighbors_harmonic in umbrellautils for explanation.
+        iat_method (string): Method used to estimate autocorrelation time.  
+
+    Returns:
+        errvals (ndarray): Array of length L (no. windows) where the i'th 
+            value corresponds to the contribution to the error from window i.
+        iatvals (ndarray): Array of length L (no. windows) where the i'th 
+            value corresponds to the iat for window i.
+        
     """
-    Estimates the asymptotic variance in the difference ratio of two observables.
-    If f2data is not given, it just calculates the asymptotic variance
-    associatied with the average of f1.
-    """
-    iatroutine = _get_iat_method(iat)
+        
+    iat_routine = _get_iat_method(iat_method)
     L = len(psis)
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
     errvals = np.zeros(L)
     iatvals = np.zeros(L)
     trajs = []
@@ -67,11 +97,9 @@ def avar_obs_diff(psis,neighbors,z,F,f1data,g1data,f2data=None,g2data=None,retur
     gdenom_avg = np.dot(z,g2avgs)
     gavg = gnumer_avg / gdenom_avg
     diff_avg = favg-gavg
-    
+
     # Calculate Group Inverse of I-F 
     groupInv = lm.groupInverse(np.eye(L)-F)
-    if returntrajs:
-        traj_collection = []
     for i in xrange(L):
         neighb_i = neighbors[i]
         # Calculate partials w.r.t. F_ij
@@ -89,34 +117,49 @@ def avar_obs_diff(psis,neighbors,z,F,f1data,g1data,f2data=None,g2data=None,retur
         partial_g2 = gavg/gdenom_avg*z[i]
         # Compute time series encoding error.
         err_tseries = np.dot(normedpsis[i],partials_Fij)
-#        print err_tseries
         err_tseries += f1trajs[i]*partial_f1
-#        print err_tseries
         err_tseries += f2trajs[i]*partial_f2
         err_tseries += g1trajs[i]*partial_g1
         err_tseries += g2trajs[i]*partial_g2
-#        print err_tseries
 
-        iat, mean, sigma = iatroutine(err_tseries)
+        iat, mean, sigma = iat_routine(err_tseries)
         errvals[i] = sigma
         iatvals[i] = iat
-        if returntrajs:
-            traj_collection.append(err_tseries)
+    return errvals, iatvals
 
-    if returntrajs:
-        return errvals, iatvals, trajs
-    else:
-        return errvals, iatvals
-
-def avar_obs(psis,neighbors,z,F,f1data,f2data=None,returntrajs=False,iat='ipce'):
-    """
-    Estimates the asymptotic variance in the ratio of two observables.
+def avar_obs(psis,z,F,f1data,f2data=None,neighbors=None,iat_method='ipce'):
+    """Estimates the asymptotic variance in the ratio of two observables.
     If f2data is not given, it just calculates the asymptotic variance
-    associatied with the average of f1.
+    associated with the average of f1.
+
+    Args:
+        psis (3D data struct): Data structure containing psi values.  See 
+            documentation in emus.py for a detailed explanation.
+        z (1D array): Array containing the normalization constants
+        F (2D array): Overlap matrix for the first EMUS iteration.
+        f1data (2D data struct): trajectory of observable in numerator in the
+            first term of the difference.  First dimension corresponds to the
+            umbrella index and the second to the point in the trajectory.
+
+    Optional Args:
+        f2data (2D data struct): trajectory of observable in denominator in the
+            first term of the difference.  
+        neighbors (2D array): list showing which states neighbor which.
+            See neighbors_harmonic in umbrellautils for explanation.
+        iat_method (string): Method used to estimate autocorrelation time.  
+
+    Returns:
+        errvals (ndarray): Array of length L (no. windows) where the i'th 
+            value corresponds to the contribution to the error from window i.
+        iatvals (ndarray): Array of length L (no. windows) where the i'th 
+            value corresponds to the iat for window i.
+        
     """
-    iatroutine = _get_iat_method(iat)
+    iat_routine = _get_iat_method(iat_method)
     L = len(psis)
     errvals = np.zeros(L)
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
     iatvals = np.zeros(L)
     trajs = []
 
@@ -144,14 +187,12 @@ def avar_obs(psis,neighbors,z,F,f1data,f2data=None,returntrajs=False,iat='ipce')
         for j in xrange(Lneighb):
             norm_psi_i[:,j] = psi_i_arr[:,j]/psi_i_sum
         normedpsis.append(norm_psi_i)
-    numer_avg = np.dot(z,f1avgs)
-    denom_avg = np.dot(z,f2avgs)
-    favg = numer_avg / denom_avg
-    
+        numer_avg = np.dot(z,f1avgs)
+        denom_avg = np.dot(z,f2avgs)
+        favg = numer_avg / denom_avg
+
     # Calculate Group Inverse of I-F 
     groupInv = lm.groupInverse(np.eye(L)-F)
-    if returntrajs:
-        traj_collection = []
     for i in xrange(L):
         neighb_i = neighbors[i]
         # Calculate partials w.r.t. F_ij
@@ -165,69 +206,53 @@ def avar_obs(psis,neighbors,z,F,f1data,f2data=None,returntrajs=False,iat='ipce')
         partial_f2 =-1.*favg/denom_avg*z[i]
         # Compute time series encoding error.
         err_tseries = np.dot(normedpsis[i],partials_Fij)
-#        print err_tseries
         err_tseries += f1trajs[i]*partial_f1
-#        print err_tseries
         err_tseries += f2trajs[i]*partial_f2
-#        print err_tseries
 
-        iat, mean, sigma = iatroutine(err_tseries)
+        iat, mean, sigma = iat_routine(err_tseries)
         errvals[i] = sigma
         iatvals[i] = iat
-        if returntrajs:
-            traj_collection.append(err_tseries)
+    return errvals, iatvals
 
-    if returntrajs:
-        return errvals, iatvals, trajs
-    else:
-        return errvals, iatvals
-
-def avar_zfe(psis,neighbors,z,F,um1,um2,returntrajs=False,iat='ipce'):
+def avar_zfe(psis,z,F,um1,um2,neighbors=None,iat_method='ipce'):
     """
     Estimates the asymptotic variance in the free energy difference 
     between windows um2 and um1, -k_B T log(z_2/z_1). In the code, we
     arbitrarily denote um2 as 'k' and um1 as 'l' for readability.
 
-    REQUIRES ACOR TO BE INSTALLED FOR iat='acor'
-
     # REWRITE TO INCLUDE TO COMPONENTWISE?
 
-    Parameters
-    ----------
-    psis : ndarray or list of ndarrays
-        The value of the bias on the probability density for each window.
-        Expected 3d object, with indices inj, where i is the state the 
-        data point comes frome, n is the number point it is, and j is the
-        value of the j'th probability bias evaluated at that point.
-    neighbors : ndarray or list
-        The list or array of ints, containing the indices of the 
-        neighboring windows
-    um1 : int
-        the index of the first window we are interested in.
-    um2 : int
-        the index of the second window we are interested in.
-    returntrajs : optional Boolean
-        Whether or not to return an array containing the
-        trajectories computed that quantify the error.
-    iat : optional string
-        Method used to estimate autocorrelation time.  Default is 
-        initial positive correlation estimator ('ipce'), but also
-        supported is initial convex correlation estimator ('icce')
-        and the acor algorithm ('acor')  See Geyer, Stat. Sci. 1992
-        and Jonathan Goodman's acor documentation for reference.
+    Args:
+        psis (3D data struct): Data structure containing psi values.
+            See documentation in emus.py for a detailed explanation.
+        z (1D array): Array containing the normalization constants
+        F (2D array): Overlap matrix for the first EMUS iteration.
+        state_1 (int): Index of the first state.
+        state_2 (ind): Index of the second state.
 
+    Optional Args:
+        neighbors (2D array): list showing which states neighbor which.
+            See neighbors_harmonic in umbrellautils for explanation.
+        iat_method (string): Method used to estimate autocorrelation time.  
+            Default is the initial positive correlation estimator ('ipce'), but
+            also supported is the initial convex correlation estimator ('icce')
+            and the acor algorithm ('acor')  See Geyer, Stat. Sci. 1992
+            and Jonathan Goodman's acor documentation for reference.
 
-    Returns
-    -------
-    errvals : ndarray
-    Array of length L (no. windows) where the i'th value corresponds
-    to the contribution to the error from window i.
+    Returns:
+        errvals (ndarray): Array of length L (no. windows) where the i'th 
+            value corresponds to the contribution to the error from window i.
+        iatvals (ndarray): Array of length L (no. windows) where the i'th 
+            value corresponds to the iat for window i.
+
     """
-    iatroutine = _get_iat_method(iat)
+    iat_routine = _get_iat_method(iat_method)
     L = len(psis)
     errvals = np.zeros(L)
     iatvals = np.zeros(L)
     trajs = []
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
 
     # First we calculate the values of the normalization constants.
     groupInv = lm.groupInverse(np.eye(L)-F)
@@ -243,21 +268,15 @@ def avar_zfe(psis,neighbors,z,F,um1,um2,returntrajs=False,iat='ipce'):
             normedpsis[:,j] = psi_i_arr[:,j]/psi_sum
         err_tseries = np.dot(normedpsis,dAdFij[i][neighbors[i]]) #Error time series
         # Calculate the error
-        iat, mean, sigma = iatroutine(err_tseries)
+        iat, mean, sigma = iat_routine(err_tseries)
         errvals[i] = sigma
         iatvals[i] = iat
-        if returntrajs:
-            trajs.append(err_tseries)
 
-    if returntrajs:
-        return errvals, iatvals, trajs
-    else:
-        return errvals, iatvals
+    return errvals, iatvals
 
 
 def getAllocations(importances,N_is,newWork):
-    """
-    Calculates the weights for resampling of the windows.  
+    """Calculates the optimal allocation of sample points 
     These are (possibly) the optimal weights for 
     To deal with negative weights, it removes all the negative weights, and calculates the weights for the resulting subproblem.
     """

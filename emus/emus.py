@@ -144,7 +144,7 @@ class emus:
                 asymptotic error.  The total asymptotic error is taken by
                 summing the entries.
         """
-        errs, iats = avar.avar_zfe(self.psis,self.neighborlist,self.z,self.F,state_1,state_2)
+        errs, iats = avar.avar_zfe(self.psis,self.z,self.F,state_1,state_2,neighbors=self.neighborlist)
         return errs
 
     def pmf(self,domain,nbins=100,kT=1.0,z=None):
@@ -163,7 +163,8 @@ class emus:
                 to 1.0
         
         Returns:
-            FINISH THIS!
+            pmf (nd array): Returns the potential of mean force as a d dimensional
+            array, where d is the number of collective variables.
 				
         """
         if z is None:
