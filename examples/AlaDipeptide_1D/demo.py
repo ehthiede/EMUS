@@ -1,61 +1,57 @@
-import numpy as np
-import emus
+# -*- coding: utf-8 -*-
+"""
+Example script with basic usage of the EMUS package.  The script follows the quickstart guide closely, with slight adjustments (for simplicity we have moved all plotting commands to the bottom of the script).
+"""
+import numpy as np                  
 import usutils as uu
+from emus import emus
+
+# Define Simulation Parameters
+T = 310                             # Temperature in Kelvin
+meta_file = 'wham_meta.txt'         # Path to Meta File
+dim = 1                             # 1 Dimensional CV space.
+period = 360                        # Dihedral Angles periodicity
+
+# Load data
+psis, cv_trajs = uu.data_from_WHAMmeta('wham_meta.txt',dim,T=T,period=period)
+
+# Create the EMUS object
+EM = emus(psis,cv_trajs)
+
+# Calculate the PMF
+domain = ((-180.0,180.))            # Range of dihedral angle values
+pmf = EM.calc_pmf(domain,nbins=60)   # Calculate the pmf
+
+# Calculate z using the MBAR iteration.
+z_MBAR_1, F_MBAR_1 = EM.calc_zs(nMBAR=1)
+z_MBAR_2, F_MBAR_2 = EM.calc_zs(nMBAR=2)
+z_MBAR_5, F_MBAR_5 = EM.calc_zs(nMBAR=5)
+z_MBAR_1k, F_MBAR_1k = EM.calc_zs(nMBAR=1000)
+
+MBARpmf = EM.calc_pmf(domain,nbins=60,z=z_MBAR_1k)
+
+### Plotting Section ###
 import matplotlib
 matplotlib.use('Qt4Agg')
 import matplotlib.pyplot as plt
 
-# Parameters
-metafile = '1dwhammeta.txt'     # Location of the Meta File
-histinfo = (-180.,180.,100)     # Range to histogram over
-period=360                      # Period of the CV
-window_1 = 5                         # First Interesting Window
-window_2 = 13                        # Second Interesting Window
-savestring = 'ala_dipeptide_pmf.txt' # String to save the PMF to.
-kT = 310*1.9872041*10**-3 # Boltzmann Constant, given in kcal/mol
+# Plot the EMUS, MBAR pmfs.
+centers = np.linspace(-177,177,60)  # Center of the histogram bins
+plt.figure()
+plt.plot(centers,pmf,label='EMUS PMF')
+plt.plot(centers,MBARpmf,label='MBAR PMF')
+plt.xlabel('$\psi$ dihedral angle')
+plt.ylabel('Unitless FE')
+plt.legend()
+plt.title('EMUS and MBAR potentials of Mean Force')
+plt.show()
 
-# Calculate the value of Psi for each trajectory.
-# Load in the meta file
-def main():
-    # Parse Wham Meta file.
-    trajlocs, ks, cntrs, corrts, temps  = uu.parse_metafile(metafile,1)
-
-    # Load in the trajectories into the cv space
-    trajs = []
-    for i, trajloc in enumerate(trajlocs):
-        trajs.append(np.loadtxt(trajloc)[:,1:]) 
-
-    # Calculate psi values
-    psis = []
-    for i,traj in enumerate(trajs):
-        psis.append(uu.calc_harmonic_psis(traj,cntrs,ks,kT,period=period))
-
-    EM = emus.emus(psis,trajs)
-    z,F = EM.calc_zs()
-    wfes = -np.log(z)
-    print "# Unitless free energy for each window, -ln(z):"
-    for i, wfes_i in enumerate(wfes):
-        print "Window_FE: %d %f"%(i,wfes_i)
-
-    # Calculate asymptotic error, importances
-    errs  = EM.avar_zfe(window_1,window_2)
-    print "Estimated Free Energy Windows %d to %d, Asymptotic Variance:"%(window_1,window_2)
-    print "Delta_FE: ",wfes[window_2]-wfes[window_1], np.dot(errs,errs)
-    imps = errs * np.array([len(traj) for traj in trajs])
-    imps *= len(imps)/np.sum(imps)
-    for i, imp_i in enumerate(imps):
-        print "Window_imp: %d %f"%(i,imp_i)
-
-    # Calculate the PMF
-    domain = (-180.,180.)
-    pmf = EM.pmf(domain,kT=kT)
-    xax = np.linspace(domain[0],domain[1],len(pmf)+1)
-    xax = (xax[1:]+xax[:-1])/2 # Hist midpoints
-    print "Saving PMF to %s" % savestring
-    np.savetxt('ala_dipeptide_pmf.txt',zip(xax,pmf))
-    plt.plot(xax,pmf)
-    plt.show()
-
-if __name__ == "__main__":
-    main()
-
+# Plot the relative normalization constants as fxn of max iteration. 
+plt.plot(-np.log(EM.z),label="Iteration 0")
+plt.plot(-np.log(z_MBAR_1),label="Iteration 1")
+plt.plot(-np.log(z_MBAR_1k),label="Iteration 1k",linestyle='--')
+plt.xlabel('Window Index')
+plt.ylabel('Unitless Free Energy')
+plt.title('Window Free Energies and MBAR Iter No.')
+plt.legend(loc='upper left')
+plt.show()

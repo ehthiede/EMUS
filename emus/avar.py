@@ -3,45 +3,47 @@
 Library with routines associated with the asymptotic variance of the
 first EMUS iteration.  These estimates rely on estimates of 
 
-THIS CODE NEEDS CLEANING!
 """
+# THIS CODE NEEDS CLEANING!
+
 import numpy as np
 from emusroutines import _get_iat_method
-import linalg_methods as lm
+import linalg as lm
 
 
 
 def avar_obs_diff(psis,z,F,f1data,g1data,f2data=None,g2data=None,
         neighbors=None,iat_method='ipce'):
-    """Estimates the asymptotic variance of the estimate of the ratio 
-    :math:`<f_1>/<f_2>-<g_1>/<g_2>` observables.  If f2data and g2data are not
-    given, they are set to 1.
+    """Estimates the asymptotic variance of the estimate of the ratio :math:`<f_1>/<f_2>-<g_1>/<g_2>` observables.  If f2data and g2data are not given, they are set to 1.
 
-    Args:
-        psis (3D data struct): Data structure containing psi values.  See 
-            documentation in emus.py for a detailed explanation.
-        z (1D array): Array containing the normalization constants
-        F (2D array): Overlap matrix for the first EMUS iteration.
-        f1data (2D data struct): trajectory of observable in numerator in the
-            first term of the difference.  First dimension corresponds to the
-            umbrella index and the second to the point in the trajectory.
-        g1data (2D data struct): trajectory of observable in numerator in the
-            second term of the difference.  
+    Parameters
+    ----------
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation in emus.py for a detailed explanation.
+    z : 1D array
+        Array containing the normalization constants
+    F : 2D array
+        Overlap matrix for the first EMUS iteration.
+    f1data : 2D data structure
+        Trajectory of observable in the numerator in the first term of the difference.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.
+    g1data : 2D data structure
+        Trajectory of observable in the numerator in the second term of the difference.  
+    f2data : 2D data structure, optional
+        Trajectory of observable in the denominator in the first term of the difference.  
+    g2data : 2D data structure, optional
+        Trajectory of observable in the denominator in the second term of the difference.  
+    neighbors : 2D array, optional
+        List showing which states neighbor which.  See neighbors_harmonic in usutils for explanation.
+    iat_method : string, optional
+        Method used to estimate autocorrelation time.  See the documentation for the avar module.
 
-    Optional Args:
-        f2data (2D data struct): trajectory of observable in denominator in the
-            first term of the difference.  
-        g2data (2D data struct): trajectory of observable in denominator in the
-            second term of the difference.  
-        neighbors (2D array): list showing which states neighbor which.
-            See neighbors_harmonic in umbrellautils for explanation.
-        iat_method (string): Method used to estimate autocorrelation time.  
 
-    Returns:
-        errvals (ndarray): Array of length L (no. windows) where the i'th 
-            value corresponds to the contribution to the error from window i.
-        iatvals (ndarray): Array of length L (no. windows) where the i'th 
-            value corresponds to the iat for window i.
+    Returns
+    -------
+    errvals : ndarray
+        Array of length L (no. windows) where the i'th value corresponds to the contribution to the error from window i.
+    iatvals : ndarray
+        Array of length L (no. windows) where the i'th value corresponds to the iat for window i.
         
     """
         
@@ -132,27 +134,29 @@ def avar_obs(psis,z,F,f1data,f2data=None,neighbors=None,iat_method='ipce'):
     If f2data is not given, it just calculates the asymptotic variance
     associated with the average of f1.
 
-    Args:
-        psis (3D data struct): Data structure containing psi values.  See 
-            documentation in emus.py for a detailed explanation.
-        z (1D array): Array containing the normalization constants
-        F (2D array): Overlap matrix for the first EMUS iteration.
-        f1data (2D data struct): trajectory of observable in numerator in the
-            first term of the difference.  First dimension corresponds to the
-            umbrella index and the second to the point in the trajectory.
+    Parameters
+    ----------
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation in emus.py for a detailed explanation.
+    z : 1D array
+        Array containing the normalization constants
+    F : 2D array
+        Overlap matrix for the first EMUS iteration.
+    f1data : 2D data structure
+        Trajectory of observable in the numerator.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.
+    f2data : 2D data structure, optional
+        Trajectory of observable in the denominator.  
+    neighbors : 2D array, optional
+        List showing which states neighbor which.  See neighbors_harmonic in usutils for explanation.
+    iat_method : string, optional
+        Method used to estimate autocorrelation time.  See the documentation for the avar module.
 
-    Optional Args:
-        f2data (2D data struct): trajectory of observable in denominator in the
-            first term of the difference.  
-        neighbors (2D array): list showing which states neighbor which.
-            See neighbors_harmonic in umbrellautils for explanation.
-        iat_method (string): Method used to estimate autocorrelation time.  
-
-    Returns:
-        errvals (ndarray): Array of length L (no. windows) where the i'th 
-            value corresponds to the contribution to the error from window i.
-        iatvals (ndarray): Array of length L (no. windows) where the i'th 
-            value corresponds to the iat for window i.
+    Returns
+    -------
+    errvals : ndarray
+        Array of length L (no. windows) where the i'th value corresponds to the contribution to the error from window i.
+    iatvals : ndarray
+        Array of length L (no. windows) where the i'th value corresponds to the iat for window i.
         
     """
     iat_routine = _get_iat_method(iat_method)
@@ -220,32 +224,33 @@ def avar_zfe(psis,z,F,um1,um2,neighbors=None,iat_method='ipce'):
     between windows um2 and um1, -k_B T log(z_2/z_1). In the code, we
     arbitrarily denote um2 as 'k' and um1 as 'l' for readability.
 
-    # REWRITE TO INCLUDE TO COMPONENTWISE?
 
-    Args:
-        psis (3D data struct): Data structure containing psi values.
-            See documentation in emus.py for a detailed explanation.
-        z (1D array): Array containing the normalization constants
-        F (2D array): Overlap matrix for the first EMUS iteration.
-        state_1 (int): Index of the first state.
-        state_2 (ind): Index of the second state.
+    Parameters
+    ----------
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation in emus.py for a detailed explanation.
+    z : 1D array
+        Array containing the normalization constants
+    F : 2D array
+        Overlap matrix for the first EMUS iteration.
+    state_1 : int
+        Index of the first state.
+    state_2 : ind 
+        Index of the second state.
+    neighbors : 2D array, optional
+        list showing which states neighbor which.  See neighbors_harmonic in umbrellautils for explanation.
+    iat_method : string, optional
+        Method used to estimate autocorrelation time.  Default is the initial positive correlation estimator ('ipce'), but also supported is the initial convex correlation estimator ('icce') and the acor algorithm ('acor')  See Geyer, Stat. Sci. 1992 and Jonathan Goodman's acor documentation for reference.
 
-    Optional Args:
-        neighbors (2D array): list showing which states neighbor which.
-            See neighbors_harmonic in umbrellautils for explanation.
-        iat_method (string): Method used to estimate autocorrelation time.  
-            Default is the initial positive correlation estimator ('ipce'), but
-            also supported is the initial convex correlation estimator ('icce')
-            and the acor algorithm ('acor')  See Geyer, Stat. Sci. 1992
-            and Jonathan Goodman's acor documentation for reference.
-
-    Returns:
-        errvals (ndarray): Array of length L (no. windows) where the i'th 
-            value corresponds to the contribution to the error from window i.
-        iatvals (ndarray): Array of length L (no. windows) where the i'th 
-            value corresponds to the iat for window i.
+    Returns
+    -------
+    errvals : ndarray
+        Array of length L (no. windows) where the i'th value corresponds to the contribution to the error from window i.
+    iatvals : ndarray
+        Array of length L (no. windows) where the i'th value corresponds to the iat for window i.
 
     """
+    # REWRITE TO INCLUDE TO COMPONENTWISE?
     iat_routine = _get_iat_method(iat_method)
     L = len(psis)
     errvals = np.zeros(L)
@@ -277,8 +282,9 @@ def avar_zfe(psis,z,F,um1,um2,neighbors=None,iat_method='ipce'):
 
 def getAllocations(importances,N_is,newWork):
     """Calculates the optimal allocation of sample points 
-    These are (possibly) the optimal weights for 
+    These are the optimal weights for 
     To deal with negative weights, it removes all the negative weights, and calculates the weights for the resulting subproblem.
+
     """
     errs = np.copy(importances)
     ns = np.copy(N_is)
@@ -297,8 +303,8 @@ def getAllocations(importances,N_is,newWork):
 
 
 def _calcWeightSubproblem(importances,N_is,newWork):
-    """
-    Calculates the sampling weights of each region, according to the method using Lagrange Modifiers.
+    """Calculates the sampling weights of each region, according to the method using Lagrange Modifiers.
+
     """
     totalWork = np.sum(N_is)
     weights = np.zeros(importances.shape)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-Container for the primary EMUS routines
+"""Module containing methods useful for analyzing umbrella sampling 
+calculations that do not rely directly on the EMUS estimator.
+
 """
 import numpy as np
 
@@ -9,29 +10,36 @@ def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=4):
     such that neighboring umbrellas are no more than nsig standard
     deviations away on a flat potential.
 
-    Args:
-        centers (2darray): The locations of the centers of each window.  The
-            first dimension is the window index, and the second
-            is the collective variable index.
-        fks (2darray or scalar):
-            If array or list, data structure where the first dimension 
-            corresponds to the window index and the second corresponds to the
-            collective variable.  If scalar, windows are assumed to have that 
-            force constant in every dimension.
-        kTs (2darray or float): 1D array with the Boltzmann factor or
-            a single value which will be used in all windows.  Default
-            value is the scalar 1.
-        period (1D arraylike or float): Period of the collective variable
-            e.g. 360 for an angle. If None, all collective variables are 
-            taken to be aperiodic.  If scalar, assumed to be period of each 
-            collective variable. If 1D iterable with each value a scalar or 
-            None, each cv has periodicity of that size.
-        nsig (scala): Number of standard deviations of the gaussians to 
-            include in the neighborlist.
+    Parameters
+    ----------
+    centers : 2darray
+        The locations of the centers of each window.  The
+        first dimension is the window index, and the second
+        is the collective variable index.
+    fks : 2darray or scalar
+        If array or list, data structure where the first dimension 
+        corresponds to the window index and the second corresponds to the
+        collective variable.  If scalar, windows are assumed to have that 
+        force constant in every dimension.
+    kTs : 2darray or float
+        1D array with the Boltzmann factor or
+        a single value which will be used in all windows.  Default
+        value is the scalar 1.
+    period : 1D array-like or float
+        Period of the collective variable
+        e.g. 360 for an angle. If None, all collective variables are 
+        taken to be aperiodic.  If scalar, assumed to be period of each 
+        collective variable. If 1D iterable with each value a scalar or 
+        None, each cv has periodicity of that size.
+    nsig : scalar
+        Number of standard deviations of the gaussians to 
+        include in the neighborlist.
 
-    Returns:
-        nbrs (2d list): List where element i is a list with the indices of all 
-            windows neighboring window i.
+    Returns
+    -------
+    nbrs : 2d list
+        List where element i is a list with the indices of all 
+        windows neighboring window i.
 
     """
     L = len(centers) # Number of Windows
@@ -57,7 +65,7 @@ def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=4):
             if period is not None:
                 for compi, component in enumerate(rv):
                     if (period[compi] is not 0.0) or (period[compi] is not None):
-                        rv[compi] = minimage(component,period[compi])
+                        rv[compi] = _minimage(component,period[compi])
             if np.linalg.norm(rv) < rad_i:
                 nbrs_i.append(j)
         nbrs.append(nbrs_i)
@@ -66,14 +74,19 @@ def unpackNbrs(compd_array,neighbors,L):
     """Unpacks an array of neighborlisted data.  Currently, assumes axis 0
     is the compressed axis.
     
-    Args:
-        compd_array (ndarray): The compressed array, calculated using neighborlists
-        neighbors (ndarray): The list or array of ints, containing the indices 
-            of the neighboring windows
-        L (int): The total number of windows.
+    Parameters
+    ----------
+    compd_array : array-like
+        The compressed array, calculated using neighborlists
+    neighbors : array-like
+        The list or array of ints, containing the indices of the neighboring windows
+    L : int
+        The total number of windows.
 
-    Returns:
-        expd_array (ndarray): The expanded array of data
+    Returns
+    -------
+    expd_array : array-like
+        The expanded array of data
 
     """
     axis=0
@@ -84,38 +97,78 @@ def unpackNbrs(compd_array,neighbors,L):
         expd_array[n_val] = compd_array[n_ind]
     return expd_array
 
-def calc_harmonic_psis(xtraj, centers, fks, kTs, period = None):
+def data_from_WHAMmeta(filepath,dim,T=None,k_B=1.9872041E-3,period=None):
+    """Reads data saved on disk according to the format used by the WHAM implementation by Grossfield.
+
+    Parameters
+    ----------
+    filepath : string
+        The path to the meta file.
+    dim : int
+        The number of dimensions of the cv space.
+    T : scalar, optional
+        Temperature of the system.
+    k_B : scalar, optional
+        Boltzmann Constant for the system. Default is in kCal/mol
+    period : 1D array-like or float, optional
+        Variable with the periodicity information of the system.  See the Data Structures section of the documentation for a detailed explanation.
+
+    Returns
+    -------
+    psis : 2D array
+        The values of the bias functions at each point in the trajectory evaluated at the windows given.  First axis corresponds to the timepoint, the second to the window index.
+    cv_trajs : 2D array-like
+        Two dimensional data structure with the trajectories in cv space.  The first dimension is the state where the data was collected, and the second is the value in cv space.
+
     """
-    Calculates the values of each bias function from a trajectory of points
+    # Parse Wham Meta file.
+    trajlocs, cntrs, fks, iats, temps  = parse_metafile(filepath,dim)
+    L = len(cntrs)
+
+    # Calculate kT for each window.  Involves some type management...
+    if not temps:
+        try:
+            temps = np.ones(L)*T
+        except:
+            raise TypeError('No Temperatures were found in the meta file, and \
+                no valid Temperature was provided as input.')
+    kT = k_B * temps
+
+    # Load in the trajectories into the cv space
+    trajs = []
+    for i, trajloc in enumerate(trajlocs):
+        trajs.append(np.loadtxt(trajloc)[:,1:]) 
+
+    # Calculate psi values
+    psis = []
+    for i,traj in enumerate(trajs):
+        psi_i = calc_harmonic_psis(traj,cntrs,fks,kT,period=period)
+        psis.append(psi_i)
+
+    return psis, trajs
+
+    
+def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
+    """Calculates the values of each bias function from a trajectory of points
     in a single state.
 
-    Args:
-        xtraj (nd array): Trajectory in collective variable space.  Can be 
-            1-dimensional (one cv) or 2-dimensional (many cvs).  The first 
-            dimension is the time index, and (optional) second corresponds
-            to the collective variable.
-        centers (ndarray): The locations of the centers of each window.  The
-            first dimension is the window index, and the (optional) second
-            is the collective variable index.
-        fks (2darray or scalar):
-            If array or list, data structure where the first dimension 
-            corresponds to the window index and the second corresponds to the
-            collective variable.  If scalar, windows are assumed to have that 
-            force constant in every dimension.
-        kTs (2darray or float): 1D array with the Boltzmann factor or
-            a single value which will be used in all windows.  Default
-            value is the scalar 1.
+    Parameters
+    ----------
+    cv_traj : array-like
+        Trajectory in collective variable space.  Can be 1-dimensional (one cv) or 2-dimensional (many cvs).  The first dimension is the time index, and (optional) second corresponds to the collective variable. 
+    centers : array-like
+        The locations of the centers of each window.  The first dimension is the window index, and the (optional) second is the collective variable index.
+    fks : scalar or 2darray
+        If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.
+    kTs : scalar or 2darray
+        1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.
+    period : 1D array-like or float, optional
+        Period of the collective variable e.g. 360 for an angle. If None, all collective variables are taken to be aperiodic.  If scalar, assumed to be period of each collective variable. If 1D iterable with each value a scalar or None, each cv has periodicity of that size.
 
-    Optional Args:
-        period (1D arraylike or float): Period of the collective variable
-            e.g. 360 for an angle. If None, all collective variables are 
-            taken to be aperiodic.  If scalar, assumed to be period of each 
-            collective variable. If 1D iterable with each value a scalar or 
-            None, each cv has periodicity of that size.
-
-    Returns:
-        psis (2d array): The values of the bias functions at each point in
-            the trajectory for every window in centers.
+    Returns
+    -------
+    psis : 2D array
+        The values of the bias functions at each point in the trajectory evaluated at the windows given.  First axis corresponds to the timepoint, the second to the window index.
             
     """
     L = len(centers)
@@ -124,26 +177,33 @@ def calc_harmonic_psis(xtraj, centers, fks, kTs, period = None):
 
     forceprefacs = -0.5*np.array([fks[i]/kTs[i] for i in xrange(L)])
     # SEE IF IT IS POSSIBLE TO SPEED THIS UP VIA NUMPY TRICKS, OR MOVE IT INTO CYTHON/C/JULIA
-    psis = [_get_hpsi_vals(coord,centers,forceprefacs,period) for coord in xtraj]
+    psis = [_get_hpsi_vals(coord,centers,forceprefacs,period) for coord in cv_traj]
     return psis
 
 def _get_hpsi_vals(coord,centers,forceprefacs,period=None):
     """Helper routine for calc_harm_psis.  Evaluates the value of the bias
     function for each harmonic window at the coordinate coord.
 
-    Args:
-        coord (1d array): Coordinate to evaluate the harmonics at.
-        centers (ndarray): Array of centers for the windows.
-        forceprefacs (ndarray): Force constants for the windows divided by -kT.
+    Parameters
+    ----------
+    coord : 1d array
+        Coordinate to evaluate the harmonics at.
+    centers : array-like 
+        Array of centers for the windows.
+    forceprefacs : array-like 
+        Force constants for the windows divided by -kT.
+    period : 1D array-like or float, optional 
+        Period of the collective variables.  See documentation for calc_harmonic_psis.
 
-    Optional Args:
-        period (1D arraylike or float): Period of the collective variables.
-            See documentation for calc_harmonic_psis.
+    Returns
+    -------
+    psivals : 1d array
+        Value of :math:`\psi_{ij}(x)` evaluated at the center of each window provided.
 
     """
     rv = np.array(coord)-np.array(centers)
     if period is not None:
-        rvmin = minimage(rv,period)
+        rvmin = _minimage(rv,period)
     else:
         rvmin = rv
     try:
@@ -155,23 +215,26 @@ def parse_metafile(filepath,dim):
     """
     Parses the meta file located at filepath. Assumes Wham-like Syntax.
 
-    Args:
-        filepath (string): The path to the meta file.
-        dim (int): The number of dimensions of the cv space.
+    Parameters
+    ----------
+    filepath : string
+        The path to the meta file.
+    dim : int
+        The number of dimensions of the cv space.
 
-    Returns:
-        traj_paths (list of strings): A list containing the paths to the
-            trajectories for each window.
-        centers (2D array of floats): Array with the center of each harmonic 
-            window. See calc_harm_psis for syntax.
-        fks (2D array of floats): Array with the force constants for each
-            harmonic window. See calc_harm_psis for syntax.
-        iats (1D array of floats or None): Array with the integrated 
-            autocorrelation times of each window.  None if not given in 
-            the meta file
-        temps (1D array of floats or None): Array with the temperature of each
-            window in the umbrella sampling calculation.  If not given in the 
-            meta file, this will just be None.
+    Returns
+    -------
+    traj_paths : list of strings
+        A list containing the paths to the trajectories for each window.
+    centers : 2D array of floats
+        Array with the center of each harmonic window. See calc_harm_psis for syntax.
+    fks : 2D array of floats
+        Array with the force constants for each harmonic window. See calc_harm_psis for syntax.
+    iats : 1D array of floats or None
+        Array with the integrated autocorrelation times of each window.  None if not given in 
+        the meta file
+    temps : 1D array of floats or None 
+        Array with the temperature of each window in the umbrella sampling calculation.  If not given in the meta file, this will just be None.
 
     """
     traj_paths = []
@@ -197,7 +260,19 @@ def parse_metafile(filepath,dim):
     return traj_paths,centers,fks,iats,temps
 
 def _minimage(rv,period):
-    """Calculates the minimum image of 
+    """Calculates the minimum vector.
+
+    Parameters
+    ----------
+    rv : array-like or scalar
+        Minimum image vector
+    period : array-like or scalar
+        Periodicity in each dimension.
+
+    Returns
+    -------
+    minimage : array-like or scalar
+        minimum image vector.
 
     """
 

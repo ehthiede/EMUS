@@ -1,0 +1,1 @@
+This folder contains umbrella sampling data for phi dihedral angle of the Alanine Dipeptide.  The molecule was simulated in vacuum using the Charmm 22 force field, using Langevin dynamics at 310 K.  Trajectory points are 0.1 ps apart (total trajectory length of 100 ps).

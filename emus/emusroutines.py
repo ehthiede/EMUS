@@ -3,25 +3,26 @@
 Container for the primary EMUS routines.
 """
 import numpy as np
-import linalg_methods as lm
+import linalg as lm
 
 def calc_obs(psis,z,f1data,f2data=None):
     """Estimates the value of an observable or ratio of observables.
-    Args:
-        psis (3D data struct): Data structure containing psi values.
-            See documentation in emus.py for a detailed explanation.
-        z (1D array or list): Normalization constants for each state
-        f1data (2D array): Data structure with timeseries of data 
-            going in the numerator of the ratio.  First dimension 
-            specifies index, second timepoint.
 
-    Optional Args:
-        f2data (2D array): Data structure with timeseries of data going
-            in the denominator of the ratio.  If not given, we are only
-            interested in <f1>.
+    Parameters
+    ----------
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation in emus.py for a detailed explanation.
+    z : 1D array
+        Array containing the normalization constants
+    f1data : 2D data structure
+        Trajectory of observable in the numerator.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.
+    f2data : 2D data structure, optional
+        Trajectory of observable in the denominator.  
 
-    Returns:
-        avg (float): estimate of <f1>/<f2>.
+    Returns
+    -------
+    avg : float
+        The estimate of <f_1>/<f_2>.
 
     """
     f1avg = 0
@@ -40,26 +41,27 @@ def calc_obs(psis,z,f1data,f2data=None):
         f2avg += z[i]*f2avg_i
     return f1avg / f2avg
 
-def makeFEsurface(cv_trajectories, psis, domain, z, nbins = 100,kT=1.):
+def make_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=1.):
     """Calculates the free energy surface for an umbrella sampling run.
 
-    Args:
-        cv_trajectories (2D data struct): Data structure containing 
-            trajectories in the collective variable space.  See documentation
-            in emus object for more detail.
-        psis (3D data struct): Data structure containing psi values.
-            See documentation in emus object for a detailed explanation.
-        domain (tuple): Tuple containing the dimensions of the space over
-            which to construct the pmf, e.g. (-180,180) or 
-            ((0,1),(-3.14,3.14))
-        z (1D array or list): Normalization constants for each state
+    Parameters
+    ----------
+    cv_trajs : 2D data structure
+        Data structure containing trajectories in the collective variable space.  See documentation in emus object for more detail.
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation in emus object for a detailed explanation.
+    domain : tuple
+        Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each state
+    nbins : int or tuple, optional
+        Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.
+    kT : float, optional
+        Value of kT to scale the PMF by.  If not provided, set to 1.0
 
-    Optional Args:
-        nbins (int or tuple): Number of bins to use.  If int, uses that many
-            bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in
-            the first dimension and 20 in the second.
-        kT (float): Value of kT to scale the PMF by.  If not provided, set
-            to 1.0
+    Returns
+    -------
+    pmf : nd array
+        Returns the potential of mean force as a d dimensional array, where d is the number of collective variables.
+
     """    
     if domain is None:
         raise NotImplementedError
@@ -71,9 +73,10 @@ def makeFEsurface(cv_trajectories, psis, domain, z, nbins = 100,kT=1.):
     if type(nbins) is int: # Make nbins to an iterable in the 1d case.
         nbins = [nbins]*ndims
     domainwdth = domain[:,1] - domain[:,0]
-
+    
+    # Calculate the PMF
     hist = np.zeros(nbins)
-    for i,xtraj_i in enumerate(cv_trajectories):
+    for i,xtraj_i in enumerate(cv_trajs):
         xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]
         hist_i = np.zeros(nbins) # Histogram of umbrella i
         for n,coord in enumerate(xtraj_i):
@@ -86,38 +89,42 @@ def makeFEsurface(cv_trajectories, psis, domain, z, nbins = 100,kT=1.):
         hist+=hist_i/len(xtraj_i)*z[i]
     pmf =-kT* np.log(hist)
     pmf -= min(pmf.flatten())
+
+    # Calculate the centers of each histogram bin.
     return pmf
 
 
 def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='ipce'):
     """Performs one step of the the EMUS iteration.
     
-    Args:
-        psis (3D data struct): Data structure containing psi values.
-            See documentation in emus.py for a detailed explanation.
+    Parameters
+    ----------
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation in emus.py for a detailed explanation.
+    Avals : 2D matrix, optional
+        Weights in front of :math:`\psi` in the overlap matrix.
+    neighbors : 2D array, optional
+        List showing which states neighbor which.  See neighbors_harmonic in usutils. 
+    return_iats : bool, optional
+        Whether or not to calculate integrated autocorrelation times of :math:`\psi_ii^*` for each window.
+    iat_method : string, optional
+        Routine to use for calculating said iats.  Accepts 'ipce', 'acor', and 'icce'.
     
-    Optional Args:
-        Avals (2D matrix): weight in front of psi in the F matrix.
-        neighbors (2D array): list showing which states neighbor which.
-            See neighbors_harmonic in umbrellautils. 
-        return_iats (Bool): whether or not to calculate integrated
-            autocorrelation times of :math:`\psi_ii^*` for each window.
-        iat_method (string): routine to use for calculating said iats.
-            Accepts 'ipce', 'acor', and 'icce'.
-    
-    Returns:
-        z (1D array): Normalization constants for each state
-        F (2D array): the matrix constructed for the eigenproblem.
-
-    Optional Return:
-        iats (1D array): if return_iats chosen, returns iats estimated.
+    Returns
+    -------
+    z : 1D array
+        Normalization constants for each state
+    F : 2D array
+        The overlap matrix constructed for the eigenproblem.
+    iats : 1D array
+        If return_iats chosen, returns the iats that have been estimated.
     """
     
     # Initialize variables
     L = len(psis) # Number of Windows
     F = np.zeros((L,L)) # Initialize F Matrix
     if return_iats:
-        iats = np.ones((L))
+        iats = np.ones(L)
         iatroutine=_get_iat_method(iat_method)
         
     
@@ -152,14 +159,15 @@ def _get_iat_method(iatmethod):
     """Control routine for selecting the method used to calculate integrated
     autocorrelation times (iat)
 
-    Args:
-        iatmethod (string): The algorithm to be used to calculate the iat.
-            Options are 'acor', 'ipce', and 'icce'.  See autocorrelation.py
-            for a description of the various methods.
+    Parameters
+    ----------
+    iat_method : string, optional
+        Routine to use for calculating said iats.  Accepts 'ipce', 'acor', and 'icce'.
     
-    Returns:
-        iatroutine (function): The function to be called to estimate the 
-            integrated autocorrelation time.
+    Returns
+    -------
+    iatroutine : function
+        The function to be called to estimate the integrated autocorrelation time.
 
     """
     if iatmethod=='acor':

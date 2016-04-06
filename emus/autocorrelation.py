@@ -41,7 +41,6 @@ def ipce(timeseries,lagmax=None):
 def icce(timeseries,lagmax=None):
     """
     Initial convex correlation time estimator
-    REWRITE TO BE MORE EFFICIENT!
     """
     if lagmax == None:
         lagmax = len(timeseries)/2
