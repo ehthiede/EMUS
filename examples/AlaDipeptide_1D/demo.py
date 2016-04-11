@@ -6,6 +6,10 @@ import numpy as np
 import usutils as uu
 from emus import emus
 
+import matplotlib
+#matplotlib.use('Qt4Agg')
+#import matplotlib.pyplot as plt
+
 # Define Simulation Parameters
 T = 310                             # Temperature in Kelvin
 meta_file = 'wham_meta.txt'         # Path to Meta File
@@ -27,13 +31,14 @@ z_MBAR_1, F_MBAR_1 = EM.calc_zs(nMBAR=1)
 z_MBAR_2, F_MBAR_2 = EM.calc_zs(nMBAR=2)
 z_MBAR_5, F_MBAR_5 = EM.calc_zs(nMBAR=5)
 z_MBAR_1k, F_MBAR_1k = EM.calc_zs(nMBAR=1000)
-
+# Calculate new PMF
 MBARpmf = EM.calc_pmf(domain,nbins=60,z=z_MBAR_1k)
 
+# Estimate probability of being in C7 ax basin
+fdata =  [(traj>25) & (traj<100) for traj in EM.cv_trajs]
+prob_C7ax = EM.calc_obs(fdata)
+
 ### Plotting Section ###
-import matplotlib
-matplotlib.use('Qt4Agg')
-import matplotlib.pyplot as plt
 
 # Plot the EMUS, MBAR pmfs.
 centers = np.linspace(-177,177,60)  # Center of the histogram bins
@@ -55,3 +60,6 @@ plt.ylabel('Unitless Free Energy')
 plt.title('Window Free Energies and MBAR Iter No.')
 plt.legend(loc='upper left')
 plt.show()
+
+# Print the C7 ax basin probability
+print "Probability of C7ax basin is %f"%prob_C7ax

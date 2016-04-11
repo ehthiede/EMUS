@@ -5,7 +5,7 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
-BUILDDIR      = ../../HTML_doc
+BUILDDIR      = build
 PDFBUILDDIR   = /tmp
 PDF           = ../manual.pdf
 
@@ -52,6 +52,7 @@ help:
 
 clean:
 	rm -rf $(BUILDDIR)/*
+
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

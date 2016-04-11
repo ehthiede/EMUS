@@ -64,6 +64,19 @@ The pmf can be constructed using these values for the relative partition functio
 
 >>> MBARpmf = EM.calc_pmf(domain,nbins=60,z=z_MBAR_1k)
 
+Calculating Averages
+--------------------
+It is possible to use the EMUS package to calculate the averages of functions.  Here, we will calculate the probability that the dihedral takes values between 25 and 100 degrees (this roughly corresponds to the molecule being in the C7 axial basin).  This is equivalent to the average of an indicator function that is 1 if the molecule is in the desired configuration and 0 otherwise.  First, we construct the timeseries of this function for each umbrella.  Note that if the EMUS object was constructed with the collective variable trajectories, they are contained at :samp:`EM.cv_trajs`. [#boolnote]_
+
+>>> fdata = [(traj>25) & (traj<100) for traj in EM.cv_trajs]
+
+We can now calculate the probability of being in this state. 
+
+>>> prob_C7ax = EM.calc_obs(fdata)
+>>> print prob_C7ax
+
+
 
 .. [#estimatornote] Technically speaking, this is mixing estimators: the :math:`z`'s are being estimated using the MBAR estimator, whereas the pmf is estimated using the MBAR :math:`z`'s, but with the EMUS estimator (MBAR iteration 0).  However, in practice the majority of the error comes from estimating the normalization constant.  Consequently, the estimator used for estimating the pmf affects the results much less. 
 
+.. [#boolnote] The following code relies on True and False having integer comprehensions as 1 and 0, respectively.  If, hypothetically speaking, the programmer has done something like in :samp:`False=5` earlier in the code, then this won't give the correct answer.  Then again, if the programmer did this they are probably a bad person.  
