@@ -10,7 +10,8 @@ any bugs, errors, or questions.
 
 For usage and documentations, see the pdf manual provided.
 
-This code has a citeable DOI: INCLUDE
+This code has a citeable DOI: see the release version
+
 If you are using this code, please also cite the 
 [EMUS paper](http://arxiv.org/abs/1603.04505/)
 
