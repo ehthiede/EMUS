@@ -10,15 +10,15 @@ any bugs, errors, or questions.
 
 For usage and documentations, see the pdf manual provided.
 
-This code has a citeable DOI: [![DOI](https://zenodo.org/badge/20497/ehthiede/EMUS.svg)](https://zenodo.org/badge/latestdoi/20497/ehthiede/EMUS)
-
-
-
 If you are using this code, please also cite the 
 [EMUS paper](http://arxiv.org/abs/1603.04505/)
+
+[![DOI](https://zenodo.org/badge/20497/ehthiede/EMUS.svg)](https://zenodo.org/badge/latestdoi/20497/ehthiede/EMUS)
 
 ------------
 Installation
 ------------
 
 To install, use setup.py `python setup.py install`
+
+
