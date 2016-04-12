@@ -4,16 +4,21 @@ Description
 
 This is an implementation of the EMUS algorithm for recombining data 
 from umbrella sampling calculations and other data sources coming from
-biased probability densities.
+biased probability densities.  The code is still very much in Alpha,
+please contact the Author at :sec:`thiede at uchicago dot edu` with 
+any bugs, errors, or questions.
 
-This code has a citeable DOI: ???
-If you are using this code, please also cite the EMUS paper, [GIVE DESIGNATION]
+For usage and documentations, see the pdf manual provided.
+
+This code has a citeable DOI: INCLUDE
+If you are using this code, please also cite the 
+`EMUS paper <http://arxiv.org/abs/1603.04505>`_.
+
+------------
+Installation
+------------
+To install, use setup.py (:sec:`python setup.py install`).
 
 
--------------------
-Usage and Arguments
--------------------
-
-To be continued....
-
+For usage and 
 
