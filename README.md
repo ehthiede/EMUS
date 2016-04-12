@@ -9,6 +9,8 @@ please contact the author at `thiede at uchicago dot edu` with
 any bugs, errors, or questions.
 
 For usage and documentations, see the pdf manual provided.
+Alternatively, HTML documentation can be accessed by
+opening html_doc/htm/index.html in a browser.
 
 If you are using this code, please also cite the 
 [EMUS paper](http://arxiv.org/abs/1603.04505/)

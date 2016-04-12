@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>avar module &mdash; emus  documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="emus  documentation" href="../index.html"/>
+        <link rel="up" title="EMUS Modules" href="index.html"/>
+        <link rel="next" title="emus module" href="emus.html"/>
+        <link rel="prev" title="autocorrelation module" href="autocorrelation.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> emus</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-averages">Calculating Averages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#data-from-sampling">Data from Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#other-conventions">Other Conventions</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">EMUS Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="autocorrelation.html">autocorrelation module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">avar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="emus.html">emus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="emusroutines.html">emusroutines module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linalg.html">linalg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usutils.html">usutils module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../test.html">test</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">emus</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">EMUS Modules</a> &raquo;</li>
+      
+    <li>avar module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/modules/avar.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-avar">
+<span id="avar-module"></span><h1>avar module<a class="headerlink" href="#module-avar" title="Permalink to this headline">¶</a></h1>
+<p>Library with routines associated with the asymptotic variance of the
+first EMUS iteration.  These estimates rely on estimates of</p>
+<dl class="function">
+<dt id="avar.avar_obs">
+<code class="descclassname">avar.</code><code class="descname">avar_obs</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>F</em>, <em>f1data</em>, <em>f2data=None</em>, <em>neighbors=None</em>, <em>iat_method='ipce'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/avar.html#avar_obs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avar.avar_obs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimates the asymptotic variance in the ratio of two observables.
+If f2data is not given, it just calculates the asymptotic variance
+associated with the average of f1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>psis</strong> : 3D data structure</p>
+<blockquote>
+<div><p>Data structure containing psi values.  See documentation in emus.py for a detailed explanation.</p>
+</div></blockquote>
+<p><strong>z</strong> : 1D array</p>
+<blockquote>
+<div><p>Array containing the normalization constants</p>
+</div></blockquote>
+<p><strong>F</strong> : 2D array</p>
+<blockquote>
+<div><p>Overlap matrix for the first EMUS iteration.</p>
+</div></blockquote>
+<p><strong>f1data</strong> : 2D data structure</p>
+<blockquote>
+<div><p>Trajectory of observable in the numerator.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.</p>
+</div></blockquote>
+<p><strong>f2data</strong> : 2D data structure, optional</p>
+<blockquote>
+<div><p>Trajectory of observable in the denominator.</p>
+</div></blockquote>
+<p><strong>neighbors</strong> : 2D array, optional</p>
+<blockquote>
+<div><p>List showing which states neighbor which.  See neighbors_harmonic in usutils for explanation.</p>
+</div></blockquote>
+<p><strong>iat_method</strong> : string, optional</p>
+<blockquote>
+<div><p>Method used to estimate autocorrelation time.  See the documentation for the avar module.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>errvals</strong> : ndarray</p>
+<blockquote>
+<div><p>Array of length L (no. windows) where the i&#8217;th value corresponds to the contribution to the error from window i.</p>
+</div></blockquote>
+<p><strong>iatvals</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>Array of length L (no. windows) where the i&#8217;th value corresponds to the iat for window i.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="avar.avar_obs_diff">
+<code class="descclassname">avar.</code><code class="descname">avar_obs_diff</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>F</em>, <em>f1data</em>, <em>g1data</em>, <em>f2data=None</em>, <em>g2data=None</em>, <em>neighbors=None</em>, <em>iat_method='ipce'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/avar.html#avar_obs_diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avar.avar_obs_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimates the asymptotic variance of the estimate of the ratio <span class="math">\(&lt;f_1&gt;/&lt;f_2&gt;-&lt;g_1&gt;/&lt;g_2&gt;\)</span> observables.  If f2data and g2data are not given, they are set to 1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>psis</strong> : 3D data structure</p>
+<blockquote>
+<div><p>Data structure containing psi values.  See documentation in emus.py for a detailed explanation.</p>
+</div></blockquote>
+<p><strong>z</strong> : 1D array</p>
+<blockquote>
+<div><p>Array containing the normalization constants</p>
+</div></blockquote>
+<p><strong>F</strong> : 2D array</p>
+<blockquote>
+<div><p>Overlap matrix for the first EMUS iteration.</p>
+</div></blockquote>
+<p><strong>f1data</strong> : 2D data structure</p>
+<blockquote>
+<div><p>Trajectory of observable in the numerator in the first term of the difference.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.</p>
+</div></blockquote>
+<p><strong>g1data</strong> : 2D data structure</p>
+<blockquote>
+<div><p>Trajectory of observable in the numerator in the second term of the difference.</p>
+</div></blockquote>
+<p><strong>f2data</strong> : 2D data structure, optional</p>
+<blockquote>
+<div><p>Trajectory of observable in the denominator in the first term of the difference.</p>
+</div></blockquote>
+<p><strong>g2data</strong> : 2D data structure, optional</p>
+<blockquote>
+<div><p>Trajectory of observable in the denominator in the second term of the difference.</p>
+</div></blockquote>
+<p><strong>neighbors</strong> : 2D array, optional</p>
+<blockquote>
+<div><p>List showing which states neighbor which.  See neighbors_harmonic in usutils for explanation.</p>
+</div></blockquote>
+<p><strong>iat_method</strong> : string, optional</p>
+<blockquote>
+<div><p>Method used to estimate autocorrelation time.  See the documentation for the avar module.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>errvals</strong> : ndarray</p>
+<blockquote>
+<div><p>Array of length L (no. windows) where the i&#8217;th value corresponds to the contribution to the error from window i.</p>
+</div></blockquote>
+<p><strong>iatvals</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>Array of length L (no. windows) where the i&#8217;th value corresponds to the iat for window i.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="avar.avar_zfe">
+<code class="descclassname">avar.</code><code class="descname">avar_zfe</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>F</em>, <em>um1</em>, <em>um2</em>, <em>neighbors=None</em>, <em>iat_method='ipce'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/avar.html#avar_zfe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avar.avar_zfe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimates the asymptotic variance in the free energy difference 
+between windows um2 and um1, -k_B T log(z_2/z_1). In the code, we
+arbitrarily denote um2 as &#8216;k&#8217; and um1 as &#8216;l&#8217; for readability.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>psis</strong> : 3D data structure</p>
+<blockquote>
+<div><p>Data structure containing psi values.  See documentation in emus.py for a detailed explanation.</p>
+</div></blockquote>
+<p><strong>z</strong> : 1D array</p>
+<blockquote>
+<div><p>Array containing the normalization constants</p>
+</div></blockquote>
+<p><strong>F</strong> : 2D array</p>
+<blockquote>
+<div><p>Overlap matrix for the first EMUS iteration.</p>
+</div></blockquote>
+<p><strong>state_1</strong> : int</p>
+<blockquote>
+<div><p>Index of the first state.</p>
+</div></blockquote>
+<p><strong>state_2</strong> : ind</p>
+<blockquote>
+<div><p>Index of the second state.</p>
+</div></blockquote>
+<p><strong>neighbors</strong> : 2D array, optional</p>
+<blockquote>
+<div><p>list showing which states neighbor which.  See neighbors_harmonic in umbrellautils for explanation.</p>
+</div></blockquote>
+<p><strong>iat_method</strong> : string, optional</p>
+<blockquote>
+<div><p>Method used to estimate autocorrelation time.  Default is the initial positive correlation estimator (&#8216;ipce&#8217;), but also supported is the initial convex correlation estimator (&#8216;icce&#8217;) and the acor algorithm (&#8216;acor&#8217;)  See Geyer, Stat. Sci. 1992 and Jonathan Goodman&#8217;s acor documentation for reference.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>errvals</strong> : ndarray</p>
+<blockquote>
+<div><p>Array of length L (no. windows) where the i&#8217;th value corresponds to the contribution to the error from window i.</p>
+</div></blockquote>
+<p><strong>iatvals</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>Array of length L (no. windows) where the i&#8217;th value corresponds to the iat for window i.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="avar.getAllocations">
+<code class="descclassname">avar.</code><code class="descname">getAllocations</code><span class="sig-paren">(</span><em>importances</em>, <em>N_is</em>, <em>newWork</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/avar.html#getAllocations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avar.getAllocations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the optimal allocation of sample points 
+These are the optimal weights for 
+To deal with negative weights, it removes all the negative weights, and calculates the weights for the resulting subproblem.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="emus.html" class="btn btn-neutral float-right" title="emus module">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="autocorrelation.html" class="btn btn-neutral" title="autocorrelation module"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Erik H Thiede.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
