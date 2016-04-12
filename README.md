@@ -11,14 +11,12 @@ any bugs, errors, or questions.
 For usage and documentations, see the pdf manual provided.
 
 This code has a citeable DOI: INCLUDE
-If you are using this code, please also cite the 
-`EMUS paper <http://arxiv.org/abs/1603.04505>`_.
+If you are using this code, please also cite the `EMUS paper`_. 
 
 ------------
 Installation
 ------------
 To install, use setup.py (:sec:`python setup.py install`).
 
-
-For usage and 
+.. _`EMUS paper` http://arxiv.org/abs/1603.04505/
 
