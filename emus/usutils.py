@@ -69,6 +69,7 @@ def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=4):
             if np.linalg.norm(rv) < rad_i:
                 nbrs_i.append(j)
         nbrs.append(nbrs_i)
+    return nbrs
 
 def unpackNbrs(compd_array,neighbors,L):
     """Unpacks an array of neighborlisted data.  Currently, assumes axis 0
@@ -174,6 +175,9 @@ def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
     L = len(centers)
     if not hasattr(kTs,'__getitem__'): # Check if kTs is a scalar
         kTs = kTs*np.ones(L)
+    
+    if not hasattr(fks,'__getitem__'): # Check if force constant is a scalar
+        fks = fks*np.ones(np.shape(centers))
 
     forceprefacs = -0.5*np.array([fks[i]/kTs[i] for i in xrange(L)])
     # SEE IF IT IS POSSIBLE TO SPEED THIS UP VIA NUMPY TRICKS, OR MOVE IT INTO CYTHON/C/JULIA

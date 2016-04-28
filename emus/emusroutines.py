@@ -4,6 +4,7 @@ Container for the primary EMUS routines.
 """
 import numpy as np
 import linalg as lm
+from usutils import unpackNbrs
 
 def calc_obs(psis,z,f1data,f2data=None):
     """Estimates the value of an observable or ratio of observables.
@@ -123,38 +124,66 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='
     # Initialize variables
     L = len(psis) # Number of Windows
     F = np.zeros((L,L)) # Initialize F Matrix
+    # Take care of defaults..
     if return_iats:
         iats = np.ones(L)
-        iatroutine=_get_iat_method(iat_method)
-        
-    
+        iatroutine = _get_iat_method(iat_method)
     if Avals is None:
         Avals = np.ones((L,L))
-    
     if neighbors is None:
         neighbors = np.outer(np.ones(L),range(L)).astype(int)
         
-    # Calculate Fi: for each i
     for i in xrange(L):
-        Avi = Avals[i]
         nbrs_i = neighbors[i]
-        psi_i = np.array(psis[i])
-        A_nbs = Avi[nbrs_i]
-        denom = np.dot(psi_i,A_nbs)
-        for j_index, j in enumerate(nbrs_i):
-            Ftraj = psi_i[:,j_index]/denom
-            Fijunnorm = np.average(Ftraj)
-            F[i,j] = Fijunnorm*Avi[i]
-            if return_iats and (i == j):
-                iat = iatroutine(Ftraj)[0]
-                if not np.isnan(iat):
-                    iats[i] = iat
+        A_nbs = Avals[i][nbrs_i]
+        nbr_index = np.where(nbrs_i == i)[0][0]
+        Fi_out = make_Fi(psis[i],i,A_nbs,return_iats)
+        if return_iats:
+            Fi, trajs = Fi_out
+            iats[i] = iatroutine(trajs[nbr_index])[0]
+            print iats[i]
+        else:
+            Fi = Fi_out
+        # Unpack the Neighbor list
+        F[i] = unpackNbrs(Fi,nbrs_i,L)
+
     z = lm.stationary_distrib(F)
+    print F
+    print z
     if return_iats:
         return z, F, iats
     else:
         return z, F
-		
+
+def make_Fi(psi_i, i, Avals_i=None, return_trajs=False):
+    """
+    Calculates a 
+    """
+    # Setup
+    L = np.shape(psi_i)[1] # Number of neighboring windows
+    Fi = np.zeros(L)
+    # Take care of defaults
+    if Avals_i is None:
+        Avals_i = np.ones(L)
+     
+    psi_i = np.array(psi_i)
+    denom = np.dot(psi_i,Avals_i) 
+    if return_trajs:
+        trajs = np.zeros(psi_i.shape)
+    for j in xrange(L):
+        Ftraj = psi_i[:,j]/denom # traj \psi_j/{\sum_k \psi_k A_k}
+        Fi[j] = np.average(Ftraj)
+        Fi[j] *= Avals_i[i]
+        if return_trajs:
+            trajs[:,j] = Ftraj
+    if return_trajs:
+        return Fi, trajs
+    else:
+        return Fi
+    
+
+
+
 def _get_iat_method(iatmethod):
     """Control routine for selecting the method used to calculate integrated
     autocorrelation times (iat)

@@ -19,6 +19,8 @@ def ipce(timeseries,lagmax=None):
     """
     Initial positive correlation time estimator
     """
+    timeseries = np.copy(timeseries)
+    mean = np.average(timeseries)
     if lagmax == None:
         lagmax = len(timeseries)/2
     corrfxn = autocorrfxn(timeseries,lagmax)
@@ -34,14 +36,24 @@ def ipce(timeseries,lagmax=None):
         i += 1
     tau = 2*t - 1
     var = np.var(timeseries)
-    mean = np.average(timeseries)
     sigma = np.sqrt(var * tau / len(timeseries))
     return tau, mean, sigma
+
+def _cte(timeseries,maxcorr):
+    timeseries = np.copy(timeseries)
+    mean = np.average(timeseries)
+    corrfxn = autocorrfxn(timeseries,maxcorr)
+    tau = 2*np.sum(corrfxn)-1
+    var = np.var(timeseries)
+    sigma = np.sqrt(var * tau / len(timeseries))
+    return tau, mean, sigma
+
     
 def icce(timeseries,lagmax=None):
     """
     Initial convex correlation time estimator
     """
+    timeseries = np.copy(timeseries)
     if lagmax == None:
         lagmax = len(timeseries)/2
     corrfxn = autocorrfxn(timeseries,lagmax)

@@ -7,8 +7,8 @@ import usutils as uu
 from emus import emus
 
 import matplotlib
-#matplotlib.use('Qt4Agg')
-#import matplotlib.pyplot as plt
+matplotlib.use('Qt4Agg')
+import matplotlib.pyplot as plt
 
 # Define Simulation Parameters
 T = 310                             # Temperature in Kelvin
