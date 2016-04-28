@@ -157,7 +157,34 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='
 
 def make_Fi(psi_i, i, Avals_i=None, return_trajs=False):
     """
-    Calculates a 
+    Calculates the values of a single row in the F matrix.
+    If neighborlists are being used, psi_i, and Avals_i should be the 
+    neighborlisted data structure, and the row will be need to be unpacked
+    using the neighborlist (This allows the user to take the output and put it
+    directly in a sparse datastructure).
+
+    Parameters
+    ----------
+        psi_i : 2D array-like
+            Values of :math:`\psi` collected in window i.  The j'th column 
+            corresponds to the j'th neighboring window.
+        i : int
+            Index of the window where the data was collected.
+        Avals_i : 1D array-like
+            Weights in front of :math:`\psi_{ij} in the overlap matrix.
+        return_trajs : bool, optional
+            Whether or not to return the trajectories that are averaged to 
+            calculate the values of F.  These can be useful for estimating 
+            autocorrelation times and performing error analysis.
+
+    Returns
+    -------
+        Fi : 1D numpy array 
+            The (neighborlisted) row in the F matrix
+        trajs : 2D numpy array
+            If return_trajs is True, returns the trajectories used in
+            calculating the values of F
+
     """
     # Setup
     L = np.shape(psi_i)[1] # Number of neighboring windows
