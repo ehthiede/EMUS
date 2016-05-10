@@ -5,7 +5,7 @@ Description
 This is an implementation of the EMUS algorithm for recombining data 
 from umbrella sampling calculations and other data sources coming from
 biased probability densities.  The code is still very much in Alpha,
-please contact the author at `thiede at uchicago dot edu` with 
+please contact the author at `thiede [at symbol] uchicago [dot] edu` with 
 any bugs, errors, or questions.
 
 For usage and documentations, see the pdf manual provided.
