@@ -12,7 +12,7 @@ def calc_obs(psis,z,f1data,f2data=None):
     Parameters
     ----------
     psis : 3D data structure
-        Data structure containing psi values.  See documentation in emus.py for a detailed explanation.
+        Data structure containing psi values.  See documentation for a detailed explanation.
     z : 1D array
         Array containing the normalization constants
     f1data : 2D data structure
@@ -48,9 +48,9 @@ def make_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=1.):
     Parameters
     ----------
     cv_trajs : 2D data structure
-        Data structure containing trajectories in the collective variable space.  See documentation in emus object for more detail.
+        Data structure containing trajectories in the collective variable space.  See documentation for more detail.
     psis : 3D data structure
-        Data structure containing psi values.  See documentation in emus object for a detailed explanation.
+        Data structure containing psi values.  See documentation for a detailed explanation.
     domain : tuple
         Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each state
     nbins : int or tuple, optional
@@ -101,7 +101,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='
     Parameters
     ----------
     psis : 3D data structure
-        Data structure containing psi values.  See documentation in emus.py for a detailed explanation.
+        Data structure containing psi values.  See documentation for a detailed explanation.
     Avals : 2D matrix, optional
         Weights in front of :math:`\psi` in the overlap matrix.
     neighbors : 2D array, optional
@@ -136,8 +136,8 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='
     for i in xrange(L):
         nbrs_i = neighbors[i]
         A_nbs = Avals[i][nbrs_i]
-        nbr_index = np.where(nbrs_i == i)[0][0]
-        Fi_out = make_Fi(psis[i],i,A_nbs,return_iats)
+        nbr_index = list(nbrs_i).index(i)
+        Fi_out = make_Fi(psis[i],nbr_index,A_nbs,return_iats)
         if return_iats:
             Fi, trajs = Fi_out
             iats[i] = iatroutine(trajs[nbr_index])[0]

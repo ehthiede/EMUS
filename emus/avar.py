@@ -19,7 +19,7 @@ def avar_obs_diff(psis,z,F,f1data,g1data,f2data=None,g2data=None,
     Parameters
     ----------
     psis : 3D data structure
-        Data structure containing psi values.  See documentation in emus.py for a detailed explanation.
+        Data structure containing psi values.  See documentation for a detailed explanation.
     z : 1D array
         Array containing the normalization constants
     F : 2D array
@@ -137,7 +137,7 @@ def avar_obs(psis,z,F,f1data,f2data=None,neighbors=None,iat_method='ipce'):
     Parameters
     ----------
     psis : 3D data structure
-        Data structure containing psi values.  See documentation in emus.py for a detailed explanation.
+        Data structure containing psi values.  See documentation for a detailed explanation.
     z : 1D array
         Array containing the normalization constants
     F : 2D array
@@ -228,7 +228,7 @@ def avar_zfe(psis,z,F,um1,um2,neighbors=None,iat_method='ipce'):
     Parameters
     ----------
     psis : 3D data structure
-        Data structure containing psi values.  See documentation in emus.py for a detailed explanation.
+        Data structure containing psi values.  See documentation for a detailed explanation.
     z : 1D array
         Array containing the normalization constants
     F : 2D array
