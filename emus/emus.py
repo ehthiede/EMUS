@@ -1,172 +1,293 @@
 # -*- coding: utf-8 -*-
-"""Module containing the emus object.
-
+"""
+Container for the primary EMUS routines.
 """
 import numpy as np
-import argparse
-import emusroutines as emr
-import avar
+import linalg as lm
+from usutils import unpackNbrs
 
+def calculate_obs(psis,z,f1data,f2data=None):
+    """Estimates the value of an observable or ratio of observables.
 
-# Default Parameters
-#_default_kB = 1.9872041*10**-3 # Boltzmann Constant, given in kcal/mol
-#_default_T = 310.0 # Default Temperature in Kelvin.
+    Parameters
+    ----------
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation for a detailed explanation.
+    z : 1D array
+        Array containing the normalization constants
+    f1data : 2D data structure
+        Trajectory of observable in the numerator.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.
+    f2data : 2D data structure, optional
+        Trajectory of observable in the denominator.  
 
-class emus:
-    """Class containing methods and data for the EMUS algorithm.  An EMUS object has the following data structures which can be interacted with or modified:
-
-    self.psis (3D array): array containing values of the biases in each state.
-    self.cv_trajs (2D Array): array containing the trajectories in cv space.  None if not used.
-    self.z (1d array): array containing the normalization constants.  Calculated according to the first iteration of EMUS. 
-    self.F (2d array): F matrix for the first iteration of EMUS.
-    self.iats (1d array): array containing integrated autocorrelation times of :math:`\psi_{ii}(x)` in each window.
+    Returns
+    -------
+    avg : float
+        The estimate of <f_1>/<f_2>.
 
     """
-
-    def __init__(self,psis,cv_trajs=None,neighbors=None,k_B=1.9872041E-3):
-        """Initialize the emus object.
-
-        Parameters
-        ----------
-        psis : 3D data structure
-            Three dimensional data structure with the trajectories of the psi values.  Expected to be either a three dimensional array or a list of two dimensional numpy arrays.  element i,j,k corresponds to :math:`\psi_k` evaluated at timepoint j in state i.  If neighborlists are used, then k is the index in the neighborlist, not the index in the overall structure.
-        cvtrajectories : 2D array-like, optional
-            Two dimensional data structure with the trajectories in cv space.  The first dimension is the state where the data was collected, and the second is the value in cv space.
-        neighbors : 2D array-like, optional
-            Two dimensional data structure.  The first dimension is the state index, and the second is the index of a neighboring state.
-        """
-        self.psis = psis
-        if neighbors is not None: # Neighborlist Provided
-            self.neighbors = neighbors
+    f1avg = 0
+    f2avg = 0
+    for i,psi_i in enumerate(psis):
+        psi_xi = np.array(psi_i)
+        psi_i_sum = np.sum(psi_xi,axis=1)
+        f1_i = np.array(f1data[i])/psi_i_sum
+        if f2data is None:
+            f2_i = 1./psi_i_sum
         else:
-            L = len(psis)
-            self.neighbors = np.outer(np.ones(L),np.arange(L)).astype(int)
-        self.cv_trajs = cv_trajs 
-        z,F,iats = emr.emus_iter(self.psis,neighbors=self.neighbors,return_iats=True)
-        self.z = z
-        self.F = F
-        self.iats = iats
+            f2_i = np.array(f2data[i])/psi_i_sum
+        f1avg_i = np.average(f1_i)
+        f2avg_i = np.average(f2_i)
+        f1avg += z[i]*f1avg_i
+        f2avg += z[i]*f2avg_i
+    return f1avg / f2avg
 
-    def calc_zs(self,nMBAR=0,tol=1.E-8,use_iats=False,iats=None):
-        """Calculates the normalization constants for the states.
+def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=1.):
+    """Calculates the free energy surface for an umbrella sampling run.
 
-        Parameters
-        ----------
-        nMBAR : int, optional (default 0)
-             Maximum number of MBAR iterations to perform.
-        tol : float, optional (default 1.0E-8)
-            If the relative residual falls beneath the tolerance, the MBAR iteration is truncated.
-        use_iats : bool, optional
-            If true, estimate integrated autocorrelation time in each MBAR iteration.  Likely unnecessary unless dynamics are expected to be drastically different in each state. If iats is provided, the iteration will use those rather than estimating them in each step.
-        iats : 1D array, optional
-            Array of size L (no. states) with values of the integrated autocorrelation time estimated in each state.  These values will be used in each iteration.  Overrides use_iats.
-        
-        Returns
-        -------
-        z : 1D array
-            Values for the Normalization constant in each state.
-        F : 2D array
-            Matrix to take the eigenvalue of for MBAR.
-        iats 1D array
-            Estimated values of the autocorrelation time.  Only returned if use_iats is true.
+    Parameters
+    ----------
+    cv_trajs : 2D data structure
+        Data structure containing trajectories in the collective variable space.  See documentation for more detail.
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation for a detailed explanation.
+    domain : tuple
+        Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each state
+    nbins : int or tuple, optional
+        Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.
+    kT : float, optional
+        Value of kT to scale the PMF by.  If not provided, set to 1.0
 
-        """
-        L = len(self.psis) # Number of States
-        Npnts = np.array([len(psis_i) for psis_i in self.psis])
-        Npnts /= np.max(Npnts)
-        if iats is None:
-            iats = np.ones(L)
-            if use_iats is True:
-                iats = self.iats
-        else:
-            use_iats is False
+    Returns
+    -------
+    pmf : nd array
+        Returns the potential of mean force as a d dimensional array, where d is the number of collective variables.
 
-        # we perform the self-consistent polishing iteration
-        z = self.z
-        F = self.F
-        for n in xrange(nMBAR):
-            z_old = z
-            Apart = Npnts/z_old
-            Amat = np.outer(np.ones(L),Apart)
-            Amat /= np.outer(np.ones(L),iats)
-            if use_iats:
-                z, F, iats = emr.emus_iter(self.psis,Amat,neighbors=self.neighbors,return_iats=True)
-            else:
-                z, F = emr.emus_iter(self.psis,Amat,neighbors=self.neighbors)
-            # Check if we have converged.	
-            if np.max(np.abs(z-z_old)/z_old) < tol:
-                break
-				
+    """    
+    if domain is None:
+        raise NotImplementedError
+
+    domain = np.asarray(domain)
+    if len(np.shape(domain)) == 1:
+        domain = np.reshape(domain,(1,len(domain)))
+    ndims = np.shape(domain)[0]
+    if type(nbins) is int: # Make nbins to an iterable in the 1d case.
+        nbins = [nbins]*ndims
+    domainwdth = domain[:,1] - domain[:,0]
+    
+    # Calculate the PMF
+    hist = np.zeros(nbins)
+    for i,xtraj_i in enumerate(cv_trajs):
+#        xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]
+        hist_i = np.zeros(nbins) # Histogram of umbrella i
+        for n,coord in enumerate(xtraj_i):
+            psi_i_n = psis[i][n]
+            # We find the coordinate of the bin we land in.
+            coordbins = (coord - domain[:,0])/domainwdth*nbins
+            coordbins = tuple(coordbins.astype(int))
+            weight = 1./np.sum(psi_i_n)
+            hist_i[coordbins] += weight
+        hist+=hist_i/len(xtraj_i)*z[i]
+    pmf =-kT* np.log(hist)
+    pmf -= min(pmf.flatten())
+
+
+    # Calculate the centers of each histogram bin.
+    return pmf
+
+def calculate_zs(psis,neighbors=None,nMBAR=0,tol=1.E-8,use_iats=False,iat_method='ipce'):
+    """Calculates the normalization constants for the states.
+
+    Parameters
+    ----------
+    nMBAR : int, optional (default 0)
+         Maximum number of MBAR iterations to perform.
+    tol : float, optional (default 1.0E-8)
+        If the relative residual falls beneath the tolerance, the MBAR iteration is truncated.
+    use_iats : bool, optional
+        If true, estimate integrated autocorrelation time in each MBAR iteration.  Likely unnecessary unless dynamics are expected to be drastically different in each state. If iats is provided, the iteration will use those rather than estimating them in each step.
+    iat_method : string, optional
+        Routine to use for calculating integrated autocorrelation times.  Currently accepts 'ipce', 'acor', and 'icce'.
+    
+    Returns
+    -------
+    z : 1D array
+        Values for the Normalization constant in each state.
+    F : 2D array
+        Matrix to take the eigenvalue of for MBAR.
+    iats : 1D array
+        Estimated values of the autocorrelation time.  Only returned if use_iats is true.
+
+    """
+    L = len(psis) # Number of States
+    Npnts = np.array([len(psis_i) for psis_i in psis])
+    Npnts /= np.max(Npnts)
+
+    if use_iats:
+        z,F,iats = emus_iter(psis,neighbors=neighbors,return_iats=use_iats,iat_method=iat_method)
+    else:
+        z,F = emus_iter(psis,neighbors=neighbors,return_iats=use_iats,iat_method=iat_method)
+        iats = np.ones(z.shape)
+
+    # we perform the self-consistent polishing iteration
+    for n in xrange(nMBAR):
+        z_old = z
+        Apart = Npnts/z_old
+        Amat = np.outer(np.ones(L),Apart)
+        Amat /= np.outer(np.ones(L),iats)
         if use_iats:
-            return z, F, iats
+            z, F, iats = emus_iter(psis,Amat,neighbors=neighbors,return_iats=True,iat_method=iat_method)
         else:
-            return z, F
+            z, F = emus_iter(psis,Amat,neighbors=neighbors)
+        # Check if we have converged.	
+        if np.max(np.abs(z-z_old)/z_old) < tol:
+            break
+                            
+    if use_iats:
+        return z, F, iats
+    else:
+        return z, F
 
-    def calc_obs(self,fdata,z=None):
-        """Estimates the average of an observable function. 
 
-        Parameters
-        ----------
-        fdata : 2d array-like
-            Two dimensional data structure where the first dimension corresponds to the state index, and the second to the value of the observable at that time point.  Must have the same number of data-points as the collective variable trajectory.
-        z : 1D array, optional
-            User-provided values for the normalization constants. If not provided, uses values from the first iteration.
-                        
-        Returns
-        -------
-        favg : float
-            The estimated average of the observable.
+def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='ipce'):
+    """Performs one step of the the EMUS iteration.
+    
+    Parameters
+    ----------
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation for a detailed explanation.
+    Avals : 2D matrix, optional
+        Weights in front of :math:`\psi` in the overlap matrix.
+    neighbors : 2D array, optional
+        List showing which states neighbor which.  See neighbors_harmonic in usutils. 
+    return_iats : bool, optional
+        Whether or not to calculate integrated autocorrelation times of :math:`\psi_ii^*` for each window.
+    iat_method : string, optional
+        Routine to use for calculating said iats.  Accepts 'ipce', 'acor', and 'icce'.
+    
+    Returns
+    -------
+    z : 1D array
+        Normalization constants for each state
+    F : 2D array
+        The overlap matrix constructed for the eigenproblem.
+    iats : 1D array
+        If return_iats chosen, returns the iats that have been estimated.
+    """
+    
+    # Initialize variables
+    L = len(psis) # Number of Windows
+    F = np.zeros((L,L)) # Initialize F Matrix
+    # Take care of defaults..
+    if return_iats:
+        iats = np.ones(L)
+        iatroutine = _get_iat_method(iat_method)
+    if Avals is None:
+        Avals = np.ones((L,L))
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
         
-        """
-        if z is None:
-            z = self.z
-        favg = emr.calc_obs(self.psis,z,fdata)
-        return favg
+    for i in xrange(L):
+        nbrs_i = neighbors[i]
+        A_nbs = Avals[i][nbrs_i]
+        nbr_index = list(nbrs_i).index(i)
+        Fi_out = calculate_Fi(psis[i],nbr_index,A_nbs,return_iats)
+        if return_iats:
+            Fi, trajs = Fi_out
+            iats[i] = iatroutine(trajs[nbr_index])[0]
+#            print iats[i]
+        else:
+            Fi = Fi_out
+        # Unpack the Neighbor list
+        F[i] = unpackNbrs(Fi,nbrs_i,L)
 
-    def avar_zfe(self,state_1,state_2):
-        """Calculates the asymptotic variance for the free energy difference between the two states specified.
+    z = lm.stationary_distrib(F)
+#    print F
+#    print z
+    if return_iats:
+        return z, F, iats
+    else:
+        return z, F
 
-        Parameters
-        ----------
-        state_1 : int
-            Index of the first state.
-        state_2 : int 
-            Index of the second state.
-                
-        Returns
-        -------
-            errs : 1D array
-                Array containing each state's contribution to the asymptotic error.  The total asymptotic error is taken by summing the entries.
-        """
-        errs, iats = avar.avar_zfe(self.psis,self.z,self.F,state_1,state_2,neighbors=self.neighbors)
-        return errs
+def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
+    """
+    Calculates the values of a single row in the F matrix.
+    If neighborlists are being used, psi_i, and Avals_i should be the 
+    neighborlisted data structure, and the row will be need to be unpacked
+    using the neighborlist .
 
-    def calc_pmf(self,domain,cv_trajs=None,nbins=100,kT=1.0,z=None):
-        """Calculates the potential of mean force for the system.
+    Parameters
+    ----------
+        psi_i : 2D array-like
+            Values of :math:`\psi` collected in window i.  The j'th column 
+            corresponds to the j'th neighboring window.
+        i : int
+            Index of the window where the data was collected.
+        Avals_i : 1D array-like
+            Weights in front of :math:`\psi_{ij} in the overlap matrix.
+        return_trajs : bool, optional
+            Whether or not to return the trajectories that are averaged to 
+            calculate the values of F.  These can be useful for estimating 
+            autocorrelation times and performing error analysis.
 
-        Parameters
-        ----------
-        domain : tuple
-            Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14))
-        nbins : int or tuple, optional
-            Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.
-        cvtrajectories : 2D array-like, optional
-            Two dimensional data structure with the trajectories in cv space.  The first dimension is the state where the data was collected, and the second is the value in cv space.  If not provided, uses trajectory given in the constructor.
-        z : 1D array, optional
-            User-provided values for the normalization constants If not provided, uses values from the first iteration of EMUS.
-        kT : float, optional
-            Value of kT to scale the PMF by.  If not provided, set to 1.0
-        
-        Returns
-        -------
-        pmf : nd array
-            Returns the potential of mean force as a d dimensional array, where d is the number of collective variables.
-				
-        """
-        if cv_trajs is None:
-            cv_trajs = self.cv_trajs
-        if z is None:
-            z = self.z
-        pmf = emr.make_pmf(cv_trajs,self.psis,domain,z,nbins=nbins,kT=kT)
-        return pmf
+    Returns
+    -------
+        Fi : 1D numpy array 
+            The (neighborlisted) row in the F matrix
+        trajs : 2D numpy array
+            If return_trajs is True, returns the trajectories used in
+            calculating the values of F
+
+    """
+    # Setup
+    L = np.shape(psi_i)[1] # Number of neighboring windows
+    Fi = np.zeros(L)
+    # Take care of defaults
+    if Avals_i is None:
+        Avals_i = np.ones(L)
+     
+    psi_i = np.array(psi_i)
+    denom = np.dot(psi_i,Avals_i) 
+    if return_trajs:
+        trajs = np.zeros(psi_i.shape)
+    for j in xrange(L):
+        Ftraj = psi_i[:,j]/denom # traj \psi_j/{\sum_k \psi_k A_k}
+        Fi[j] = np.average(Ftraj)
+        Fi[j] *= Avals_i[i]
+        if return_trajs:
+            trajs[:,j] = Ftraj
+    if return_trajs:
+        return Fi, trajs
+    else:
+        return Fi
+    
+
+
+
+def _get_iat_method(iatmethod):
+    """Control routine for selecting the method used to calculate integrated
+    autocorrelation times (iat)
+
+    Parameters
+    ----------
+    iat_method : string, optional
+        Routine to use for calculating said iats.  Accepts 'ipce', 'acor', and 'icce'.
+    
+    Returns
+    -------
+    iatroutine : function
+        The function to be called to estimate the integrated autocorrelation time.
+
+    """
+    if iatmethod=='acor':
+        from acor import acor
+        iatroutine = acor
+    elif iatmethod == 'ipce':
+        from autocorrelation import ipce
+        iatroutine = ipce
+    elif iatmethod == 'icce':
+        from autocorrelation import icce
+        iatroutine = icce
+    return iatroutine
+
 

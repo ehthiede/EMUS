@@ -210,9 +210,12 @@ def _get_hpsi_vals(coord,centers,forceprefacs,period=None):
     rv = np.array(coord)-np.array(centers)
     if period is not None:
         rvmin = np.copy(rv)
-        for i,p in enumerate(period):
-            if p is not None:
-                rvmin[i] -= p*np.rint(rvmin[i]/p)
+        try:
+            for i,p in enumerate(period):
+                if p is not None:
+                    rvmin[i] -= p*np.rint(rvmin[i]/p)
+        except:
+            rvmin -= period * np.rint(rvmin/period)
     else:
         rvmin = rv
     try:
