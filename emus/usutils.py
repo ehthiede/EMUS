@@ -50,8 +50,9 @@ def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=4):
         kTs = kTs*np.ones(L)
     if not hasattr(fks,'__getitem__'): # Check if force constant is a scalar
         fks = fks*np.ones(np.shape(centers))
-
-    rad = nsig*np.sqrt(kTs/np.amax(fks,axis=1)) #TIGHTEN UP Neighborlisting?
+    print np.shape(fks[0])
+    kTs = np.outer(kTs,np.ones(np.shape(fks[0])))
+    rad = nsig*np.sqrt(kTs/fks) 
     if period is not None: 
         if not hasattr(period,'__getitem__'): # Check if period is scalar
             period = [period]
@@ -60,6 +61,7 @@ def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=4):
     nbrs = []
     for i,cntr_i in enumerate(centers):
         rad_i = rad[i]
+#        print rad_i
         nbrs_i = []
         for j, cntr_j in enumerate(centers):
             rv = cntr_j-cntr_i
@@ -67,7 +69,8 @@ def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=4):
                 for compi, component in enumerate(rv):
                     if (period[compi] is not 0.0) or (period[compi] is not None):
                         rv[compi] = _minimage(component,period[compi])
-            if np.linalg.norm(rv) < rad_i:
+#            print cntr_j, cntr_i, rv
+            if (np.abs(rv) < rad_i).all():
                 nbrs_i.append(j)
         nbrs.append(nbrs_i)
     return nbrs
