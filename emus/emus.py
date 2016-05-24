@@ -4,6 +4,7 @@ Container for the primary EMUS routines.
 """
 import numpy as np
 import linalg as lm
+import autocorrelation
 from usutils import unpackNbrs
 
 def calculate_obs(psis,z,f1data,f2data=None):
@@ -181,7 +182,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='
     # Take care of defaults..
     if return_iats:
         iats = np.ones(L)
-        iatroutine = _get_iat_method(iat_method)
+        iatroutine = ac._get_iat_method(iat_method)
     if Avals is None:
         Avals = np.ones((L,L))
     if neighbors is None:
@@ -262,32 +263,5 @@ def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
         return Fi
     
 
-
-
-def _get_iat_method(iatmethod):
-    """Control routine for selecting the method used to calculate integrated
-    autocorrelation times (iat)
-
-    Parameters
-    ----------
-    iat_method : string, optional
-        Routine to use for calculating said iats.  Accepts 'ipce', 'acor', and 'icce'.
-    
-    Returns
-    -------
-    iatroutine : function
-        The function to be called to estimate the integrated autocorrelation time.
-
-    """
-    if iatmethod=='acor':
-        from acor import acor
-        iatroutine = acor
-    elif iatmethod == 'ipce':
-        from autocorrelation import ipce
-        iatroutine = ipce
-    elif iatmethod == 'icce':
-        from autocorrelation import icce
-        iatroutine = icce
-    return iatroutine
 
 

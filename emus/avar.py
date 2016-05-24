@@ -7,7 +7,7 @@ first EMUS iteration.  These estimates rely on estimates of
 # THIS CODE NEEDS CLEANING!
 
 import numpy as np
-from emusroutines import _get_iat_method
+import autocorrelation as ac
 import linalg as lm
 
 
@@ -47,7 +47,7 @@ def avar_obs_diff(psis,z,F,f1data,g1data,f2data=None,g2data=None,
         
     """
         
-    iat_routine = _get_iat_method(iat_method)
+    iat_routine = ac._get_iat_method(iat_method)
     L = len(psis)
     if neighbors is None:
         neighbors = np.outer(np.ones(L),range(L)).astype(int)
@@ -159,7 +159,7 @@ def avar_obs(psis,z,F,f1data,f2data=None,neighbors=None,iat_method='ipce'):
         Array of length L (no. windows) where the i'th value corresponds to the iat for window i.
         
     """
-    iat_routine = _get_iat_method(iat_method)
+    iat_routine = ac._get_iat_method(iat_method)
     L = len(psis)
     errvals = np.zeros(L)
     if neighbors is None:
@@ -242,7 +242,7 @@ def avar_z(psis,z,F,neighbors=None,iat_method='ipce'):
         Array of length L (no. windows) where the i'th value corresponds to the asymptotic variance of window i.
 
     """
-    iat_routine = _get_iat_method(iat_method)
+    iat_routine = ac._get_iat_method(iat_method)
     L = len(z)
     z_err = np.zeros(L)
     if neighbors is None: # If no neighborlist, assume all windows neighbor
@@ -310,7 +310,7 @@ def avar_zfe(psis,z,F,um1,um2,neighbors=None,iat_method='ipce'):
 
     """
     # REWRITE TO INCLUDE TO COMPONENTWISE?
-    iat_routine = _get_iat_method(iat_method)
+    iat_routine = ac._get_iat_method(iat_method)
     L = len(psis)
     errvals = np.zeros(L)
     iatvals = np.zeros(L)

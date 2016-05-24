@@ -77,3 +77,30 @@ def icce(timeseries,lagmax=None):
     sigma = np.sqrt(var * tau / len(timeseries))
     return tau, mean, sigma
 
+def _get_iat_method(iatmethod):
+    """Control routine for selecting the method used to calculate integrated
+    autocorrelation times (iat)
+
+    Parameters
+    ----------
+    iat_method : string, optional
+        Routine to use for calculating said iats.  Accepts 'ipce', 'acor', and 'icce'.
+    
+    Returns
+    -------
+    iatroutine : function
+        The function to be called to estimate the integrated autocorrelation time.
+
+    """
+    if iatmethod=='acor':
+        from acor import acor
+        iatroutine = acor
+    elif iatmethod == 'ipce':
+        from autocorrelation import ipce
+        iatroutine = ipce
+    elif iatmethod == 'icce':
+        from autocorrelation import icce
+        iatroutine = icce
+    return iatroutine
+
+
