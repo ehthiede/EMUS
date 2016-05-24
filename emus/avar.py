@@ -218,6 +218,65 @@ def avar_obs(psis,z,F,f1data,f2data=None,neighbors=None,iat_method='ipce'):
         iatvals[i] = iat
     return errvals, iatvals
 
+
+def avar_z(psis,z,F,neighbors=None,iat_method='ipce'):
+    """
+    Estimates the asymptotic variance of z for each window.
+
+    Parameters
+    ----------
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation for a detailed explanation.
+    z : 1D array
+        Array containing the normalization constants
+    F : 2D array
+        Overlap matrix for the first EMUS iteration.
+    neighbors : 2D list, optional
+        list showing which states neighbor which. First index corresponds to a window index; and the second to each state it neighbors.
+    iat_method : string, optional
+        Method used to estimate autocorrelation time.  Default is the initial positive correlation estimator ('ipce'), but also supported is the initial convex correlation estimator ('icce') and the acor algorithm ('acor')  See Geyer, Stat. Sci. 1992 and Jonathan Goodman's acor documentation for reference.
+
+    Returns
+    -------
+    z_err : ndarray
+        Array of length L (no. windows) where the i'th value corresponds to the asymptotic variance of window i.
+
+    """
+    iat_routine = _get_iat_method(iat_method)
+    L = len(z)
+    z_err = np.zeros(L)
+    if neighbors is None: # If no neighborlist, assume all windows neighbor
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
+
+    groupInv = lm.groupInverse(np.eye(L)-F)
+    # Calculate the partial derivatives of z .
+    # (i,j,k)'th element is partial of z_k w.r.t. F_ij
+    dzdFij = np.outer(z,groupInv).reshape((L,L,L))
+
+    # Iterate over windows, getting err contribution from sampling in each
+    for i, psi_i in enumerate(psis):
+        # Data cleaning
+        psi_i_arr = np.array(psi_i)
+        Lneighb = len(neighbors[i]) # Number of neighbors
+
+        # Normalize psi_j(x_i^t) for all j
+        psi_sum = np.sum(psi_i_arr,axis=1)
+        normedpsis = np.zeros(psi_i_arr.shape) # psi_j / sum_k psi_k
+        for j in xrange(Lneighb):
+            normedpsis[:,j] = psi_i_arr[:,j]/psi_sum
+
+        # Calculate contribution to as. err. for each z_k
+        for k in xrange(L):
+            dzkdFij = dzdFij[:,:,k]
+            err_t_series = np.dot(normedpsis,dzkdFij[i][neighbors[i]])
+            iat, mn, sigma = iat_routine(err_t_series)
+            z_err[k] += sigma*sigma 
+
+    return z_err
+
+
+
+
 def avar_zfe(psis,z,F,um1,um2,neighbors=None,iat_method='ipce'):
     """
     Estimates the asymptotic variance in the free energy difference 
@@ -235,7 +294,7 @@ def avar_zfe(psis,z,F,um1,um2,neighbors=None,iat_method='ipce'):
         Overlap matrix for the first EMUS iteration.
     state_1 : int
         Index of the first state.
-    state_2 : ind 
+    state_2 : int
         Index of the second state.
     neighbors : 2D array, optional
         list showing which states neighbor which.  See neighbors_harmonic in umbrellautils for explanation.
