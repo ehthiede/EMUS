@@ -5,7 +5,7 @@ Example script with basic usage of the EMUS package.  The script follows the qui
 import numpy as np                  
 import usutils as uu
 import emus
-from avar import avar_zfe
+from avar import avar_z
 
 import matplotlib
 matplotlib.use('Qt4Agg')
@@ -21,6 +21,10 @@ period = 360                        # Dihedral Angles periodicity
 
 # Load data
 psis, cv_trajs = uu.data_from_WHAMmeta('wham_meta.txt',dim,T=T,period=period)
+npts = len(psis[0])
+print npts
+#psis = np.array(psis)[:,(int(9*npts)/10):]
+#cv_trajs = np.array(cv_trajs)[:,(int(9*npts)/10):]
 
 # Calculate the partitio function for each window
 z, F = emus.calculate_zs(psis) 
@@ -47,27 +51,29 @@ prob_C7ax = emus.calculate_obs(psis,z,fdata)
 
 # Plot the EMUS, MBAR pmfs.
 centers = np.linspace(-177,177,60)  # Center of the histogram bins
-plt.figure()
-plt.plot(centers,pmf,label='EMUS PMF')
-plt.plot(centers,MBARpmf,label='MBAR PMF')
-plt.xlabel('$\psi$ dihedral angle')
-plt.ylabel('Unitless FE')
-plt.legend()
-plt.title('EMUS and MBAR potentials of Mean Force')
-plt.show()
+#plt.figure()
+#plt.plot(centers,pmf,label='EMUS PMF')
+#plt.plot(centers,MBARpmf,label='MBAR PMF')
+#plt.xlabel('$\psi$ dihedral angle')
+#plt.ylabel('Unitless FE')
+#plt.legend()
+#plt.title('EMUS and MBAR potentials of Mean Force')
+#plt.show()
 
 # Plot the relative normalization constants as fxn of max iteration. 
-plt.plot(-np.log(z),label="Iteration 0")
-plt.plot(-np.log(z_MBAR_1),label="Iteration 1")
-plt.plot(-np.log(z_MBAR_1k),label="Iteration 1k",linestyle='--')
-plt.xlabel('Window Index')
-plt.ylabel('Unitless Free Energy')
-plt.title('Window Free Energies and MBAR Iter No.')
-plt.legend(loc='upper left')
-plt.show()
+#plt.plot(-np.log(z),label="Iteration 0")
+#plt.plot(-np.log(z_MBAR_1),label="Iteration 1")
+#plt.plot(-np.log(z_MBAR_1k),label="Iteration 1k",linestyle='--')
+#plt.xlabel('Window Index')
+#plt.ylabel('Unitless Free Energy')
+#plt.title('Window Free Energies and MBAR Iter No.')
+#plt.legend(loc='upper left')
+#plt.show()
 
 # Print the C7 ax basin probability
 print "Probability of C7ax basin is %f"%prob_C7ax
 
-err, taus = avar_zfe(psis,z,F,5,16)
-print err
+# err, taus = avar_zfe(psis,z,F,5,16)
+zerr = avar_z(psis,z,F,iat_method='acor')
+np.save('zerr',zerr)
+print np.sqrt(zerr)/z
