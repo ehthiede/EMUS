@@ -175,30 +175,29 @@ def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
         The values of the bias functions at each point in the trajectory evaluated at the windows given.  First axis corresponds to the timepoint, the second to the window index.
             
     """
-    L = len(centers)
+    L = len(centers) # Number of windows
     if not hasattr(kTs,'__getitem__'): # Check if kTs is a scalar
         kTs = kTs*np.ones(L)
-    
     if not hasattr(fks,'__getitem__'): # Check if force constant is a scalar
         fks = fks*np.ones(np.shape(centers))
-        # ADJUST IF SIZE IS NOT QUITE RIGHT!!!!
 
-    forceprefacs = -0.5*np.array([fks[i]/kTs[i] for i in xrange(L)])
-    # SEE IF IT IS POSSIBLE TO SPEED THIS UP VIA NUMPY TRICKS, OR MOVE IT INTO CYTHON/C/JULIA
-    psis = [_get_hpsi_vals(coord,centers,forceprefacs,period) for coord in cv_traj]
+    psis = np.zeros((len(cv_traj),L))
+    for j in xrange(L):
+        psis[:,j] = get_psis_harmwin(cv_traj,centers[j],fks[j],kTs[j],period=period)
     return psis
 
-def _get_hpsi_vals(coord,centers,forceprefacs,period=None):
+def get_psis_harmwin(cv_traj,win_center,win_fk,kT=1.0,period=None):
     """Helper routine for calc_harm_psis.  Evaluates the value of the bias
-    function for each harmonic window at the coordinate coord.
+    function for a single harmonic window over a trajectory.
 
     Parameters
     ----------
-    coord : 1d array
-        Coordinate to evaluate the harmonics at.
-    centers : array-like 
-        Array of centers for the windows.
-    forceprefacs : array-like 
+    cv_traj : array-like
+        Trajectory in collective variable space.  Can be 1-dimensional (one cv) or 2-dimensional (many cvs).  The first dimension is the time index, and (optional) second corresponds to the collective variable. 
+        trajectory
+    win_center : array-like or scalar
+        Array of the centers of the window.
+    win_fk : array-like or scalar 
         Force constants for the windows divided by -kT.
     period : 1D array-like or float, optional 
         Period of the collective variables.  See documentation for calc_harmonic_psis.
@@ -206,24 +205,41 @@ def _get_hpsi_vals(coord,centers,forceprefacs,period=None):
     Returns
     -------
     psivals : 1d array
-        Value of :math:`\psi_{ij}(x)` evaluated at the center of each window provided.
+        Value of :math:`\psi_{ij}(x)` evaluated at the center of the window for each point in the trajectory.
 
     """
-    rv = np.array(coord)-np.array(centers)
-    if period is not None:
-        rvmin = np.copy(rv)
-        try:
-            for i,p in enumerate(period):
-                if p is not None:
-                    rvmin[i] -= p*np.rint(rvmin[i]/p)  # TODO THIS IS TOTALLY BROKEN!!!! FIX IT!!!
-        except:
-            rvmin -= period * np.rint(rvmin/period)
-    else:
-        rvmin = rv
     try:
-        return np.exp(np.sum(forceprefacs*rvmin*rvmin,axis=1))
-    except:
-        return np.exp(forceprefacs*rvmin*rvmin)
+        ndim = len(win_center)
+    except TypeError:
+        ndim = 1
+    if period is not None:
+        if not hasattr(period,'__getitem__'): # Check if period is a scalar
+            period = [period]*ndim
+    rvmin = cv_traj - win_center
+
+    # Enforce Minimum Image Convention.
+    if len(np.shape(cv_traj)) == 1: # 1D trajectory array provided
+        if period is not None:
+            p = period[0]
+            if (p is not None) and (p != 0):
+                rvmin -= p*np.rint(rvmin/p)
+
+    elif len(np.shape(cv_traj)) == 2: # 2D trajectory array provided
+        if period is not None:
+            for d in xrange(ndim):
+                p = period[d]
+                if (p is not None) and (p != 0):
+                    rvmin[:,d]-= p*np.rint(rvmin[:,d]/p)
+    else: # User provided something weird...
+        raise ValueError("Trajectory provided has wrong dimensionality %d, "+ \
+            "dimension should be 1 or 2."%len(np.shape(cv_traj)))
+    # Calculate psi_ij
+    U = rvmin*rvmin*win_fk
+    if len(np.shape(U)) == 2:
+        U = np.sum(U,axis=1)
+    U/=2.
+
+    return np.exp(-U/kT)
 
 def parse_metafile(filepath,dim):
     """
