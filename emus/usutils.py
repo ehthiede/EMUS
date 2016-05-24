@@ -50,7 +50,6 @@ def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=4):
         kTs = kTs*np.ones(L)
     if not hasattr(fks,'__getitem__'): # Check if force constant is a scalar
         fks = fks*np.ones(np.shape(centers))
-    print np.shape(fks[0])
     kTs = np.outer(kTs,np.ones(np.shape(fks[0])))
     rad = nsig*np.sqrt(kTs/fks) 
     if period is not None: 
@@ -216,7 +215,7 @@ def _get_hpsi_vals(coord,centers,forceprefacs,period=None):
         try:
             for i,p in enumerate(period):
                 if p is not None:
-                    rvmin[i] -= p*np.rint(rvmin[i]/p)
+                    rvmin[i] -= p*np.rint(rvmin[i]/p)  # TODO THIS IS TOTALLY BROKEN!!!! FIX IT!!!
         except:
             rvmin -= period * np.rint(rvmin/period)
     else:
