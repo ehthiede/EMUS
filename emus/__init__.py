@@ -8,5 +8,3 @@ __license__ = "MIT"
 __maintainer__ = "Erik Henning Thiede"
 __email__ = "thiede@uchicago.edu"
 
-from emus import emus
-# FINISH THIS HERE
