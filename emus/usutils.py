@@ -60,15 +60,10 @@ def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=4):
     nbrs = []
     for i,cntr_i in enumerate(centers):
         rad_i = rad[i]
-#        print rad_i
         nbrs_i = []
-        for j, cntr_j in enumerate(centers):
-            rv = cntr_j-cntr_i
-            if period is not None:
-                for compi, component in enumerate(rv):
-                    if (period[compi] is not 0.0) or (period[compi] is not None):
-                        rv[compi] = _minimage(component,period[compi])
-#            print cntr_j, cntr_i, rv
+        rv = centers - cntr_i
+        rvmin = minimage_traj(rv,period) 
+        for j, rv in enumerate(rvmin):
             if (np.abs(rv) < rad_i).all():
                 nbrs_i.append(j)
         nbrs.append(nbrs_i)
@@ -183,10 +178,10 @@ def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
 
     psis = np.zeros((len(cv_traj),L))
     for j in xrange(L):
-        psis[:,j] = get_psis_harmwin(cv_traj,centers[j],fks[j],kTs[j],period=period)
+        psis[:,j] = calc_harmonic_psi_ij(cv_traj,centers[j],fks[j],kTs[j],period=period)
     return psis
 
-def get_psis_harmwin(cv_traj,win_center,win_fk,kT=1.0,period=None):
+def calc_harmonic_psi_ij(cv_traj,win_center,win_fk,kT=1.0,period=None):
     """Helper routine for calc_harm_psis.  Evaluates the value of the bias
     function for a single harmonic window over a trajectory.
 
@@ -215,24 +210,10 @@ def get_psis_harmwin(cv_traj,win_center,win_fk,kT=1.0,period=None):
     if period is not None:
         if not hasattr(period,'__getitem__'): # Check if period is a scalar
             period = [period]*ndim
-    rvmin = cv_traj - win_center
-
+    rv = cv_traj - win_center
     # Enforce Minimum Image Convention.
-    if len(np.shape(cv_traj)) == 1: # 1D trajectory array provided
-        if period is not None:
-            p = period[0]
-            if (p is not None) and (p != 0):
-                rvmin -= p*np.rint(rvmin/p)
+    rvmin = minimage_traj(rv,period)
 
-    elif len(np.shape(cv_traj)) == 2: # 2D trajectory array provided
-        if period is not None:
-            for d in xrange(ndim):
-                p = period[d]
-                if (p is not None) and (p != 0):
-                    rvmin[:,d]-= p*np.rint(rvmin[:,d]/p)
-    else: # User provided something weird...
-        raise ValueError("Trajectory provided has wrong dimensionality %d, "+ \
-            "dimension should be 1 or 2."%len(np.shape(cv_traj)))
     # Calculate psi_ij
     U = rvmin*rvmin*win_fk
     if len(np.shape(U)) == 2:
@@ -306,3 +287,38 @@ def _minimage(rv,period):
 
     """
     return rv - period * np.rint(rv/period)
+
+def minimage_traj(rv,period):
+    """Calculates the minimum trajectory
+
+    Parameters
+    ----------
+    rv : 1 or 2D array-like 
+        Minimum image trajectory
+    period : array-like or scalar
+        Periodicity in each dimension.
+
+    Returns
+    -------
+    minimage : array-like
+        minimum image trajectory
+    """
+    rvmin = np.array(np.copy(rv))
+    if len(np.shape(rv)) == 1: # 1D trajectory array provided
+        if period is not None:
+            p = period[0]
+            if (p is not None) and (p != 0):
+                rvmin -= p*np.rint(rvmin/p)
+
+    elif len(np.shape(rv)) == 2: # 2D trajectory array provided
+        ndim = len(rv[0])
+        if period is not None:
+            for d in xrange(ndim):
+                p = period[d]
+                if (p is not None) and (p != 0):
+                    rvmin[:,d]-= p*np.rint(rvmin[:,d]/p)
+    else: # User provided something weird...
+        raise ValueError("Trajectory provided has wrong dimensionality %d, "+ \
+            "dimension should be 1 or 2."%len(np.shape(rv)))
+    return rvmin
+    

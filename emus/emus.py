@@ -4,7 +4,7 @@ Container for the primary EMUS routines.
 """
 import numpy as np
 import linalg as lm
-import autocorrelation
+import autocorrelation as ac
 from usutils import unpackNbrs
 
 def calculate_obs(psis,z,f1data,f2data=None):
@@ -202,8 +202,8 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='
         # Unpack the Neighbor list
         F[i] = unpackNbrs(Fi,nbrs_i,L)
 
-    z = lm.stationary_distrib(F)
 #    print F
+    z = lm.stationary_distrib(F)
 #    print z
     if return_iats:
         return z, F, iats
