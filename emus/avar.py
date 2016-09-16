@@ -10,8 +10,6 @@ import numpy as np
 import autocorrelation as ac
 import linalg as lm
 
-
-
 def avar_obs_diff(psis,z,F,f1data,g1data,f2data=None,g2data=None,
         neighbors=None,iat_method='ipce'):
     """Estimates the asymptotic variance of the estimate of the ratio :math:`<f_1>/<f_2>-<g_1>/<g_2>` observables.  If f2data and g2data are not given, they are set to 1.
@@ -123,6 +121,101 @@ def avar_obs_diff(psis,z,F,f1data,g1data,f2data=None,g2data=None,
         err_tseries += f2trajs[i]*partial_f2
         err_tseries += g1trajs[i]*partial_g1
         err_tseries += g2trajs[i]*partial_g2
+
+        iat, mean, sigma = iat_routine(err_tseries)
+        errvals[i] = sigma
+        iatvals[i] = iat
+    return errvals, iatvals
+
+def avar_fe_diff(psis,z,F,f1data,f2data=None,neighbors=None,iat_method='ipce'):
+    """Estimates the asymptotic variance in the ratio of two observables.
+    If f2data is not given, it just calculates the asymptotic variance
+    associated with the average of f1.
+
+    Parameters
+    ----------
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation for a detailed explanation.
+    z : 1D array
+        Array containing the normalization constants
+    F : 2D array
+        Overlap matrix for the first EMUS iteration.
+    f1data : 2D data structure
+        Trajectory of observable in the numerator.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.
+    f2data : 2D data structure, optional
+        Trajectory of observable in the denominator.  
+    neighbors : 2D array, optional
+        List showing which states neighbor which.  See neighbors_harmonic in usutils for explanation.
+    iat_method : string, optional
+        Method used to estimate autocorrelation time.  See the documentation for the avar module.
+
+    Returns
+    -------
+    errvals : ndarray
+        Array of length L (no. windows) where the i'th value corresponds to the contribution to the error from window i.
+    iatvals : ndarray
+        Array of length L (no. windows) where the i'th value corresponds to the iat for window i.
+        
+    """
+    iat_routine = ac._get_iat_method(iat_method)
+    L = len(psis)
+    errvals = np.zeros(L)
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
+    iatvals = np.zeros(L)
+    trajs = []
+
+    f1trajs = []
+    f2trajs = []
+    f1avgs = np.zeros(L)
+    f2avgs = np.zeros(L)
+    normedpsis = []
+    # Normalize f1, f2, psi trajectories by \sum_k psi_k
+    for i,psi_i in enumerate(psis):
+        Lneighb = len(neighbors[i]) # Number of neighbors
+        psi_i_arr = np.array(psi_i)
+        psi_i_sum = np.sum(psi_i_arr,axis=1)
+        f1_i = np.array(f1data[i])/psi_i_sum
+        if f2data is None:
+            f2_i = 1./psi_i_sum
+        else:
+            f2_i = np.array(f2data[i])/psi_i_sum
+
+        f1trajs.append(f1_i)
+        f2trajs.append(f2_i)
+        f1avgs[i] = np.average(f1_i)
+        f2avgs[i] = np.average(f2_i)
+        norm_psi_i = np.zeros(np.shape(psis[i]))
+        for j in xrange(Lneighb):
+            norm_psi_i[:,j] = psi_i_arr[:,j]/psi_i_sum
+        normedpsis.append(norm_psi_i)
+        numer_avg = np.dot(z,f1avgs)
+        denom_avg = np.dot(z,f2avgs)
+        favg = numer_avg / denom_avg
+
+    # Calculate Group Inverse of I-F 
+    groupInv = lm.groupInverse(np.eye(L)-F)
+    for i in xrange(L):
+        neighb_i = neighbors[i]
+        # Calculate partials w.r.t. F_ij
+        partials_Fij = np.zeros(np.shape(neighb_i))
+        for j_ind, j in enumerate(neighb_i):
+#            fac1 = f1avgs-favg*f2avgs
+#            dBdFij = np.dot(groupInv[j,:],fac1)*z[i]/denom_avg
+#            partials_Fij[j_ind] = dBdFij
+            dBdFij = np.dot(groupInv[j,:],f2avgs)/np.dot(z,f2avgs)
+            dBdFij -= np.dot(groupInv[j,:],f1avgs)/np.dot(z,f1avgs)
+            dBdFij *= z[i]
+
+        # Calculate partials w.r.t. f1,f2
+#        partial_f1 = z[i]/denom_avg 
+#        partial_f2 =-1.*favg/denom_avg*z[i]
+        partial_f1 = z[i]/np.dot(z,f1avgs)
+        partial_f2 = -z[i]/np.dot(z,f2avgs)
+        # Compute time series encoding error.
+        err_tseries = np.dot(normedpsis[i],partials_Fij)
+        err_tseries += f1trajs[i]*partial_f1
+        err_tseries += f2trajs[i]*partial_f2
 
         iat, mean, sigma = iat_routine(err_tseries)
         errvals[i] = sigma
