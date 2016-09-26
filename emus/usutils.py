@@ -41,7 +41,6 @@ def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=4):
         List where element i is a list with the indices of all 
         windows neighboring window i.
     
-    FIX THIS!!!!!!!!!
     """
     L = len(centers) # Number of Windows
 
@@ -255,7 +254,7 @@ def parse_metafile(filepath,dim):
     temps = []
     with open(filepath,'r') as f:
         for line in f:
-            windowparams = line.split(' ')
+            windowparams = line.split()
             traj_paths.append(windowparams[0])
             centers.append(windowparams[1:1+dim])
             fks.append(windowparams[1+dim:1+2*dim])
