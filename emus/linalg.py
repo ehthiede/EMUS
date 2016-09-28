@@ -56,6 +56,9 @@ def stationary_distrib(F,residtol = 1.E-10,max_iter=100):
    
 
 def old_stationary_distrib(F,fix=None,residtol = 1.E-10,max_iter=100):
+    """
+    Depricated routine to calculate the stationar distribution of F.
+    """
     L = len(F) # Number of States
     # If no fixed state is specified, we find a state with high weight in z.
     if fix is None:

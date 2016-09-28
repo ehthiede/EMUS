@@ -7,7 +7,7 @@ import linalg as lm
 import autocorrelation as ac
 from usutils import unpackNbrs
 
-def calculate_obs(psis,z,f1data,f2data=None):
+def calculate_obs(psis,z,g1data,g2data=None):
     """Estimates the value of an observable or ratio of observables.
 
     Parameters
@@ -16,32 +16,26 @@ def calculate_obs(psis,z,f1data,f2data=None):
         Data structure containing psi values.  See documentation for a detailed explanation.
     z : 1D array
         Array containing the normalization constants
-    f1data : 2D data structure
+    g1data : 2D data structure
         Trajectory of observable in the numerator.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.
-    f2data : 2D data structure, optional
+    g2data : 2D data structure, optional
         Trajectory of observable in the denominator.  
 
     Returns
     -------
     avg : float
-        The estimate of <f_1>/<f_2>.
+        The estimate of :math:`<g_1>/<g_2>`.
 
     """
-    f1avg = 0
-    f2avg = 0
-    for i,psi_i in enumerate(psis):
-        psi_xi = np.array(psi_i)
-        psi_i_sum = np.sum(psi_xi,axis=1)
-        f1_i = np.array(f1data[i])/psi_i_sum
-        if f2data is None:
-            f2_i = 1./psi_i_sum
-        else:
-            f2_i = np.array(f2data[i])/psi_i_sum
-        f1avg_i = np.average(f1_i)
-        f2avg_i = np.average(f2_i)
-        f1avg += z[i]*f1avg_i
-        f2avg += z[i]*f2avg_i
-    return f1avg / f2avg
+    # Clean the input and set defaults
+    g1data = [np.array(g1i).flatten() for g1i in g1data]
+    if g2data is None:
+        g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
+        
+    g1star = _calculate_win_avgs(psis,z,g1data)
+    g2star = _calculate_win_avgs(psis,z,g2data)
+    return np.dot(g1star,z)/np.dot(g2star,z)
+
 
 def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=1.):
     """Calculates the free energy surface for an umbrella sampling run.
@@ -49,7 +43,7 @@ def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=1.):
     Parameters
     ----------
     cv_trajs : 2D data structure
-        Data structure containing trajectories in the collective variable space.  See documentation for more detail.
+        Data structure containing trajectories in the collective variable space. 
     psis : 3D data structure
         Data structure containing psi values.  See documentation for a detailed explanation.
     domain : tuple
@@ -91,7 +85,6 @@ def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=1.):
         hist+=hist_i/len(xtraj_i)*z[i]
     pmf =-kT* np.log(hist)
     pmf -= min(pmf.flatten())
-
 
     # Calculate the centers of each histogram bin.
     return pmf
@@ -262,6 +255,28 @@ def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
     else:
         return Fi
     
+def _calculate_win_avgs(psis,z,gdata):
+    """Helper method estimating the scaled averages in each umbrella.
 
+    Parameters
+    ----------
+    psis : 3D data structure
+        Data structure containing psi values.  See documentation for a detailed explanation.
+    z : 1D array
+        Array containing the normalization constants
+    gdata : 2D data structure
+        Trajectory of observable in the numerator.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.
+
+    Returns
+    -------
+    gstar : 1D array
+        Array where element i is the estimate of :math:`<g^*>` in state i.
+
+    """
+    gstar = []
+    for i,psi_i in enumerate(psis):
+        denom_i = 1./np.sum(psi_i,axis=1)
+        gstar.append(np.average(gdata[i]*denom_i))
+    return np.array(gstar)
 
 
