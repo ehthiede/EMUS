@@ -193,9 +193,9 @@ To deal with negative weights, it removes all the negative weights, and calculat
 </dd></dl>
 
 <dl class="function">
-<dt id="avar.log_average_ratio">
-<code class="descclassname">avar.</code><code class="descname">log_average_ratio</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>F</em>, <em>g1data</em>, <em>g2data=None</em>, <em>neighbors=None</em>, <em>iat_method='ipce'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/avar.html#log_average_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avar.log_average_ratio" title="Permalink to this definition">¶</a></dt>
-<dd><p>Estimates the asymptotic variance in the EMUS estimate of <span class="math">\(-log &lt;g_1&gt;/&lt;g_2&gt;\)</span>.  Input and output is as in average_ratio.  Note that if this is used for free energy differences, the result does not use the Boltzmann factor (i.e. <span class="math">\(k_B T=1\)</span>).  In that case, resulting variances should be scaled by the Boltzmann factor <em>squared</em>.</p>
+<dt id="avar.log_average">
+<code class="descclassname">avar.</code><code class="descname">log_average</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>F</em>, <em>g1data</em>, <em>g2data=None</em>, <em>neighbors=None</em>, <em>iat_method='ipce'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/avar.html#log_average"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avar.log_average" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimates the asymptotic variance in the EMUS estimate of <span class="math">\(-log &lt;g_1&gt;/&lt;g_2&gt;\)</span>.  If <span class="math">\(g_2\)</span> data is not provided, it estimates the asymptotic variance in the estimate of <span class="math">\(-log &lt;g_1&gt;/&lt;g_2&gt;\)</span>.  Input and output is as in average_ratio.  Note that if this is used for free energy differences, the result does not use the Boltzmann factor (i.e. <span class="math">\(k_B T=1\)</span>).  In that case, resulting variances should be scaled by the Boltzmann factor <em>squared</em>.</p>
 </dd></dl>
 
 <dl class="function">

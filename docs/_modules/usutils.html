@@ -128,8 +128,9 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">_defaults</span> <span class="kn">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="neighbors_harmonic"><a class="viewcode-back" href="../modules/usutils.html#usutils.neighbors_harmonic">[docs]</a><span class="k">def</span> <span class="nf">neighbors_harmonic</span><span class="p">(</span><span class="n">centers</span><span class="p">,</span><span class="n">fks</span><span class="p">,</span><span class="n">kTs</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">nsig</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+<div class="viewcode-block" id="neighbors_harmonic"><a class="viewcode-back" href="../modules/usutils.html#usutils.neighbors_harmonic">[docs]</a><span class="k">def</span> <span class="nf">neighbors_harmonic</span><span class="p">(</span><span class="n">centers</span><span class="p">,</span><span class="n">fks</span><span class="p">,</span><span class="n">kTs</span><span class="o">=</span><span class="n">DEFAULT_KT</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">nsig</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates neighborlist for harmonic windows.  Neighbors are chosen </span>
 <span class="sd">    such that neighboring umbrellas are no more than nsig standard</span>
 <span class="sd">    deviations away on a flat potential.</span>
@@ -137,33 +138,20 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    centers : 2darray</span>
-<span class="sd">        The locations of the centers of each window.  The</span>
-<span class="sd">        first dimension is the window index, and the second</span>
-<span class="sd">        is the collective variable index.</span>
+<span class="sd">        The locations of the centers of each window.  The first dimension is the window index, and the second is the collective variable index.</span>
 <span class="sd">    fks : 2darray or scalar</span>
-<span class="sd">        If array or list, data structure where the first dimension </span>
-<span class="sd">        corresponds to the window index and the second corresponds to the</span>
-<span class="sd">        collective variable.  If scalar, windows are assumed to have that </span>
-<span class="sd">        force constant in every dimension.</span>
+<span class="sd">        If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.</span>
 <span class="sd">    kTs : 2darray or float</span>
-<span class="sd">        1D array with the Boltzmann factor or</span>
-<span class="sd">        a single value which will be used in all windows.  Default</span>
-<span class="sd">        value is the scalar 1.</span>
+<span class="sd">        1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.</span>
 <span class="sd">    period : 1D array-like or float</span>
-<span class="sd">        Period of the collective variable</span>
-<span class="sd">        e.g. 360 for an angle. If None, all collective variables are </span>
-<span class="sd">        taken to be aperiodic.  If scalar, assumed to be period of each </span>
-<span class="sd">        collective variable. If 1D iterable with each value a scalar or </span>
-<span class="sd">        None, each cv has periodicity of that size.</span>
+<span class="sd">        Period of the collective variable e.g. 360 for an angle. If None, all collective variables are taken to be aperiodic.  If scalar, assumed to be period of each collective variable. If 1D iterable with each value a scalar or None, each cv has periodicity of that size.</span>
 <span class="sd">    nsig : scalar</span>
-<span class="sd">        Number of standard deviations of the gaussians to </span>
-<span class="sd">        include in the neighborlist.</span>
+<span class="sd">        Number of standard deviations of the gaussians to include in the neighborlist.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    nbrs : 2d list</span>
-<span class="sd">        List where element i is a list with the indices of all </span>
-<span class="sd">        windows neighboring window i.</span>
+<span class="sd">        List where element i is a list with the indices of all windows neighboring window i.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span> <span class="c"># Number of Windows</span>
@@ -193,8 +181,7 @@
     <span class="k">return</span> <span class="n">nbrs</span>
 </div>
 <div class="viewcode-block" id="unpackNbrs"><a class="viewcode-back" href="../modules/usutils.html#usutils.unpackNbrs">[docs]</a><span class="k">def</span> <span class="nf">unpackNbrs</span><span class="p">(</span><span class="n">compd_array</span><span class="p">,</span><span class="n">neighbors</span><span class="p">,</span><span class="n">L</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Unpacks an array of neighborlisted data.  Currently, assumes axis 0</span>
-<span class="sd">    is the compressed axis.</span>
+    <span class="sd">&quot;&quot;&quot;Unpacks an array of neighborlisted data.  Currently, assumes axis 0 is the compressed axis.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -222,8 +209,7 @@
 
     </div>
 <div class="viewcode-block" id="calc_harmonic_psis"><a class="viewcode-back" href="../modules/usutils.html#usutils.calc_harmonic_psis">[docs]</a><span class="k">def</span> <span class="nf">calc_harmonic_psis</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">fks</span><span class="p">,</span> <span class="n">kTs</span><span class="p">,</span> <span class="n">period</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Calculates the values of each bias function from a trajectory of points</span>
-<span class="sd">    in a single window.</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the values of each bias function from a trajectory of points in a single window.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -241,7 +227,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    psis : 2D array</span>
-<span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html&gt;`__ for more information.</span>
+<span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 <span class="sd">            </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span> <span class="c"># Number of windows</span>
@@ -320,7 +306,7 @@
         <span class="n">fxndata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">:])</span>
     <span class="k">return</span> <span class="n">fxndata</span>
 </div>
-<div class="viewcode-block" id="data_from_WHAMmeta"><a class="viewcode-back" href="../modules/usutils.html#usutils.data_from_WHAMmeta">[docs]</a><span class="k">def</span> <span class="nf">data_from_WHAMmeta</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">k_B</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">nsig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="data_from_WHAMmeta"><a class="viewcode-back" href="../modules/usutils.html#usutils.data_from_WHAMmeta">[docs]</a><span class="k">def</span> <span class="nf">data_from_WHAMmeta</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">DEFAULT_T</span><span class="p">,</span><span class="n">k_B</span><span class="o">=</span><span class="n">DEFAULT_K_B</span><span class="p">,</span><span class="n">nsig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Reads data saved on disk according to the format used by the WHAM implementation by Grossfield.</span>
 
 <span class="sd">    Parameters</span>
