@@ -12,6 +12,6 @@ setup(name='EMUS',
         'Topic :: Scientific/Engineering'
         ],
     packages=find_packages(),
-    install_requires=['numpy','hdf5','acor'], # Does this do what you think, Erik?
+    install_requires=['numpy','h5py','acor'], # Does this do what you think, Erik?
 
     )
