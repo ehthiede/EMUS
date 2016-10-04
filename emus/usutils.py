@@ -13,33 +13,20 @@ def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=6):
     Parameters
     ----------
     centers : 2darray
-        The locations of the centers of each window.  The
-        first dimension is the window index, and the second
-        is the collective variable index.
+        The locations of the centers of each window.  The first dimension is the window index, and the second is the collective variable index.
     fks : 2darray or scalar
-        If array or list, data structure where the first dimension 
-        corresponds to the window index and the second corresponds to the
-        collective variable.  If scalar, windows are assumed to have that 
-        force constant in every dimension.
+        If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.
     kTs : 2darray or float
-        1D array with the Boltzmann factor or
-        a single value which will be used in all windows.  Default
-        value is the scalar 1.
+        1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.
     period : 1D array-like or float
-        Period of the collective variable
-        e.g. 360 for an angle. If None, all collective variables are 
-        taken to be aperiodic.  If scalar, assumed to be period of each 
-        collective variable. If 1D iterable with each value a scalar or 
-        None, each cv has periodicity of that size.
+        Period of the collective variable e.g. 360 for an angle. If None, all collective variables are taken to be aperiodic.  If scalar, assumed to be period of each collective variable. If 1D iterable with each value a scalar or None, each cv has periodicity of that size.
     nsig : scalar
-        Number of standard deviations of the gaussians to 
-        include in the neighborlist.
+        Number of standard deviations of the gaussians to include in the neighborlist.
 
     Returns
     -------
     nbrs : 2d list
-        List where element i is a list with the indices of all 
-        windows neighboring window i.
+        List where element i is a list with the indices of all windows neighboring window i.
     
     """
     L = len(centers) # Number of Windows
@@ -69,8 +56,7 @@ def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=6):
     return nbrs
 
 def unpackNbrs(compd_array,neighbors,L):
-    """Unpacks an array of neighborlisted data.  Currently, assumes axis 0
-    is the compressed axis.
+    """Unpacks an array of neighborlisted data.  Currently, assumes axis 0 is the compressed axis.
     
     Parameters
     ----------
@@ -98,8 +84,7 @@ def unpackNbrs(compd_array,neighbors,L):
 
     
 def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
-    """Calculates the values of each bias function from a trajectory of points
-    in a single window.
+    """Calculates the values of each bias function from a trajectory of points in a single window.
 
     Parameters
     ----------
@@ -117,7 +102,7 @@ def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
     Returns
     -------
     psis : 2D array
-        The values of the bias functions at each point in the trajectory evaluated at the windows given.  First axis corresponds to the timepoint, the second to the window index.
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
             
     """
     L = len(centers) # Number of windows

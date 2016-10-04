@@ -11,7 +11,9 @@ setup(name='EMUS',
         'Development Status :: 2 - Pre-Alpha',
         'Topic :: Scientific/Engineering'
         ],
-    packages=find_packages(),
+#    packages=find_packages(),
+#    package_dir=['emus'],
+    packages=['emus'],
     install_requires=['numpy','h5py','acor'], # Does this do what you think, Erik?
 
     )
