@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Data Structures &mdash; emus  documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="emus  documentation" href="index.html"/>
+        <link rel="next" title="EMUS Modules" href="modules/index.html"/>
+        <link rel="prev" title="Quickstart" href="quickstart.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> emus</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#calculating-averages">Calculating Averages</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-from-sampling">Data from Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-conventions">Other Conventions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">EMUS Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/autocorrelation.html">autocorrelation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/avar.html">avar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/emus.html">emus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/emusroutines.html">emusroutines module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/linalg.html">linalg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/usutils.html">usutils module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">test</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">emus</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Data Structures</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/datastructures.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="data-structures">
+<h1>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline">¶</a></h1>
+<p>This section discusses commonly used variables and naming conventions used throughout the EMUS package. These are not strict standards: the EMUS package attempts to duck-type as much as possible to interpret user input.  The documentation below is intended to indicate approximately what form inputs can take, and to aid comprehension of the source code.</p>
+<div class="section" id="parameters-for-harmonic-windows">
+<h2>Parameters for Harmonic windows<a class="headerlink" href="#parameters-for-harmonic-windows" title="Permalink to this headline">¶</a></h2>
+<p>These variables contain parameters of the window sampling system.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">centers:</th><td class="field-body">Two-dimensional array-like containing the center of
+each harmonic window in collective variable space.
+The first index corresponds to the window index,
+and the second to the collective variable index:
+<code class="samp docutils literal"><span class="pre">centers[2]</span></code> gives the coordinate of the center of the third
+window.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">fks:</th><td class="field-body">Two-dimensional array-like containing the force constant for each window.
+The syntax and format is the same as for centers.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">kTs:</th><td class="field-body">One-dimensional array-like with the Boltzmann factor for each window,
+where the index corresponds to the window index.
+Alternatively, if the Boltzmann factor is the same for all windows,
+EMUS will accept a scalar value for.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">period:</th><td class="field-body">One-dimensional array-like encoding the period of the collective
+variable.
+<code class="samp docutils literal"><span class="pre">period[i]</span></code> gives the periodicity of the i&#8217;th collective
+variable.
+If the periodicity in that dimension is none, a value of None is used.
+For instance, <code class="samp docutils literal"><span class="pre">period=[360.,1,None]</span></code>  specifies that
+the first collective variable has a period of 360, the second has
+one of 1, and that the third is aperiodic.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="data-from-sampling">
+<h2>Data from Sampling<a class="headerlink" href="#data-from-sampling" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">cv_trajs:</th><td class="field-body">Two-dimensional array-like containing the trajectories
+in the collective variable space.
+The first dimension corresponds to the state index and the second
+to the timepoint.  <code class="samp docutils literal"><span class="pre">cv_trajs[i]</span></code> gives the the collective
+variable trajectory of the i&#8217;th state, and <code class="samp docutils literal"><span class="pre">cv_trajs[i][n]</span></code>
+gives the value of the collective variable of state i
+at the nth time point.
+Note the trajectories do not have to have the same number of time
+points: <code class="samp docutils literal"><span class="pre">cv_trajs[i]</span></code> and <code class="samp docutils literal"><span class="pre">cv_trajs[j]</span></code> may have
+different lengths.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">psis:</th><td class="field-body">Three-dimensional array-like with the values of <span class="math">\(\psi_j\)</span>
+evaluated at each point in the trajectory.
+As above, the first and second indices are
+the state index and timepoint, respectively.
+The third index is the state where <span class="math">\(\psi\)</span> is being evaluated:
+<code class="samp docutils literal"><span class="pre">psis[i][n][j]</span></code> returns the value of
+<span class="math">\(\psi_j\left(X_n^i\right)\)</span>.
+If the neighborlist functionality is used, the third index does not
+need to span over all of the windows, only nearby ones
+(this introduces slight systematic bias into the estimator).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">fdata:</th><td class="field-body">Two-dimensional array-like containing the values of an observable.
+The data structure is similar to cv_trajs: <code class="samp docutils literal"><span class="pre">fdata[i][n]</span></code>
+gives the value of the observable evaluated in state i at timepoint n.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">neighbors:</th><td class="field-body">Two-dimensional array-like used for the neighborlist
+functionality.
+In practice, it is often known in advance that
+many combinations of i and j will result in values of <span class="math">\(\psi\)</span>
+that are effectively zero
+(for instance, two harmonic windows far away in
+collective variable space).
+In these situations, it is cheaper to only calculate and store psis
+for neighboring states, and <code class="samp docutils literal"><span class="pre">psis[i][n][j]</span></code> will return the
+return <span class="math">\(\psi\)</span> for the j&#8217;th <em>neighbor</em>.
+The <code class="samp docutils literal"><span class="pre">neighbors</span></code> data element then gives the true indeces of
+each neighbor: <code class="samp docutils literal"><span class="pre">neighbors[i][j]</span></code> returns the index of the
+j&#8217;th state neighboring state i.
+For harmonic windows, a neighborlist can be constructed using the
+neighbors_harmonic function.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">iats:</th><td class="field-body">One-dimensional array-like giving the integrated autocorrelation time
+for the values of <span class="math">\(\psi\)</span> each state (iat).
+<code class="samp docutils literal"><span class="pre">iats[i]</span></code> gives the iat for state i.[#iatnote]_</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="other-conventions">
+<h2>Other Conventions<a class="headerlink" href="#other-conventions" title="Permalink to this headline">¶</a></h2>
+<table class="docutils footnote" frame="void" id="iatnote" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>Claiming that there is a single iat for all :math`psi` is a
+polite mathematical fiction, as different <span class="math">\(\psi\)</span> values will have
+different integrated autocorrelations times.  However, it is reasonable
+to expect <span class="math">\(psi\)</span> values to have comparable iats, and estimating
+multiple iats is numerically challenging.  Consequently, we use one iat
+for all.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="modules/index.html" class="btn btn-neutral float-right" title="EMUS Modules">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="quickstart.html" class="btn btn-neutral" title="Quickstart"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Erik H Thiede.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

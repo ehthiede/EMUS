@@ -1,17 +1,7 @@
-Quickstart 
+Quickstart
 ==========
 
-This guide covers how to perform typical tasks with the EMUS package in a pythonic environment.  The required data files, as well as a (slightly modified) script containing all of the python commands used below, can be found in the examples directory of the package in the AlaDipeptide_1D directory. The guide will make use of the numpy and matplotlib packages. 
-
-Note that most common functionality of the EMUS package can be accessed from command line using the wemus.py script.  To see a full list of command line options, use the command
-
->>> python wemus.py --help
-
-.. The wemus script has a syntax similar to the WHAM script by Grossfield.  The command 
-   
-   >>> python wemus.py 1 wham_meta.txt -180 180 60 -f fxn_meta.txt -p 360 -T 310.0 -k 'kCal' --ext txt -e acor 
-   
-   runs EMUS analysis on the data specified by the wham_meta and fxn_meta files.  This command specifies that the collective variable data is one dimensional, and is located at the locations specified in wham_meta.txt.  The collective variable ranges from -180 to 180 degrees, and the pmf is requested with 60 histogram bins.  T
+This guide covers perform typical tasks with the EMUS package.  The required data files, as well as a (slightly modified) script containing all of the python commands used below, can be found in the examples directory of the package in the AlaDipeptide_1D directory. The guide will make use of the numpy and matplotlib packages. 
 
 Loading from WHAM-like Formats
 ------------------------------
@@ -76,7 +66,7 @@ The pmf can be constructed using these values for the relative partition functio
 
 Calculating Averages
 --------------------
-It is possible to use the EMUS package to calculate the averages of functions.  Here, we will calculate the probability that the dihedral takes values between 25 and 100 degrees (this roughly corresponds to the molecule being in the C7 axial basin).  This is equivalent to the average of an indicator function that is 1 if the molecule is in the desired configuration and 0 otherwise.  First, we construct the timeseries of this function for each window.  Note that if the EMUS object was constructed with the collective variable trajectories, they are contained at :samp:`EM.cv_trajs`. [#boolnote]_
+It is possible to use the EMUS package to calculate the averages of functions.  Here, we will calculate the probability that the dihedral takes values between 25 and 100 degrees (this roughly corresponds to the molecule being in the C7 axial basin).  This is equivalent to the average of an indicator function that is 1 if the molecule is in the desired configuration and 0 otherwise.  First, we construct the timeseries of this function for each umbrella.  Note that if the EMUS object was constructed with the collective variable trajectories, they are contained at :samp:`EM.cv_trajs`. [#boolnote]_
 
 >>> fdata = [(traj>25) & (traj<100) for traj in EM.cv_trajs]
 
@@ -85,22 +75,8 @@ We can now calculate the probability of being in this state.
 >>> prob_C7ax = EM.calc_obs(fdata)
 >>> print prob_C7ax
 
-The EMUS package also introduces a new meta file for functions of configuration space.  The format is a simple text file, where the i'th line is the path to the function data collected in window i.
 
->>> data/fdata_0.txt
->>> data/fdata_1.txt
->>> data/fdata_2.txt
->>> ...
-
-In each of the data files, the first column is the timestamp, and each successive column is the value of the n'th function at that timestep.  The data can be loaded using a method in usutils
-
->>> fxndata = uu.data_from_fxnmeta('fxn_meta.txt')
-
-The format of the data is similar to psis.  The first index is the index of the umbrella where the data was collected.  The second is the timepoint of the data, and the third index corresponds to the function.
-
->>> fxndata[0]  # Data collected in the first window.
->>> fxndata[fxn_i[:,0] for fxn_i in fxndata] # First function evaluated in each window.
 
 .. [#estimatornote] Technically speaking, this is mixing estimators: the :math:`z`'s are being estimated using the MBAR estimator, whereas the pmf is estimated using the MBAR :math:`z`'s, but with the EMUS estimator (MBAR iteration 0).  However, in practice the majority of the error comes from estimating the normalization constant.  Consequently, the estimator used for estimating the pmf affects the results much less. 
 
-.. [#boolnote] The following code relies on True and False having integer comprehensions as 1 and 0, respectively.  If, hypothetically speaking, the programmer has done something like in :samp:`False=5` earlier in the code, then this won't give the correct answer.  Then again, if the programmer did this they are probably a bad person.  
+.. [#boolnote] The following code relies on True and False having their default integer comprehensions as 1 and 0, respectively.  If, hypothetically speaking, the programmer has done something like in :samp:`False=5` earlier in the code, then this won't give the correct answer.  Then again, if the programmer did this they are probably a bad person.  
