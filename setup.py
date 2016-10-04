@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from distutils.core import setup,find_packages
 
 setup(name='EMUS',
     version='0.1.0',
@@ -11,7 +11,7 @@ setup(name='EMUS',
         'Development Status :: 2 - Pre-Alpha',
         'Topic :: Scientific/Engineering'
         ],
-    packages=['emus'],
-    install_requires=['acor'], # Does this do what you think, Erik?
+    packages=find_packages()
+    install_requires=['numpy','hdf5','acor'], # Does this do what you think, Erik?
 
     )
