@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>emus module &mdash; emus  documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="emus  documentation" href="../index.html"/>
+        <link rel="up" title="EMUS Modules" href="index.html"/>
+        <link rel="next" title="emusroutines module" href="emusroutines.html"/>
+        <link rel="prev" title="avar module" href="avar.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> emus</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-averages">Calculating Averages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#data-from-sampling">Data from Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#other-conventions">Other Conventions</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">EMUS Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="autocorrelation.html">autocorrelation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avar.html">avar module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">emus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="emusroutines.html">emusroutines module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linalg.html">linalg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usutils.html">usutils module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../test.html">test</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">emus</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">EMUS Modules</a> &raquo;</li>
+      
+    <li>emus module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="../_sources/modules/emus.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-emus">
+<span id="emus-module"></span><h1>emus module<a class="headerlink" href="#module-emus" title="Permalink to this headline">¶</a></h1>
+<p>Container for the primary EMUS routines.</p>
+<dl class="function">
+<dt id="emus.calculate_Fi">
+<code class="descclassname">emus.</code><code class="descname">calculate_Fi</code><span class="sig-paren">(</span><em>psi_i</em>, <em>i</em>, <em>Avals_i=None</em>, <em>return_trajs=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus.html#calculate_Fi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.calculate_Fi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the values of a single row in the F matrix.
+If neighborlists are being used, psi_i, and Avals_i should be the 
+neighborlisted data structure, and the row will be need to be unpacked
+using the neighborlist .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>psi_i</strong> : 2D array-like</p>
+<blockquote>
+<div><blockquote>
+<div><p>Values of <span class="math">\(\psi\)</span> collected in window i.  The j&#8217;th column 
+corresponds to the j&#8217;th neighboring window.</p>
+</div></blockquote>
+<dl class="docutils">
+<dt>i <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Index of the window where the data was collected.</p>
+</dd>
+<dt>Avals_i <span class="classifier-delimiter">:</span> <span class="classifier">1D array-like</span></dt>
+<dd><p class="first last">Weights in front of :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>psi_{ij} in the overlap matrix.</p>
+</dd>
+<dt>return_trajs <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">Whether or not to return the trajectories that are averaged to 
+calculate the values of F.  These can be useful for estimating 
+autocorrelation times and performing error analysis.</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Fi</strong> : 1D numpy array</p>
+<blockquote class="last">
+<div><blockquote>
+<div><p>The (neighborlisted) row in the F matrix</p>
+</div></blockquote>
+<dl class="docutils">
+<dt>trajs <span class="classifier-delimiter">:</span> <span class="classifier">2D numpy array</span></dt>
+<dd><p class="first last">If return_trajs is True, returns the trajectories used in
+calculating the values of F</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.calculate_obs">
+<code class="descclassname">emus.</code><code class="descname">calculate_obs</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>g1data</em>, <em>g2data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus.html#calculate_obs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.calculate_obs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimates the value of an observable or ratio of observables.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>psis</strong> : 3D data structure</p>
+<blockquote>
+<div><p>Data structure containing psi values.  See documentation for a detailed explanation.</p>
+</div></blockquote>
+<p><strong>z</strong> : 1D array</p>
+<blockquote>
+<div><p>Array containing the normalization constants</p>
+</div></blockquote>
+<p><strong>g1data</strong> : 2D data structure</p>
+<blockquote>
+<div><p>Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.</p>
+</div></blockquote>
+<p><strong>g2data</strong> : 2D data structure, optional</p>
+<blockquote>
+<div><p>Trajectory of observable in the denominator.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>avg</strong> : float</p>
+<blockquote class="last">
+<div><p>The estimate of <span class="math">\(&lt;g_1&gt;/&lt;g_2&gt;\)</span>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.calculate_pmf">
+<code class="descclassname">emus.</code><code class="descname">calculate_pmf</code><span class="sig-paren">(</span><em>cv_trajs</em>, <em>psis</em>, <em>domain</em>, <em>z</em>, <em>nbins=100</em>, <em>kT=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus.html#calculate_pmf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.calculate_pmf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the free energy surface along a coordinate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cv_trajs</strong> : 2D data structure</p>
+<blockquote>
+<div><p>Data structure containing trajectories in the collective variable space.</p>
+</div></blockquote>
+<p><strong>psis</strong> : 3D data structure</p>
+<blockquote>
+<div><p>Data structure containing psi values.  See documentation for a detailed explanation.</p>
+</div></blockquote>
+<p><strong>domain</strong> : tuple</p>
+<blockquote>
+<div><p>Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window</p>
+</div></blockquote>
+<p><strong>nbins</strong> : int or tuple, optional</p>
+<blockquote>
+<div><p>Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.</p>
+</div></blockquote>
+<p><strong>kT</strong> : float, optional</p>
+<blockquote>
+<div><p>Value of kT to scale the PMF by.  If not provided, set to 1.0</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pmf</strong> : nd array</p>
+<blockquote class="last">
+<div><p>Returns the potential of mean force as a d dimensional array, where d is the number of collective variables.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.calculate_zs">
+<code class="descclassname">emus.</code><code class="descname">calculate_zs</code><span class="sig-paren">(</span><em>psis</em>, <em>neighbors=None</em>, <em>nMBAR=0</em>, <em>tol=1e-08</em>, <em>use_iats=False</em>, <em>iat_method='ipce'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus.html#calculate_zs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.calculate_zs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the normalization constants for the windows.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nMBAR</strong> : int, optional (default 0)</p>
+<blockquote>
+<div><p>Maximum number of MBAR iterations to perform.</p>
+</div></blockquote>
+<p><strong>tol</strong> : float, optional (see _defaults.py for default)</p>
+<blockquote>
+<div><p>If the relative residual falls beneath the tolerance, the MBAR iteration is truncated.</p>
+</div></blockquote>
+<p><strong>use_iats</strong> : bool, optional</p>
+<blockquote>
+<div><p>If true, estimate integrated autocorrelation time in each MBAR iteration.  Likely unnecessary unless dynamics are expected to be drastically different in each window. If iats is provided, the iteration will use those rather than estimating them in each step.</p>
+</div></blockquote>
+<p><strong>iat_method</strong> : string, optional</p>
+<blockquote>
+<div><p>Routine to use for calculating integrated autocorrelation times.  Currently accepts DEFAULT_IAT, &#8216;acor&#8217;, and &#8216;icce&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong> : 1D array</p>
+<blockquote>
+<div><p>Values for the Normalization constant in each window.</p>
+</div></blockquote>
+<p><strong>F</strong> : 2D array</p>
+<blockquote>
+<div><p>Matrix to take the eigenvalue of for MBAR.</p>
+</div></blockquote>
+<p><strong>iats</strong> : 1D array</p>
+<blockquote class="last">
+<div><p>Estimated values of the autocorrelation time.  Only returned if use_iats is true.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.emus_iter">
+<code class="descclassname">emus.</code><code class="descname">emus_iter</code><span class="sig-paren">(</span><em>psis</em>, <em>Avals=None</em>, <em>neighbors=None</em>, <em>return_iats=False</em>, <em>iat_method='ipce'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus.html#emus_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.emus_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs one step of the the EMUS iteration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>psis</strong> : 3D data structure</p>
+<blockquote>
+<div><p>Data structure containing psi values.  See documentation for a detailed explanation.</p>
+</div></blockquote>
+<p><strong>Avals</strong> : 2D matrix, optional</p>
+<blockquote>
+<div><p>Weights in front of <span class="math">\(\psi\)</span> in the overlap matrix.</p>
+</div></blockquote>
+<p><strong>neighbors</strong> : 2D array, optional</p>
+<blockquote>
+<div><p>List showing which windows neighbor which.  See neighbors_harmonic in usutils.</p>
+</div></blockquote>
+<p><strong>return_iats</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether or not to calculate integrated autocorrelation times of <span class="math">\(\psi_ii^*\)</span> for each window.</p>
+</div></blockquote>
+<p><strong>iat_method</strong> : string, optional</p>
+<blockquote>
+<div><p>Routine to use for calculating said iats.  Accepts &#8216;ipce&#8217;, &#8216;acor&#8217;, and &#8216;icce&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong> : 1D array</p>
+<blockquote>
+<div><p>Normalization constants for each window</p>
+</div></blockquote>
+<p><strong>F</strong> : 2D array</p>
+<blockquote>
+<div><p>The overlap matrix constructed for the eigenproblem.</p>
+</div></blockquote>
+<p><strong>iats</strong> : 1D array</p>
+<blockquote class="last">
+<div><p>If return_iats chosen, returns the iats that have been estimated.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="emusroutines.html" class="btn btn-neutral float-right" title="emusroutines module">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="avar.html" class="btn btn-neutral" title="avar module"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Erik H Thiede.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
