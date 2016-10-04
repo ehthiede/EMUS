@@ -216,7 +216,6 @@ def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period
         except:
             raise TypeError('No Temperatures were found in the meta file, and no valid Temperature was provided as input.')
     kT = k_B * temps
-    print kT
     if nsig is not None:
         neighbors = neighbors_harmonic(cntrs,fks,kTs=kT,period=period,nsig=nsig)
     else:
