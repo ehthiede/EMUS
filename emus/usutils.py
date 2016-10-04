@@ -5,7 +5,7 @@ calculations that do not rely directly on the EMUS estimator.
 """
 import numpy as np
 
-def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=4):
+def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=6):
     """Calculates neighborlist for harmonic windows.  Neighbors are chosen 
     such that neighboring umbrellas are no more than nsig standard
     deviations away on a flat potential.
@@ -95,60 +95,11 @@ def unpackNbrs(compd_array,neighbors,L):
         expd_array[n_val] = compd_array[n_ind]
     return expd_array
 
-def data_from_WHAMmeta(filepath,dim,T=None,k_B=1.9872041E-3,period=None):
-    """Reads data saved on disk according to the format used by the WHAM implementation by Grossfield.
-
-    Parameters
-    ----------
-    filepath : string
-        The path to the meta file.
-    dim : int
-        The number of dimensions of the cv space.
-    T : scalar, optional
-        Temperature of the system.
-    k_B : scalar, optional
-        Boltzmann Constant for the system. Default is in kCal/mol
-    period : 1D array-like or float, optional
-        Variable with the periodicity information of the system.  See the Data Structures section of the documentation for a detailed explanation.
-
-    Returns
-    -------
-    psis : 2D array
-        The values of the bias functions at each point in the trajectory evaluated at the windows given.  First axis corresponds to the timepoint, the second to the window index.
-    cv_trajs : 2D array-like
-        Two dimensional data structure with the trajectories in cv space.  The first dimension is the state where the data was collected, and the second is the value in cv space.
-
-    """
-    # Parse Wham Meta file.
-    trajlocs, cntrs, fks, iats, temps  = parse_metafile(filepath,dim)
-    L = len(cntrs)
-
-    # Calculate kT for each window.  Involves some type management...
-    if not temps:
-        try:
-            temps = np.ones(L)*T
-        except:
-            raise TypeError('No Temperatures were found in the meta file, and \
-                no valid Temperature was provided as input.')
-    kT = k_B * temps
-
-    # Load in the trajectories into the cv space
-    trajs = []
-    for i, trajloc in enumerate(trajlocs):
-        trajs.append(np.loadtxt(trajloc)[:,1:]) 
-
-    # Calculate psi values
-    psis = []
-    for i,traj in enumerate(trajs):
-        psi_i = calc_harmonic_psis(traj,cntrs,fks,kT,period=period)
-        psis.append(psi_i)
-
-    return psis, trajs
 
     
 def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
     """Calculates the values of each bias function from a trajectory of points
-    in a single state.
+    in a single window.
 
     Parameters
     ----------
@@ -220,6 +171,83 @@ def calc_harmonic_psi_ij(cv_traj,win_center,win_fk,kT=1.0,period=None):
     U/=2.
 
     return np.exp(-U/kT)
+
+def data_from_fxnmeta(filepath):
+    """Parses the meta file associated with observable data
+
+    Parameters
+    ----------
+    filepath : string
+        The path to the meta file containing the paths of the observable data.
+
+    Returns
+    -------
+    fxndata : List of 2D arrays
+        Three dimensional data structure containing observable information.  The first index corresponds to the window index, the second corresponds to the time point in the window, and the third to the index of the observable.
+
+    """
+    fxn_paths = []
+    with open(filepath,'r') as f:
+        for line in f:
+            fxn_paths.append(line.strip())
+
+    fxndata = []
+    for path in fxn_paths:
+        fxndata.append(np.loadtxt(path)[:,1:])
+    return fxndata
+
+def data_from_WHAMmeta(filepath,dim,T=1.0,k_B=1.0,nsig=None,period=None):
+    """Reads data saved on disk according to the format used by the WHAM implementation by Grossfield.
+
+    Parameters
+    ----------
+    filepath : string
+        The path to the meta file.
+    dim : int
+        The number of dimensions of the cv space.
+    T : scalar, optional
+        Temperature of the system.
+    k_B : scalar, optional
+        Boltzmann Constant for the system. Default is in natural units (1.0)
+    nsig : scalar or None, optional
+        Number of standard deviations of the gaussians to include in the neighborlist.If None, does not use neighbor lists.
+    period : 1D array-like or float, optional
+        Variable with the periodicity information of the system.  See the Data Structures section of the documentation for a detailed explanation.
+
+    Returns
+    -------
+    psis : List of 2D arrays
+        The values of the bias functions at each point in the trajectory evaluated at the windows given.  First axis corresponds to the timepoint, the second to the window index.
+
+    """
+    # Parse Wham Meta file.
+    trajlocs, cntrs, fks, iats, temps  = parse_metafile(filepath,dim)
+    L = len(cntrs)
+    # Calculate kT for each window.  Involves some type management...
+    if not temps:
+        try:
+            temps = np.ones(L)*T
+        except:
+            raise TypeError('No Temperatures were found in the meta file, and no valid Temperature was provided as input.')
+    kT = k_B * temps
+    if nsig is not None:
+        neighbors = neighbors_harmonic(cntrs,fks,kTs=kT,period=period,nsig=nsig)
+    else:
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
+
+    # Load in the trajectories into the cv space
+    trajs = []
+    for i, trajloc in enumerate(trajlocs):
+        trajs.append(np.loadtxt(trajloc)[:,1:])
+
+    # Calculate psi values
+    psis = []
+    for i,traj in enumerate(trajs):
+        nbrs_i = neighbors[i]
+        psi_i = calc_harmonic_psis(traj,cntrs[nbrs_i],fks,kT,period=period)
+        psis.append(psi_i)
+
+    return psis, trajs, neighbors
 
 def parse_metafile(filepath,dim):
     """

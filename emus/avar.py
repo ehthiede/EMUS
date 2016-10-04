@@ -1,57 +1,53 @@
 # -*- coding: utf-8 -*-
-"""
-Library with routines associated with the asymptotic variance of the
-first EMUS iteration.  These estimates rely on estimates of 
-FINISH THIS DOCUMENTATION!!!!
+""" Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator ('ipce') and the initial convex correlation estimator ('icce') by Geyer, and the acor algorithm ('acor') by Jonathan Goodman.  See autocorrelation.py for more details.
 
-Method used to estimate autocorrelation time.  Default is the initial positive correlation estimator ('ipce'), but also supported is the initial convex correlation estimator ('icce') and the acor algorithm ('acor')  See Geyer, Stat. Sci. 1992 and Jonathan Goodman's acor documentation for reference.
+
 """
 
 import numpy as np
 import emus
 import autocorrelation as ac
 import linalg as lm
+from _defaults import *
 
-def average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method='ipce'):
-    """Estimates the asymptotic variance in the estimate of :math:`<g_1>/<g_2>`
-        If :math:`g_2` is not given, it just calculates the asymptotic variance
-        associated with the average of :math:`g_1`.
+def average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IAT):
+    """Estimates the asymptotic variance in the estimate of :math:`<g_1>/<g_2>`. If :math:`g_2` is not given, it just calculates the asymptotic variance associated with the average of :math:`g_1`.
 
-        Parameters
-        ----------
-        psis : 3D data structure
+    Parameters
+    ----------
+    psis : 3D data structure
         Data structure containing psi values.  See documentation for a detailed explanation.
-        z : 1D array
+    z : 1D array
         Array containing the normalization constants
-        F : 2D array
+    F : 2D array
         Overlap matrix for the first EMUS iteration.
-        g1data : 2D data structure
-        Trajectory of observable in the numerator.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.
-        g2data : 2D data structure, optional
+    g1data : 2D data structure
+        Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.
+    g2data : 2D data structure, optional
         Trajectory of observable in the denominator of the ratio.  
-        neighbors : 2D array, optional
-        List showing which states neighbor which.  See neighbors_harmonic in usutils for explanation.
-        iat_method : string, optional
-        Method used to estimate autocorrelation time.  See the documentation above.
+    neighbors : 2D array, optional
+        List showing which windows neighbor which.  Element i,j is the j'th neighboring window of window i.
+    iat_method : string, optional
+        Method used to estimate autocorrelation time.  Choices are 'acor', 'ipce', and 'icce'.
 
-        Returns
-        -------
-        iats : ndarray
+    Returns
+    -------
+    iats : ndarray
         Array of length L (no. windows) where the i'th value corresponds to the iat for window i's contribution to the error.
-        mean : scalar
+    mean : scalar
         Estimate of the ratio
-        variances : ndarray
+    variances : ndarray
         Array of length L (no. windows) where the i'th value corresponds to the autocovariance corresponding to window i's contribution to the error.  The total autocavariance of the ratio can be calculated by summing over the array.
 
         """
 
     # Clean the input and set defaults
-L = len(psis)
+    L = len(psis)
     if neighbors is None:
-neighbors = np.outer(np.ones(L),range(L)).astype(int)
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
     g1data = [np.array(g1i).flatten() for g1i in g1data]
     if g2data is None:
-    g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
+        g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
 
     # Compute average of functions in each window.
     g1star= emus._calculate_win_avgs(psis,z,g1data)
@@ -62,18 +58,14 @@ neighbors = np.outer(np.ones(L),range(L)).astype(int)
     # Compute partial derivatives
     gI = lm.groupInverse(np.eye(L)-F)
     for i in xrange(L):
-        neighb_i = neighbors[i]
         dBdF = np.outer(z,np.dot(gI,g1star-g1avg/g2avg*g2star))/g2avg
         dBdg1 = z/g2avg
         dBdg2 = -(g1avg/g2avg)*z/g2avg
     iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
     return iats, g1avg/g2avg, variances
 
-def log_average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method='ipce'):
-    """Estimates the asymptotic variance in the EMUS estimate of :math:`-log <g_1>/<g_2>`.
-    Input and output is as in average_ratio.  Note that if this is used for 
-    free energy differences, the result does not use the Boltzmann factor (i.e. :math:`k_B T=1`).
-    Resulting variances should be scaled by the Boltzmann factor.
+def log_average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IAT):
+    """Estimates the asymptotic variance in the EMUS estimate of :math:`-log <g_1>/<g_2>`.  Input and output is as in average_ratio.  Note that if this is used for free energy differences, the result does not use the Boltzmann factor (i.e. :math:`k_B T=1`).  In that case, resulting variances should be scaled by the Boltzmann factor *squared*.
 
     """
     # Clean the input and set defaults
@@ -93,8 +85,6 @@ def log_average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method='ipc
     # Compute partial derivatives
     gI = lm.groupInverse(np.eye(L)-F)
     for i in xrange(L):
-        scg1 = g1star/
-        neighb_i = neighbors[i]
         dBdF = np.outer(z,np.dot(gI,g1star/g1avg-g2star/g2avg))
         dBdg1 = z/g1avg
         dBdg2 = -z/g2avg
@@ -102,8 +92,8 @@ def log_average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method='ipc
     return iats, -np.log(g1avg/g2avg), variances
 
 
-def partition_functions(psis,z,F,neighbors=None,iat_method='ipce'):
-    """Estimates the asymptotic variance of the partition function (normalization constant) for each state.  To get an estimate of the autocovariance of the free energy for each state, multiply the autocovariance of state :math:`i` by :math:`k_B T / z_i`.
+def partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):
+    """Estimates the asymptotic variance of the partition function (normalization constant) for each window.  To get an estimate of the autocovariance of the free energy for each window, multiply the autocovariance of window :math:`i` by :math:` (k_B T / z_i)^2`.
 
     Parameters
     ----------
@@ -114,7 +104,7 @@ def partition_functions(psis,z,F,neighbors=None,iat_method='ipce'):
     F : 2D array
         Overlap matrix for the first EMUS iteration.
     neighbors : 2D array, optional
-        List showing which states neighbor which.  See neighbors_harmonic in usutils for explanation.
+        List showing which windows neighbor which.  See neighbors_harmonic in usutils for explanation.
     iat_method : string, optional
         Method used to estimate autocorrelation time.  See the documentation above.
 
@@ -123,9 +113,9 @@ def partition_functions(psis,z,F,neighbors=None,iat_method='ipce'):
     autocovars: ndarray
         Array of length L (no. windows) where the i'th value corresponds to the autocovariance estimate for :math:`z_i` 
     z_var_contribs : ndarray 
-        Two dimensional array, where element i,j corresponds to state j's contribution to the autocovariance of window i.
+        Two dimensional array, where element i,j corresponds to window j's contribution to the autocovariance of window i.
     z_var_iats : ndarray 
-        Two dimensional array, where element i,j corresponds to the autocorrelation time associated with state j's contribution to the autocovariance of window i.
+        Two dimensional array, where element i,j corresponds to the autocorrelation time associated with window j's contribution to the autocovariance of window i.
     """
 
     iat_routine = ac._get_iat_method(iat_method)
@@ -162,9 +152,9 @@ def partition_functions(psis,z,F,neighbors=None,iat_method='ipce'):
     autocovars = np.sum(z_var_contribs,axis=1)
     return autocovars, z_var_contribs, z_var_iats
 
-def _calculate_acovar(psis,dBdF,gdata=None,dBdg=None,neighbors=None,iat_method='ipce'):
+def _calculate_acovar(psis,dBdF,gdata=None,dBdg=None,neighbors=None,iat_method=DEFAULT_IAT):
     """
-    Estimates the autocovariance and autocorrelation times for window contributions for each windows contribution to the autocovariance of some observable B.
+    Estimates the autocovariance and autocorrelation times for each window's contribution to the autocovariance of some observable B.
 
     Parameters
     ----------
@@ -222,12 +212,10 @@ def getAllocations(importances,N_is,newWork):
     ns = np.copy(N_is)
     testWeights = _calcWeightSubproblem(errs,ns,newWork)
     negativity = np.array([ weit < 0.0 for weit in testWeights])
-#    print negativity
     while(any(negativity) == True):
         errs*=( 1.0-negativity)
         ns*=(1.0-negativity)
         newWeights = _calcWeightSubproblem(errs,ns,newWork)
-#        print min(testWeights*newWeights)
         testWeights = newWeights
         negativity = np.array([ weit < 0.0 for weit in testWeights])
     # We return the weights, rounded and then converted to integers
@@ -241,7 +229,6 @@ def _calcWeightSubproblem(importances,N_is,newWork):
     totalWork = np.sum(N_is)
     weights = np.zeros(importances.shape)
     varConstants = importances*np.sqrt(N_is)
-    #print varConstants
     constSum = np.sum(varConstants)
     for ind, val in enumerate(varConstants):
         weights[ind] = val/constSum*(newWork+totalWork)-N_is[ind]

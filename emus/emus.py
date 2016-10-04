@@ -6,6 +6,7 @@ import numpy as np
 import linalg as lm
 import autocorrelation as ac
 from usutils import unpackNbrs
+from _defaults import *
 
 def calculate_obs(psis,z,g1data,g2data=None):
     """Estimates the value of an observable or ratio of observables.
@@ -17,7 +18,7 @@ def calculate_obs(psis,z,g1data,g2data=None):
     z : 1D array
         Array containing the normalization constants
     g1data : 2D data structure
-        Trajectory of observable in the numerator.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.
+        Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.
     g2data : 2D data structure, optional
         Trajectory of observable in the denominator.  
 
@@ -37,8 +38,8 @@ def calculate_obs(psis,z,g1data,g2data=None):
     return np.dot(g1star,z)/np.dot(g2star,z)
 
 
-def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=1.):
-    """Calculates the free energy surface for an umbrella sampling run.
+def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=DEFAULT_KT):
+    """Calculates the free energy surface along a coordinate.
 
     Parameters
     ----------
@@ -47,7 +48,7 @@ def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=1.):
     psis : 3D data structure
         Data structure containing psi values.  See documentation for a detailed explanation.
     domain : tuple
-        Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each state
+        Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window
     nbins : int or tuple, optional
         Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.
     kT : float, optional
@@ -74,7 +75,7 @@ def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=1.):
     hist = np.zeros(nbins)
     for i,xtraj_i in enumerate(cv_trajs):
 #        xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]
-        hist_i = np.zeros(nbins) # Histogram of umbrella i
+        hist_i = np.zeros(nbins) # Histogram of window i
         for n,coord in enumerate(xtraj_i):
             psi_i_n = psis[i][n]
             # We find the coordinate of the bin we land in.
@@ -89,31 +90,31 @@ def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=1.):
     # Calculate the centers of each histogram bin.
     return pmf
 
-def calculate_zs(psis,neighbors=None,nMBAR=0,tol=1.E-8,use_iats=False,iat_method='ipce'):
-    """Calculates the normalization constants for the states.
+def calculate_zs(psis,neighbors=None,nMBAR=0,tol=DEFAULT_MBAR_TOL,use_iats=False,iat_method=DEFAULT_IAT):
+    """Calculates the normalization constants for the windows.
 
     Parameters
     ----------
     nMBAR : int, optional (default 0)
          Maximum number of MBAR iterations to perform.
-    tol : float, optional (default 1.0E-8)
+    tol : float, optional (see _defaults.py for default)
         If the relative residual falls beneath the tolerance, the MBAR iteration is truncated.
     use_iats : bool, optional
-        If true, estimate integrated autocorrelation time in each MBAR iteration.  Likely unnecessary unless dynamics are expected to be drastically different in each state. If iats is provided, the iteration will use those rather than estimating them in each step.
+        If true, estimate integrated autocorrelation time in each MBAR iteration.  Likely unnecessary unless dynamics are expected to be drastically different in each window. If iats is provided, the iteration will use those rather than estimating them in each step.
     iat_method : string, optional
-        Routine to use for calculating integrated autocorrelation times.  Currently accepts 'ipce', 'acor', and 'icce'.
+        Routine to use for calculating integrated autocorrelation times.  Currently accepts DEFAULT_IAT, 'acor', and 'icce'.
     
     Returns
     -------
     z : 1D array
-        Values for the Normalization constant in each state.
+        Values for the Normalization constant in each window.
     F : 2D array
         Matrix to take the eigenvalue of for MBAR.
     iats : 1D array
         Estimated values of the autocorrelation time.  Only returned if use_iats is true.
 
     """
-    L = len(psis) # Number of States
+    L = len(psis) # Number of windows
     Npnts = np.array([len(psis_i) for psis_i in psis])
     Npnts /= np.max(Npnts)
 
@@ -143,7 +144,7 @@ def calculate_zs(psis,neighbors=None,nMBAR=0,tol=1.E-8,use_iats=False,iat_method
         return z, F
 
 
-def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='ipce'):
+def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method=DEFAULT_IAT):
     """Performs one step of the the EMUS iteration.
     
     Parameters
@@ -153,7 +154,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='
     Avals : 2D matrix, optional
         Weights in front of :math:`\psi` in the overlap matrix.
     neighbors : 2D array, optional
-        List showing which states neighbor which.  See neighbors_harmonic in usutils. 
+        List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
     return_iats : bool, optional
         Whether or not to calculate integrated autocorrelation times of :math:`\psi_ii^*` for each window.
     iat_method : string, optional
@@ -162,7 +163,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='
     Returns
     -------
     z : 1D array
-        Normalization constants for each state
+        Normalization constants for each window
     F : 2D array
         The overlap matrix constructed for the eigenproblem.
     iats : 1D array
@@ -170,7 +171,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='
     """
     
     # Initialize variables
-    L = len(psis) # Number of Windows
+    L = len(psis) # Number of windows
     F = np.zeros((L,L)) # Initialize F Matrix
     # Take care of defaults..
     if return_iats:
@@ -189,15 +190,12 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method='
         if return_iats:
             Fi, trajs = Fi_out
             iats[i] = iatroutine(trajs[nbr_index])[0]
-#            print iats[i]
         else:
             Fi = Fi_out
         # Unpack the Neighbor list
         F[i] = unpackNbrs(Fi,nbrs_i,L)
 
-#    print F
     z = lm.stationary_distrib(F)
-#    print z
     if return_iats:
         return z, F, iats
     else:
@@ -256,7 +254,7 @@ def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
         return Fi
     
 def _calculate_win_avgs(psis,z,gdata):
-    """Helper method estimating the scaled averages in each umbrella.
+    """Helper method estimating the scaled averages in each window.
 
     Parameters
     ----------
@@ -265,12 +263,12 @@ def _calculate_win_avgs(psis,z,gdata):
     z : 1D array
         Array containing the normalization constants
     gdata : 2D data structure
-        Trajectory of observable in the numerator.  First dimension corresponds to the umbrella index and the second to the point in the trajectory.
+        Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.
 
     Returns
     -------
     gstar : 1D array
-        Array where element i is the estimate of :math:`<g^*>` in state i.
+        Array where element i is the estimate of :math:`<g^*>` in window i.
 
     """
     gstar = []

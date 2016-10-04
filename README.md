@@ -15,7 +15,7 @@ opening html_doc/htm/index.html in a browser.
 If you are using this code, please also cite the 
 [EMUS paper](http://arxiv.org/abs/1603.04505/)
 
-[![DOI](https://zenodo.org/badge/20497/ehthiede/EMUS.svg)](https://zenodo.org/badge/latestdoi/20497/ehthiede/EMUS)
+Copyright (c) 2016 Erik Henning Thiede, Brian van Koten, Jonathan Weare, Aaron R. Dinner.
 
 ------------
 Installation

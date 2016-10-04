@@ -1,8 +1,7 @@
-Update IAT selection in EMUS class
-Check that all IAT selection is implemented correctly.
-Move MBAR iteration to EMUS routines
 PEP8 compatibility
 Make sure nomenclature is unified.
 Flesh out Data Structures document.
 Have make_pmf return the bin edges as well as the pmf
 PROOFREAD THE DOCUMENTATION!
+
+Update License to Gnu license; add reference.

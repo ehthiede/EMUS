@@ -1,10 +1,28 @@
 # -*- coding: utf-8 -*-
 """
-Tools for analyzing the autocorrelation of a time series
+Tools for analyzing the autocorrelation time of a time series.
+
+The ipce and icce routines are implementations of the initial positive correlation time estimator, and the initial convex correlation estimator proposed by Geyer (see Geyer, Statist. Sci., **7** 4, (1992), p. 473).
 """
 import numpy as np
 
 def autocorrfxn(timeseries,lagmax):
+    """
+    Calculates the autocorrelation function of a timeseries up to lagmax.
+
+    Parameters
+    ----------
+        timeseries : ndarray
+            The time series of which to calculate the autocorrelation function.
+        lagmax : int
+            The maximum change in time to which to calculate the autocorrelation function.
+    
+    Returns
+    -------
+        corrfxn : ndarray
+            The value of the autocorrelation function for each value of the change in time.
+
+    """
     ts = np.asarray(timeseries)
     ts -= np.average(ts) # Set to mean 0
     N = len(timeseries)
@@ -14,10 +32,26 @@ def autocorrfxn(timeseries,lagmax):
     corrfxn /= corrfxn[0] # Normalize
     return corrfxn
 
-
 def ipce(timeseries,lagmax=None):
     """
-    Initial positive correlation time estimator
+    The initial positive correlation time estimator for the autocorrelation time, as proposed by Geyer. 
+
+    Parameters
+    ----------
+        timeseries : ndarray
+            The time series of which to calculate the autocorrelation function.
+        lagmax : int
+            The maximum change in time to which to calculate the autocorrelation function.
+
+    Returns
+    -------
+        tau : float
+            Estimate of the autocorrelation time.
+        mean : float
+            Average value of the timeseries
+        sigma : float
+            Estimate of the square root of the autocovariance of the timeseries
+
     """
     timeseries = np.copy(timeseries)
     mean = np.average(timeseries)
@@ -47,11 +81,27 @@ def _cte(timeseries,maxcorr):
     var = np.var(timeseries)
     sigma = np.sqrt(var * tau / len(timeseries))
     return tau, mean, sigma
-
     
 def icce(timeseries,lagmax=None):
     """
-    Initial convex correlation time estimator
+    The initial convex correlation time estimator for the autocorrelation time, as proposed by Geyer.  
+
+    Parameters
+    ----------
+        timeseries : ndarray
+            The time series of which to calculate the autocorrelation function.
+        lagmax : int
+            The maximum change in time to which to calculate the autocorrelation function.
+
+    Returns
+    -------
+        tau : float
+            Estimate of the autocorrelation time.
+        mean : float
+            Average value of the timeseries
+        sigma : float
+            Estimate of the square root of the autocovariance of the timeseries
+
     """
     timeseries = np.copy(timeseries)
     if lagmax == None:
@@ -64,7 +114,6 @@ def icce(timeseries,lagmax=None):
     while i < 0.5*lagmax-2:
         gammafuture =  corrfxn[2*i+2] + corrfxn[2*i+3]
         if gamma > 0.5*(gammapast+gammafuture) :
-            print 'stop at ',2*i
             break
         else:
             t += gamma 
@@ -102,5 +151,3 @@ def _get_iat_method(iatmethod):
         from autocorrelation import icce
         iatroutine = icce
     return iatroutine
-
-

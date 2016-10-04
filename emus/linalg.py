@@ -38,7 +38,7 @@ def stationary_distrib(F,residtol = 1.E-10,max_iter=100):
     
     """
 
-    L = len(F) # Number of States
+    L = len(F) # Number of states 
     M = np.eye(L)-F
     q,r=qr(M)
     z=q[:,-1] # Stationary dist. is last column of QR fact
@@ -59,7 +59,7 @@ def old_stationary_distrib(F,fix=None,residtol = 1.E-10,max_iter=100):
     """
     Depricated routine to calculate the stationar distribution of F.
     """
-    L = len(F) # Number of States
+    L = len(F) # Number of states
     # If no fixed state is specified, we find a state with high weight in z.
     if fix is None:
         testz = stationary_distrib(F,1)
