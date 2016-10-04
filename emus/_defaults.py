@@ -3,8 +3,8 @@
 
 """
 ##### Package-wide #####
-DEFAULT_K_B = 1.0
-DEFAULT_T = 1.0
+DEFAULT_K_B = 1.0 # Must be a numerical value.
+DEFAULT_T = 1.0 # Must be a numerical value.
 DEFAULT_KT = DEFAULT_K_B * DEFAULT_T 
 DEFAULT_IAT = 'ipce'
 

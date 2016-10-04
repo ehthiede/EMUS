@@ -64,8 +64,8 @@ def average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_
     iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
     return iats, g1avg/g2avg, variances
 
-def log_average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IAT):
-    """Estimates the asymptotic variance in the EMUS estimate of :math:`-log <g_1>/<g_2>`.  Input and output is as in average_ratio.  Note that if this is used for free energy differences, the result does not use the Boltzmann factor (i.e. :math:`k_B T=1`).  In that case, resulting variances should be scaled by the Boltzmann factor *squared*.
+def log_average(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IAT):
+    """Estimates the asymptotic variance in the EMUS estimate of :math:`-log <g_1>/<g_2>`.  If :math:`g_2` data is not provided, it estimates the asymptotic variance in the estimate of :math:`-log <g_1>/<g_2>`.  Input and output is as in average_ratio.  Note that if this is used for free energy differences, the result does not use the Boltzmann factor (i.e. :math:`k_B T=1`).  In that case, resulting variances should be scaled by the Boltzmann factor *squared*.
 
     """
     # Clean the input and set defaults

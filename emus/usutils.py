@@ -4,8 +4,9 @@ calculations that do not rely directly on the EMUS estimator.
 
 """
 import numpy as np
+from _defaults import *
 
-def neighbors_harmonic(centers,fks,kTs=1.,period=None,nsig=6):
+def neighbors_harmonic(centers,fks,kTs=DEFAULT_KT,period=None,nsig=6):
     """Calculates neighborlist for harmonic windows.  Neighbors are chosen 
     such that neighboring umbrellas are no more than nsig standard
     deviations away on a flat potential.
@@ -181,7 +182,7 @@ def data_from_fxnmeta(filepath):
         fxndata.append(np.loadtxt(path)[:,1:])
     return fxndata
 
-def data_from_WHAMmeta(filepath,dim,T=1.0,k_B=1.0,nsig=None,period=None):
+def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period=None):
     """Reads data saved on disk according to the format used by the WHAM implementation by Grossfield.
 
     Parameters
@@ -215,6 +216,7 @@ def data_from_WHAMmeta(filepath,dim,T=1.0,k_B=1.0,nsig=None,period=None):
         except:
             raise TypeError('No Temperatures were found in the meta file, and no valid Temperature was provided as input.')
     kT = k_B * temps
+    print kT
     if nsig is not None:
         neighbors = neighbors_harmonic(cntrs,fks,kTs=kT,period=period,nsig=nsig)
     else:
