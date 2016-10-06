@@ -14,7 +14,6 @@ Contents:
    autocorrelation
    avar
    emus
-   emusroutines
    linalg
    usutils
 

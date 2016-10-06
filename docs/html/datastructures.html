@@ -64,6 +64,11 @@
           
           
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#emus">EMUS</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
@@ -81,12 +86,10 @@
 <li class="toctree-l2"><a class="reference internal" href="modules/autocorrelation.html">autocorrelation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/avar.html">avar module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/emus.html">emus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/emusroutines.html">emusroutines module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/linalg.html">linalg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/usutils.html">usutils module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="test.html">test</a></li>
 </ul>
 
           
@@ -127,7 +130,6 @@
 <p>This section discusses commonly used variables and naming conventions used throughout the EMUS package. These are not strict standards: the EMUS package attempts to duck-type as much as possible to interpret user input.  The documentation below is intended to indicate approximately what form inputs can take, and to aid comprehension of the source code.</p>
 <div class="section" id="parameters-for-harmonic-windows">
 <h2>Parameters for Harmonic windows<a class="headerlink" href="#parameters-for-harmonic-windows" title="Permalink to this headline">¶</a></h2>
-<p>These variables contain parameters of the window sampling system.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -187,7 +189,7 @@ If the neighborlist functionality is used, the third index does not
 need to span over all of the windows, only nearby ones
 (this introduces slight systematic bias into the estimator).</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">fdata:</th><td class="field-body">Two-dimensional array-like containing the values of an observable.
+<tr class="field-odd field"><th class="field-name">gdata:</th><td class="field-body">Two-dimensional array-like containing the values of an observable.
 The data structure is similar to cv_trajs: <code class="samp docutils literal"><span class="pre">fdata[i][n]</span></code>
 gives the value of the observable evaluated in state i at timepoint n.</td>
 </tr>

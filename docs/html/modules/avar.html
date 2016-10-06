@@ -65,6 +65,11 @@
           
           
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
@@ -82,12 +87,10 @@
 <li class="toctree-l2"><a class="reference internal" href="autocorrelation.html">autocorrelation module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">avar module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="emus.html">emus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="emusroutines.html">emusroutines module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linalg.html">linalg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usutils.html">usutils module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../test.html">test</a></li>
 </ul>
 
           
@@ -127,7 +130,7 @@
             
   <div class="section" id="module-avar">
 <span id="avar-module"></span><h1>avar module<a class="headerlink" href="#module-avar" title="Permalink to this headline">¶</a></h1>
-<p>Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator (&#8216;ipce&#8217;) and the initial convex correlation estimator (&#8216;icce&#8217;) by Geyer, and the acor algorithm (&#8216;acor&#8217;) by Jonathan Goodman.  See autocorrelation.py for more details.</p>
+<p>Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator (&#8216;ipce&#8217;) and the initial convex correlation estimator (&#8216;icce&#8217;) by Geyer, and the acor algorithm (&#8216;acor&#8217;) by Jonathan Goodman.  See the documentation to the <cite>autocorrelation module &lt;autocorrelation.html&gt;</cite> for more details.</p>
 <dl class="function">
 <dt id="avar.average_ratio">
 <code class="descclassname">avar.</code><code class="descname">average_ratio</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>F</em>, <em>g1data</em>, <em>g2data=None</em>, <em>neighbors=None</em>, <em>iat_method='ipce'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/avar.html#average_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avar.average_ratio" title="Permalink to this definition">¶</a></dt>
@@ -138,7 +141,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>psis</strong> : 3D data structure</p>
 <blockquote>
-<div><p>Data structure containing psi values.  See documentation for a detailed explanation.</p>
+<div><p>The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
 </div></blockquote>
 <p><strong>z</strong> : 1D array</p>
 <blockquote>
@@ -208,7 +211,7 @@ To deal with negative weights, it removes all the negative weights, and calculat
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>psis</strong> : 3D data structure</p>
 <blockquote>
-<div><p>Data structure containing psi values.  See documentation for a detailed explanation.</p>
+<div><p>The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
 </div></blockquote>
 <p><strong>z</strong> : 1D array</p>
 <blockquote>

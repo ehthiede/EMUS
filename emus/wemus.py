@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
 """
 EMUS Script runnable from the command line that uses WHAM-like input.
 """
@@ -30,9 +30,7 @@ def main():
     # Calculate any averages of functions.
     if fdata is not None:
         favgs = []
-        nfxns = len(fdata[0][0])
-        for n in xrange(nfxns):
-            fdata_i = [fi[:,n] for fi in fdata]
+        for n, fdata_i in enumerate(fdata):
             favgs.append(emus.calculate_obs(psis,z,fdata_i))
 
     # Perform Error analysis if requested.

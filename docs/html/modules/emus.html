@@ -32,7 +32,7 @@
   
     <link rel="top" title="emus  documentation" href="../index.html"/>
         <link rel="up" title="EMUS Modules" href="index.html"/>
-        <link rel="next" title="emusroutines module" href="emusroutines.html"/>
+        <link rel="next" title="linalg module" href="linalg.html"/>
         <link rel="prev" title="avar module" href="avar.html"/> 
 
   
@@ -65,6 +65,11 @@
           
           
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
@@ -82,12 +87,10 @@
 <li class="toctree-l2"><a class="reference internal" href="autocorrelation.html">autocorrelation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="avar.html">avar module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="">emus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="emusroutines.html">emusroutines module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linalg.html">linalg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usutils.html">usutils module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../test.html">test</a></li>
 </ul>
 
           
@@ -131,47 +134,36 @@
 <dl class="function">
 <dt id="emus.calculate_Fi">
 <code class="descclassname">emus.</code><code class="descname">calculate_Fi</code><span class="sig-paren">(</span><em>psi_i</em>, <em>i</em>, <em>Avals_i=None</em>, <em>return_trajs=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus.html#calculate_Fi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.calculate_Fi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the values of a single row in the F matrix.
-If neighborlists are being used, psi_i, and Avals_i should be the 
-neighborlisted data structure, and the row will be need to be unpacked
-using the neighborlist .</p>
+<dd><p>Calculates the values of a single row in the F matrix.  If neighborlists are being used, psi_i, and Avals_i should be the neighborlisted data structure, and the row will be need to be unpacked using the neighborlist.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>psi_i</strong> : 2D array-like</p>
 <blockquote>
-<div><blockquote>
-<div><p>Values of <span class="math">\(\psi\)</span> collected in window i.  The j&#8217;th column 
-corresponds to the j&#8217;th neighboring window.</p>
+<div><p>Values of <span class="math">\(\psi\)</span> collected in window i.  The j&#8217;th column corresponds to the j&#8217;th neighboring window.</p>
 </div></blockquote>
-<dl class="docutils">
-<dt>i <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">Index of the window where the data was collected.</p>
-</dd>
-<dt>Avals_i <span class="classifier-delimiter">:</span> <span class="classifier">1D array-like</span></dt>
-<dd><p class="first last">Weights in front of :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>psi_{ij} in the overlap matrix.</p>
-</dd>
-<dt>return_trajs <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd><p class="first last">Whether or not to return the trajectories that are averaged to 
-calculate the values of F.  These can be useful for estimating 
-autocorrelation times and performing error analysis.</p>
-</dd>
-</dl>
+<p><strong>i</strong> : int</p>
+<blockquote>
+<div><p>Index of the window where the data was collected.</p>
+</div></blockquote>
+<p><strong>Avals_i</strong> : 1D array-like</p>
+<blockquote>
+<div><p>Weights in front of <span class="math">\(\psi_{ij}\)</span> in the overlap matrix.</p>
+</div></blockquote>
+<p><strong>return_trajs</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether or not to return the trajectories that are averaged to calculate the values of F.  These can be useful for estimating autocorrelation times and performing error analysis.</p>
 </div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Fi</strong> : 1D numpy array</p>
-<blockquote class="last">
-<div><blockquote>
+<blockquote>
 <div><p>The (neighborlisted) row in the F matrix</p>
 </div></blockquote>
-<dl class="docutils">
-<dt>trajs <span class="classifier-delimiter">:</span> <span class="classifier">2D numpy array</span></dt>
-<dd><p class="first last">If return_trajs is True, returns the trajectories used in
-calculating the values of F</p>
-</dd>
-</dl>
+<p><strong>trajs</strong> : 2D numpy array</p>
+<blockquote class="last">
+<div><p>If return_trajs is True, returns the trajectories used in calculating the values of F</p>
 </div></blockquote>
 </td>
 </tr>
@@ -189,7 +181,7 @@ calculating the values of F</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>psis</strong> : 3D data structure</p>
 <blockquote>
-<div><p>Data structure containing psi values.  See documentation for a detailed explanation.</p>
+<div><p>The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
 </div></blockquote>
 <p><strong>z</strong> : 1D array</p>
 <blockquote>
@@ -225,11 +217,11 @@ calculating the values of F</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cv_trajs</strong> : 2D data structure</p>
 <blockquote>
-<div><p>Data structure containing trajectories in the collective variable space.</p>
+<div><p>Data structure containing trajectories in the collective variable space.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
 </div></blockquote>
 <p><strong>psis</strong> : 3D data structure</p>
 <blockquote>
-<div><p>Data structure containing psi values.  See documentation for a detailed explanation.</p>
+<div><p>The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
 </div></blockquote>
 <p><strong>domain</strong> : tuple</p>
 <blockquote>
@@ -309,7 +301,7 @@ calculating the values of F</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>psis</strong> : 3D data structure</p>
 <blockquote>
-<div><p>Data structure containing psi values.  See documentation for a detailed explanation.</p>
+<div><p>The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
 </div></blockquote>
 <p><strong>Avals</strong> : 2D matrix, optional</p>
 <blockquote>
@@ -355,7 +347,7 @@ calculating the values of F</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="emusroutines.html" class="btn btn-neutral float-right" title="emusroutines module">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="linalg.html" class="btn btn-neutral float-right" title="linalg module">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="avar.html" class="btn btn-neutral" title="avar module"><span class="fa fa-arrow-circle-left"></span> Previous</a>

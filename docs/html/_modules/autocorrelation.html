@@ -63,6 +63,11 @@
           
           
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
@@ -80,12 +85,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../modules/autocorrelation.html">autocorrelation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/avar.html">avar module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/emus.html">emus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/emusroutines.html">emusroutines module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/linalg.html">linalg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/usutils.html">usutils module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../test.html">test</a></li>
 </ul>
 
           
@@ -123,28 +126,27 @@
             
   <h1>Source code for autocorrelation</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Tools for analyzing the autocorrelation time of a time series.</span>
+<span class="sd">&quot;&quot;&quot; Tools for analyzing the autocorrelation time of a time series.</span>
 
 <span class="sd">The ipce and icce routines are implementations of the initial positive correlation time estimator, and the initial convex correlation estimator proposed by Geyer (see Geyer, Statist. Sci., **7** 4, (1992), p. 473).</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <div class="viewcode-block" id="autocorrfxn"><a class="viewcode-back" href="../modules/autocorrelation.html#autocorrelation.autocorrfxn">[docs]</a><span class="k">def</span> <span class="nf">autocorrfxn</span><span class="p">(</span><span class="n">timeseries</span><span class="p">,</span><span class="n">lagmax</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the autocorrelation function of a timeseries up to lagmax.</span>
+    <span class="sd">&quot;&quot;&quot; Calculates the autocorrelation function of a timeseries up to lagmax.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        timeseries : ndarray</span>
-<span class="sd">            The time series of which to calculate the autocorrelation function.</span>
-<span class="sd">        lagmax : int</span>
-<span class="sd">            The maximum change in time to which to calculate the autocorrelation function.</span>
+<span class="sd">    timeseries : ndarray</span>
+<span class="sd">        The time series of which to calculate the autocorrelation function.</span>
+<span class="sd">    lagmax : int</span>
+<span class="sd">        The maximum change in time to which to calculate the autocorrelation function.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        corrfxn : ndarray</span>
-<span class="sd">            The value of the autocorrelation function for each value of the change in time.</span>
+<span class="sd">    corrfxn : ndarray</span>
+<span class="sd">        The value of the autocorrelation function for each value of the change in time.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">timeseries</span><span class="p">)</span>
@@ -157,24 +159,23 @@
     <span class="k">return</span> <span class="n">corrfxn</span>
 </div>
 <div class="viewcode-block" id="ipce"><a class="viewcode-back" href="../modules/autocorrelation.html#autocorrelation.ipce">[docs]</a><span class="k">def</span> <span class="nf">ipce</span><span class="p">(</span><span class="n">timeseries</span><span class="p">,</span><span class="n">lagmax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The initial positive correlation time estimator for the autocorrelation time, as proposed by Geyer. </span>
+    <span class="sd">&quot;&quot;&quot; The initial positive correlation time estimator for the autocorrelation time, as proposed by Geyer. </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        timeseries : ndarray</span>
-<span class="sd">            The time series of which to calculate the autocorrelation function.</span>
-<span class="sd">        lagmax : int</span>
-<span class="sd">            The maximum change in time to which to calculate the autocorrelation function.</span>
+<span class="sd">    timeseries : ndarray</span>
+<span class="sd">        The time series of which to calculate the autocorrelation function.</span>
+<span class="sd">    lagmax : int</span>
+<span class="sd">        The maximum change in time to which to calculate the autocorrelation function.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        tau : float</span>
-<span class="sd">            Estimate of the autocorrelation time.</span>
-<span class="sd">        mean : float</span>
-<span class="sd">            Average value of the timeseries</span>
-<span class="sd">        sigma : float</span>
-<span class="sd">            Estimate of the square root of the autocovariance of the timeseries</span>
+<span class="sd">    tau : float</span>
+<span class="sd">        Estimate of the autocorrelation time.</span>
+<span class="sd">    mean : float</span>
+<span class="sd">        Average value of the timeseries</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        Estimate of the square root of the autocovariance of the timeseries</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">timeseries</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">timeseries</span><span class="p">)</span>
@@ -207,24 +208,23 @@
     <span class="k">return</span> <span class="n">tau</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">sigma</span>
     
 <div class="viewcode-block" id="icce"><a class="viewcode-back" href="../modules/autocorrelation.html#autocorrelation.icce">[docs]</a><span class="k">def</span> <span class="nf">icce</span><span class="p">(</span><span class="n">timeseries</span><span class="p">,</span><span class="n">lagmax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The initial convex correlation time estimator for the autocorrelation time, as proposed by Geyer.  </span>
+    <span class="sd">&quot;&quot;&quot;The initial convex correlation time estimator for the autocorrelation time, as proposed by Geyer.  </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        timeseries : ndarray</span>
-<span class="sd">            The time series of which to calculate the autocorrelation function.</span>
-<span class="sd">        lagmax : int</span>
-<span class="sd">            The maximum change in time to which to calculate the autocorrelation function.</span>
+<span class="sd">    timeseries : ndarray</span>
+<span class="sd">        The time series of which to calculate the autocorrelation function.</span>
+<span class="sd">    lagmax : int</span>
+<span class="sd">        The maximum change in time to which to calculate the autocorrelation function.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        tau : float</span>
-<span class="sd">            Estimate of the autocorrelation time.</span>
-<span class="sd">        mean : float</span>
-<span class="sd">            Average value of the timeseries</span>
-<span class="sd">        sigma : float</span>
-<span class="sd">            Estimate of the square root of the autocovariance of the timeseries</span>
+<span class="sd">    tau : float</span>
+<span class="sd">        Estimate of the autocorrelation time.</span>
+<span class="sd">    mean : float</span>
+<span class="sd">        Average value of the timeseries</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        Estimate of the square root of the autocovariance of the timeseries</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">timeseries</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">timeseries</span><span class="p">)</span>

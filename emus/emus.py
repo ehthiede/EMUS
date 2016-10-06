@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-Container for the primary EMUS routines.
+""" Container for the primary EMUS routines.
+
 """
 import numpy as np
 import linalg as lm
@@ -14,7 +14,7 @@ def calculate_obs(psis,z,g1data,g2data=None):
     Parameters
     ----------
     psis : 3D data structure
-        Data structure containing psi values.  See documentation for a detailed explanation.
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     z : 1D array
         Array containing the normalization constants
     g1data : 2D data structure
@@ -44,9 +44,9 @@ def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=DEFAULT_KT):
     Parameters
     ----------
     cv_trajs : 2D data structure
-        Data structure containing trajectories in the collective variable space. 
+        Data structure containing trajectories in the collective variable space.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     psis : 3D data structure
-        Data structure containing psi values.  See documentation for a detailed explanation.
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     domain : tuple
         Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window
     nbins : int or tuple, optional
@@ -150,7 +150,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method=D
     Parameters
     ----------
     psis : 3D data structure
-        Data structure containing psi values.  See documentation for a detailed explanation.
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     Avals : 2D matrix, optional
         Weights in front of :math:`\psi` in the overlap matrix.
     neighbors : 2D array, optional
@@ -168,6 +168,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method=D
         The overlap matrix constructed for the eigenproblem.
     iats : 1D array
         If return_iats chosen, returns the iats that have been estimated.
+
     """
     
     # Initialize variables
@@ -202,34 +203,26 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method=D
         return z, F
 
 def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
-    """
-    Calculates the values of a single row in the F matrix.
-    If neighborlists are being used, psi_i, and Avals_i should be the 
-    neighborlisted data structure, and the row will be need to be unpacked
-    using the neighborlist .
-
+    """Calculates the values of a single row in the F matrix.  If neighborlists are being used, psi_i, and Avals_i should be the neighborlisted data structure, and the row will be need to be unpacked using the neighborlist.
+    
     Parameters
     ----------
-        psi_i : 2D array-like
-            Values of :math:`\psi` collected in window i.  The j'th column 
-            corresponds to the j'th neighboring window.
-        i : int
-            Index of the window where the data was collected.
-        Avals_i : 1D array-like
-            Weights in front of :math:`\psi_{ij} in the overlap matrix.
-        return_trajs : bool, optional
-            Whether or not to return the trajectories that are averaged to 
-            calculate the values of F.  These can be useful for estimating 
-            autocorrelation times and performing error analysis.
-
+    psi_i : 2D array-like
+        Values of :math:`\psi` collected in window i.  The j'th column corresponds to the j'th neighboring window.
+    i : int
+        Index of the window where the data was collected.
+    Avals_i : 1D array-like
+        Weights in front of :math:`\psi_{ij}` in the overlap matrix.
+    return_trajs : bool, optional
+        Whether or not to return the trajectories that are averaged to calculate the values of F.  These can be useful for estimating autocorrelation times and performing error analysis.
+    
     Returns
     -------
-        Fi : 1D numpy array 
-            The (neighborlisted) row in the F matrix
-        trajs : 2D numpy array
-            If return_trajs is True, returns the trajectories used in
-            calculating the values of F
-
+    Fi : 1D numpy array 
+        The (neighborlisted) row in the F matrix
+    trajs : 2D numpy array
+        If return_trajs is True, returns the trajectories used in calculating the values of F
+    
     """
     # Setup
     L = np.shape(psi_i)[1] # Number of neighboring windows
@@ -259,7 +252,7 @@ def _calculate_win_avgs(psis,z,gdata):
     Parameters
     ----------
     psis : 3D data structure
-        Data structure containing psi values.  See documentation for a detailed explanation.
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     z : 1D array
         Array containing the normalization constants
     gdata : 2D data structure

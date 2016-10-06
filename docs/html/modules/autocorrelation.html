@@ -65,6 +65,11 @@
           
           
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
@@ -82,12 +87,10 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="">autocorrelation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="avar.html">avar module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="emus.html">emus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="emusroutines.html">emusroutines module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linalg.html">linalg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usutils.html">usutils module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../test.html">test</a></li>
 </ul>
 
           
@@ -139,14 +142,11 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>timeseries</strong> : ndarray</p>
 <blockquote>
-<div><blockquote>
 <div><p>The time series of which to calculate the autocorrelation function.</p>
 </div></blockquote>
-<dl class="docutils">
-<dt>lagmax <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">The maximum change in time to which to calculate the autocorrelation function.</p>
-</dd>
-</dl>
+<p><strong>lagmax</strong> : int</p>
+<blockquote>
+<div><p>The maximum change in time to which to calculate the autocorrelation function.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -170,30 +170,25 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>timeseries</strong> : ndarray</p>
 <blockquote>
-<div><blockquote>
 <div><p>The time series of which to calculate the autocorrelation function.</p>
 </div></blockquote>
-<dl class="docutils">
-<dt>lagmax <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">The maximum change in time to which to calculate the autocorrelation function.</p>
-</dd>
-</dl>
+<p><strong>lagmax</strong> : int</p>
+<blockquote>
+<div><p>The maximum change in time to which to calculate the autocorrelation function.</p>
 </div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>tau</strong> : float</p>
-<blockquote class="last">
-<div><blockquote>
+<blockquote>
 <div><p>Estimate of the autocorrelation time.</p>
 </div></blockquote>
-<dl class="docutils">
-<dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Average value of the timeseries</p>
-</dd>
-<dt>sigma <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Estimate of the square root of the autocovariance of the timeseries</p>
-</dd>
-</dl>
+<p><strong>mean</strong> : float</p>
+<blockquote>
+<div><p>Average value of the timeseries</p>
+</div></blockquote>
+<p><strong>sigma</strong> : float</p>
+<blockquote class="last">
+<div><p>Estimate of the square root of the autocovariance of the timeseries</p>
 </div></blockquote>
 </td>
 </tr>
@@ -211,30 +206,25 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>timeseries</strong> : ndarray</p>
 <blockquote>
-<div><blockquote>
 <div><p>The time series of which to calculate the autocorrelation function.</p>
 </div></blockquote>
-<dl class="docutils">
-<dt>lagmax <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">The maximum change in time to which to calculate the autocorrelation function.</p>
-</dd>
-</dl>
+<p><strong>lagmax</strong> : int</p>
+<blockquote>
+<div><p>The maximum change in time to which to calculate the autocorrelation function.</p>
 </div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>tau</strong> : float</p>
-<blockquote class="last">
-<div><blockquote>
+<blockquote>
 <div><p>Estimate of the autocorrelation time.</p>
 </div></blockquote>
-<dl class="docutils">
-<dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Average value of the timeseries</p>
-</dd>
-<dt>sigma <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Estimate of the square root of the autocovariance of the timeseries</p>
-</dd>
-</dl>
+<p><strong>mean</strong> : float</p>
+<blockquote>
+<div><p>Average value of the timeseries</p>
+</div></blockquote>
+<p><strong>sigma</strong> : float</p>
+<blockquote class="last">
+<div><p>Estimate of the square root of the autocovariance of the timeseries</p>
 </div></blockquote>
 </td>
 </tr>

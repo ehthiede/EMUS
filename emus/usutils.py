@@ -169,7 +169,7 @@ def data_from_fxnmeta(filepath):
     Returns
     -------
     fxndata : List of 2D arrays
-        Three dimensional data structure containing observable information.  The first index corresponds to the window index, the second corresponds to the time point in the window, and the third to the index of the observable.
+        Three dimensional data structure containing observable information.  The first index corresponds to the observable being calculated, the second to the window index, and the third to the time point in the window.
 
     """
     fxn_paths = []
@@ -178,8 +178,17 @@ def data_from_fxnmeta(filepath):
             fxn_paths.append(line.strip())
 
     fxndata = []
-    for path in fxn_paths:
-        fxndata.append(np.loadtxt(path)[:,1:])
+    for i,path in enumerate(fxn_paths):
+        data_i = np.loadtxt(path)
+        nfxns = None # Placeholder value
+        if i == 0:
+            nfxns = len(data_i[0])
+            for n in xrange(nfxns):
+                fxndata.append([data_i[:,(n+1)]])
+        else:
+            for n in xrange(nfxns):
+                fxndata[(n+1)].append(data_i[:,(n+1)])
+
     return fxndata
 
 def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period=None):
@@ -203,7 +212,7 @@ def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period
     Returns
     -------
     psis : List of 2D arrays
-        The values of the bias functions at each point in the trajectory evaluated at the windows given.  First axis corresponds to the timepoint, the second to the window index.
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
 
     """
     # Parse Wham Meta file.

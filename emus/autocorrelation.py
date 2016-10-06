@@ -1,26 +1,25 @@
 # -*- coding: utf-8 -*-
-"""
-Tools for analyzing the autocorrelation time of a time series.
+""" Tools for analyzing the autocorrelation time of a time series.
 
 The ipce and icce routines are implementations of the initial positive correlation time estimator, and the initial convex correlation estimator proposed by Geyer (see Geyer, Statist. Sci., **7** 4, (1992), p. 473).
+
 """
 import numpy as np
 
 def autocorrfxn(timeseries,lagmax):
-    """
-    Calculates the autocorrelation function of a timeseries up to lagmax.
+    """ Calculates the autocorrelation function of a timeseries up to lagmax.
 
     Parameters
     ----------
-        timeseries : ndarray
-            The time series of which to calculate the autocorrelation function.
-        lagmax : int
-            The maximum change in time to which to calculate the autocorrelation function.
+    timeseries : ndarray
+        The time series of which to calculate the autocorrelation function.
+    lagmax : int
+        The maximum change in time to which to calculate the autocorrelation function.
     
     Returns
     -------
-        corrfxn : ndarray
-            The value of the autocorrelation function for each value of the change in time.
+    corrfxn : ndarray
+        The value of the autocorrelation function for each value of the change in time.
 
     """
     ts = np.asarray(timeseries)
@@ -33,24 +32,23 @@ def autocorrfxn(timeseries,lagmax):
     return corrfxn
 
 def ipce(timeseries,lagmax=None):
-    """
-    The initial positive correlation time estimator for the autocorrelation time, as proposed by Geyer. 
+    """ The initial positive correlation time estimator for the autocorrelation time, as proposed by Geyer. 
 
     Parameters
     ----------
-        timeseries : ndarray
-            The time series of which to calculate the autocorrelation function.
-        lagmax : int
-            The maximum change in time to which to calculate the autocorrelation function.
+    timeseries : ndarray
+        The time series of which to calculate the autocorrelation function.
+    lagmax : int
+        The maximum change in time to which to calculate the autocorrelation function.
 
     Returns
     -------
-        tau : float
-            Estimate of the autocorrelation time.
-        mean : float
-            Average value of the timeseries
-        sigma : float
-            Estimate of the square root of the autocovariance of the timeseries
+    tau : float
+        Estimate of the autocorrelation time.
+    mean : float
+        Average value of the timeseries
+    sigma : float
+        Estimate of the square root of the autocovariance of the timeseries
 
     """
     timeseries = np.copy(timeseries)
@@ -83,24 +81,23 @@ def _cte(timeseries,maxcorr):
     return tau, mean, sigma
     
 def icce(timeseries,lagmax=None):
-    """
-    The initial convex correlation time estimator for the autocorrelation time, as proposed by Geyer.  
+    """The initial convex correlation time estimator for the autocorrelation time, as proposed by Geyer.  
 
     Parameters
     ----------
-        timeseries : ndarray
-            The time series of which to calculate the autocorrelation function.
-        lagmax : int
-            The maximum change in time to which to calculate the autocorrelation function.
+    timeseries : ndarray
+        The time series of which to calculate the autocorrelation function.
+    lagmax : int
+        The maximum change in time to which to calculate the autocorrelation function.
 
     Returns
     -------
-        tau : float
-            Estimate of the autocorrelation time.
-        mean : float
-            Average value of the timeseries
-        sigma : float
-            Estimate of the square root of the autocovariance of the timeseries
+    tau : float
+        Estimate of the autocorrelation time.
+    mean : float
+        Average value of the timeseries
+    sigma : float
+        Estimate of the square root of the autocovariance of the timeseries
 
     """
     timeseries = np.copy(timeseries)

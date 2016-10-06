@@ -5,8 +5,6 @@ This section discusses commonly used variables and naming conventions used throu
 
 Parameters for Harmonic windows
 ---------------------------------
-These variables contain parameters of the window sampling system.
-
 :centers: Two-dimensional array-like containing the center of 
           each harmonic window in collective variable space.  
           The first index corresponds to the window index, 
@@ -50,7 +48,7 @@ Data from Sampling
        If the neighborlist functionality is used, the third index does not 
        need to span over all of the windows, only nearby ones 
        (this introduces slight systematic bias into the estimator).
-:fdata: Two-dimensional array-like containing the values of an observable.
+:gdata: Two-dimensional array-like containing the values of an observable.
         The data structure is similar to cv_trajs: :samp:`fdata[i][n]`
         gives the value of the observable evaluated in state i at timepoint n. 
 :neighbors: Two-dimensional array-like used for the neighborlist 

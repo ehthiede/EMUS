@@ -63,6 +63,11 @@
           
           
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
@@ -80,12 +85,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../modules/autocorrelation.html">autocorrelation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/avar.html">avar module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/emus.html">emus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/emusroutines.html">emusroutines module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/linalg.html">linalg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/usutils.html">usutils module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../test.html">test</a></li>
 </ul>
 
           
@@ -123,8 +126,7 @@
             
   <h1>Source code for avar</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot; Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator (&#39;ipce&#39;) and the initial convex correlation estimator (&#39;icce&#39;) by Geyer, and the acor algorithm (&#39;acor&#39;) by Jonathan Goodman.  See autocorrelation.py for more details.</span>
-
+<span class="sd">&quot;&quot;&quot; Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator (&#39;ipce&#39;) and the initial convex correlation estimator (&#39;icce&#39;) by Geyer, and the acor algorithm (&#39;acor&#39;) by Jonathan Goodman.  See the documentation to the `autocorrelation module &lt;autocorrelation.html&gt;` for more details.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -140,7 +142,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    psis : 3D data structure</span>
-<span class="sd">        Data structure containing psi values.  See documentation for a detailed explanation.</span>
+<span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 <span class="sd">    z : 1D array</span>
 <span class="sd">        Array containing the normalization constants</span>
 <span class="sd">    F : 2D array</span>
@@ -222,7 +224,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    psis : 3D data structure</span>
-<span class="sd">        Data structure containing psi values.  See documentation for a detailed explanation.</span>
+<span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 <span class="sd">    z : 1D array</span>
 <span class="sd">        Array containing the normalization constants</span>
 <span class="sd">    F : 2D array</span>
@@ -283,7 +285,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    psis : 3D data structure</span>
-<span class="sd">        Data structure containing psi values.  See documentation for a detailed explanation.</span>
+<span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 <span class="sd">    dBdF : array-like</span>
 <span class="sd">        Two dimensional array, where element :math:`i,j` is the derivative of the estimate of B with respect to :math:`F_{ij}`</span>
 <span class="sd">    gdata : array-like, optional</span>

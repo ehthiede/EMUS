@@ -63,6 +63,11 @@
           
           
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
@@ -80,12 +85,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../modules/autocorrelation.html">autocorrelation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/avar.html">avar module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/emus.html">emus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/emusroutines.html">emusroutines module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/linalg.html">linalg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/usutils.html">usutils module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../test.html">test</a></li>
 </ul>
 
           
@@ -123,8 +126,8 @@
             
   <h1>Source code for emus</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Container for the primary EMUS routines.</span>
+<span class="sd">&quot;&quot;&quot; Container for the primary EMUS routines.</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">linalg</span> <span class="kn">as</span> <span class="nn">lm</span>
@@ -138,7 +141,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    psis : 3D data structure</span>
-<span class="sd">        Data structure containing psi values.  See documentation for a detailed explanation.</span>
+<span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 <span class="sd">    z : 1D array</span>
 <span class="sd">        Array containing the normalization constants</span>
 <span class="sd">    g1data : 2D data structure</span>
@@ -168,9 +171,9 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cv_trajs : 2D data structure</span>
-<span class="sd">        Data structure containing trajectories in the collective variable space. </span>
+<span class="sd">        Data structure containing trajectories in the collective variable space.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 <span class="sd">    psis : 3D data structure</span>
-<span class="sd">        Data structure containing psi values.  See documentation for a detailed explanation.</span>
+<span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 <span class="sd">    domain : tuple</span>
 <span class="sd">        Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window</span>
 <span class="sd">    nbins : int or tuple, optional</span>
@@ -274,7 +277,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    psis : 3D data structure</span>
-<span class="sd">        Data structure containing psi values.  See documentation for a detailed explanation.</span>
+<span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 <span class="sd">    Avals : 2D matrix, optional</span>
 <span class="sd">        Weights in front of :math:`\psi` in the overlap matrix.</span>
 <span class="sd">    neighbors : 2D array, optional</span>
@@ -292,6 +295,7 @@
 <span class="sd">        The overlap matrix constructed for the eigenproblem.</span>
 <span class="sd">    iats : 1D array</span>
 <span class="sd">        If return_iats chosen, returns the iats that have been estimated.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="c"># Initialize variables</span>
@@ -326,34 +330,26 @@
         <span class="k">return</span> <span class="n">z</span><span class="p">,</span> <span class="n">F</span>
 </div>
 <div class="viewcode-block" id="calculate_Fi"><a class="viewcode-back" href="../modules/emus.html#emus.calculate_Fi">[docs]</a><span class="k">def</span> <span class="nf">calculate_Fi</span><span class="p">(</span><span class="n">psi_i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">Avals_i</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">return_trajs</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the values of a single row in the F matrix.</span>
-<span class="sd">    If neighborlists are being used, psi_i, and Avals_i should be the </span>
-<span class="sd">    neighborlisted data structure, and the row will be need to be unpacked</span>
-<span class="sd">    using the neighborlist .</span>
-
+    <span class="sd">&quot;&quot;&quot;Calculates the values of a single row in the F matrix.  If neighborlists are being used, psi_i, and Avals_i should be the neighborlisted data structure, and the row will be need to be unpacked using the neighborlist.</span>
+<span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        psi_i : 2D array-like</span>
-<span class="sd">            Values of :math:`\psi` collected in window i.  The j&#39;th column </span>
-<span class="sd">            corresponds to the j&#39;th neighboring window.</span>
-<span class="sd">        i : int</span>
-<span class="sd">            Index of the window where the data was collected.</span>
-<span class="sd">        Avals_i : 1D array-like</span>
-<span class="sd">            Weights in front of :math:`\psi_{ij} in the overlap matrix.</span>
-<span class="sd">        return_trajs : bool, optional</span>
-<span class="sd">            Whether or not to return the trajectories that are averaged to </span>
-<span class="sd">            calculate the values of F.  These can be useful for estimating </span>
-<span class="sd">            autocorrelation times and performing error analysis.</span>
-
+<span class="sd">    psi_i : 2D array-like</span>
+<span class="sd">        Values of :math:`\psi` collected in window i.  The j&#39;th column corresponds to the j&#39;th neighboring window.</span>
+<span class="sd">    i : int</span>
+<span class="sd">        Index of the window where the data was collected.</span>
+<span class="sd">    Avals_i : 1D array-like</span>
+<span class="sd">        Weights in front of :math:`\psi_{ij}` in the overlap matrix.</span>
+<span class="sd">    return_trajs : bool, optional</span>
+<span class="sd">        Whether or not to return the trajectories that are averaged to calculate the values of F.  These can be useful for estimating autocorrelation times and performing error analysis.</span>
+<span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        Fi : 1D numpy array </span>
-<span class="sd">            The (neighborlisted) row in the F matrix</span>
-<span class="sd">        trajs : 2D numpy array</span>
-<span class="sd">            If return_trajs is True, returns the trajectories used in</span>
-<span class="sd">            calculating the values of F</span>
-
+<span class="sd">    Fi : 1D numpy array </span>
+<span class="sd">        The (neighborlisted) row in the F matrix</span>
+<span class="sd">    trajs : 2D numpy array</span>
+<span class="sd">        If return_trajs is True, returns the trajectories used in calculating the values of F</span>
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c"># Setup</span>
     <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">psi_i</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="c"># Number of neighboring windows</span>
@@ -383,7 +379,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    psis : 3D data structure</span>
-<span class="sd">        Data structure containing psi values.  See documentation for a detailed explanation.</span>
+<span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 <span class="sd">    z : 1D array</span>
 <span class="sd">        Array containing the normalization constants</span>
 <span class="sd">    gdata : 2D data structure</span>

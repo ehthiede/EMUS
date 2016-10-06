@@ -63,6 +63,11 @@
           
           
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
@@ -80,12 +85,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../modules/autocorrelation.html">autocorrelation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/avar.html">avar module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/emus.html">emus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/emusroutines.html">emusroutines module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/linalg.html">linalg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/usutils.html">usutils module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../test.html">test</a></li>
 </ul>
 
           
@@ -293,7 +296,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    fxndata : List of 2D arrays</span>
-<span class="sd">        Three dimensional data structure containing observable information.  The first index corresponds to the window index, the second corresponds to the time point in the window, and the third to the index of the observable.</span>
+<span class="sd">        Three dimensional data structure containing observable information.  The first index corresponds to the observable being calculated, the second to the window index, and the third to the time point in the window.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fxn_paths</span> <span class="o">=</span> <span class="p">[]</span>
@@ -302,8 +305,17 @@
             <span class="n">fxn_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 
     <span class="n">fxndata</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">fxn_paths</span><span class="p">:</span>
-        <span class="n">fxndata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fxn_paths</span><span class="p">):</span>
+        <span class="n">data_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">nfxns</span> <span class="o">=</span> <span class="bp">None</span> <span class="c"># Placeholder value</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">nfxns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">nfxns</span><span class="p">):</span>
+                <span class="n">fxndata</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">data_i</span><span class="p">[:,(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">nfxns</span><span class="p">):</span>
+                <span class="n">fxndata</span><span class="p">[(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_i</span><span class="p">[:,(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+
     <span class="k">return</span> <span class="n">fxndata</span>
 </div>
 <div class="viewcode-block" id="data_from_WHAMmeta"><a class="viewcode-back" href="../modules/usutils.html#usutils.data_from_WHAMmeta">[docs]</a><span class="k">def</span> <span class="nf">data_from_WHAMmeta</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">DEFAULT_T</span><span class="p">,</span><span class="n">k_B</span><span class="o">=</span><span class="n">DEFAULT_K_B</span><span class="p">,</span><span class="n">nsig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -327,7 +339,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    psis : List of 2D arrays</span>
-<span class="sd">        The values of the bias functions at each point in the trajectory evaluated at the windows given.  First axis corresponds to the timepoint, the second to the window index.</span>
+<span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c"># Parse Wham Meta file.</span>

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator ('ipce') and the initial convex correlation estimator ('icce') by Geyer, and the acor algorithm ('acor') by Jonathan Goodman.  See autocorrelation.py for more details.
-
+""" Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator ('ipce') and the initial convex correlation estimator ('icce') by Geyer, and the acor algorithm ('acor') by Jonathan Goodman.  See the documentation to the `autocorrelation module <autocorrelation.html>` for more details.
 
 """
 
@@ -16,7 +15,7 @@ def average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_
     Parameters
     ----------
     psis : 3D data structure
-        Data structure containing psi values.  See documentation for a detailed explanation.
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     z : 1D array
         Array containing the normalization constants
     F : 2D array
@@ -98,7 +97,7 @@ def partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):
     Parameters
     ----------
     psis : 3D data structure
-        Data structure containing psi values.  See documentation for a detailed explanation.
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     z : 1D array
         Array containing the normalization constants
     F : 2D array
@@ -159,7 +158,7 @@ def _calculate_acovar(psis,dBdF,gdata=None,dBdg=None,neighbors=None,iat_method=D
     Parameters
     ----------
     psis : 3D data structure
-        Data structure containing psi values.  See documentation for a detailed explanation.
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     dBdF : array-like
         Two dimensional array, where element :math:`i,j` is the derivative of the estimate of B with respect to :math:`F_{ij}`
     gdata : array-like, optional
