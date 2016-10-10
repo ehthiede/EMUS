@@ -3,12 +3,11 @@
 EMUS Script runnable from the command line that uses WHAM-like input.
 """
 import numpy as np                  
-import usutils as uu
-import emus
-import avar
+from emus import usutils as uu
+from emus import emus, avar
 import argparse
 import os
-from _defaults import *
+from emus._defaults import *
 
 
 def main():
