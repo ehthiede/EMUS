@@ -128,7 +128,7 @@
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
 <p>This guide covers how to perform typical tasks with the EMUS package in a pythonic environment.  The required data files, as well as a (slightly modified) script containing all of the python commands used below, can be found in the examples directory of the package in the AlaDipeptide_1D directory. The guide will make use of the numpy and matplotlib packages.</p>
 <p>Note that most common functionality of the EMUS package can be accessed from command line using the wemus.py script.  To see a full list of command line options, use the command</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">python</span> <span class="n">wemus</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">help</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">wemus</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
 <div class="section" id="loading-from-wham-like-formats">
@@ -136,7 +136,7 @@
 <p>The usutils module provides a method that loads data in the format used by WHAM.  It outputs the trajectory in collective variable space as well as the <span class="math">\(\psi_ij(x_n)\)</span> values.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">usutils</span> <span class="kn">as</span> <span class="nn">uu</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">emus</span> <span class="kn">import</span> <span class="n">usutils</span> <span class="k">as</span> <span class="n">uu</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c"># Define Simulation Parameters</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="mi">310</span>                             <span class="c"># Temperature in Kelvin</span>
@@ -151,14 +151,17 @@
 </div>
 <div class="section" id="calculating-the-pmf">
 <h2>Calculating the PMF<a class="headerlink" href="#calculating-the-pmf" title="Permalink to this headline">¶</a></h2>
-<p>We can now build the EMUS object (this automatically calculates the relative normalization constants according to the first EMUS iteration).</p>
+<p>We now import the emus code, and calculate the normalization constants.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">emus</span> <span class="kn">import</span> <span class="n">emus</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">EM</span> <span class="o">=</span> <span class="n">emus</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">cv_trajs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">neighbors</span><span class="o">=</span><span class="n">neighbors</span><span class="p">,)</span>
 </pre></div>
 </div>
 <p>To calculate the potential of mean force, we provide the number of histogram bins and the range of the collective variable, and call the appropriate method of the EMUS object.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">domain</span> <span class="o">=</span> <span class="p">((</span><span class="o">-</span><span class="mf">180.0</span><span class="p">,</span><span class="mf">180.</span><span class="p">))</span>            <span class="c"># Range of dihedral angle values</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pmf</span> <span class="o">=</span> <span class="n">EM</span><span class="o">.</span><span class="n">calc_pmf</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span><span class="n">nbins</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>   <span class="c"># Calculate the pmf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="mi">310</span>                             <span class="c"># Temperature in Kelvin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k_B</span> <span class="o">=</span> <span class="mf">1.9872041E-3</span>                  <span class="c"># Boltzmann factor in kcal/mol</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kT</span> <span class="o">=</span> <span class="n">k_B</span> <span class="o">*</span> <span class="n">T</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pmf</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_pmf</span><span class="p">(</span><span class="n">cv_trajs</span><span class="p">,</span><span class="n">psis</span><span class="p">,</span><span class="n">domain</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">nbins</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span><span class="n">kT</span><span class="o">=</span><span class="n">kT</span><span class="p">)</span>   <span class="c"># Calculate the pmf</span>
 </pre></div>
 </div>
 <p>We can now plot the potential of mean force using pyplot or other tools.  Note that this returns the unitless free energy by default: the user can either multiply the pmf by <span class="math">\(k_B T\)</span> in postprocessing, or specify <span class="math">\(k_B T\)</span> as a parameter for calc_pmf.</p>
@@ -170,15 +173,11 @@
 </div>
 <div class="section" id="estimating-window-partition-functions">
 <h2>Estimating Window Partition Functions<a class="headerlink" href="#estimating-window-partition-functions" title="Permalink to this headline">¶</a></h2>
-<p>Upon creation, the EMUS object already estimates the relative partition function (denoted <span class="math">\(z\)</span>) of each window using the EMUS estimator.  These are contained in the object, and can be accessed directly.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">EM</span><span class="o">.</span><span class="n">z</span>
-</pre></div>
-</div>
-<p>The EMUS object also has the ability to calculate the relative partition functions from the MBAR estimator.  This requires solving a self-consistent iteration.  The nMBAR parameter specifies the maximum number of iterations.  Note that truncating early still provides a consistent estimator, and introduces no systematic bias.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_1</span><span class="p">,</span> <span class="n">F_MBAR_1</span> <span class="o">=</span> <span class="n">EM</span><span class="o">.</span><span class="n">calc_zs</span><span class="p">(</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_2</span><span class="p">,</span> <span class="n">F_MBAR_2</span> <span class="o">=</span> <span class="n">EM</span><span class="o">.</span><span class="n">calc_zs</span><span class="p">(</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_5</span><span class="p">,</span> <span class="n">F_MBAR_5</span> <span class="o">=</span> <span class="n">EM</span><span class="o">.</span><span class="n">calc_zs</span><span class="p">(</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_1k</span><span class="p">,</span> <span class="n">F_MBAR_1k</span> <span class="o">=</span> <span class="n">EM</span><span class="o">.</span><span class="n">calc_zs</span><span class="p">(</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<p>The EMUS package also has the ability to calculate the relative partition functions from the MBAR estimator.  This requires solving a self-consistent iteration.  The nMBAR parameter specifies the maximum number of iterations.  Note that truncating early still provides a consistent estimator, and introduces no systematic bias.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_1</span><span class="p">,</span> <span class="n">F_MBAR_1</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_2</span><span class="p">,</span> <span class="n">F_MBAR_2</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_5</span><span class="p">,</span> <span class="n">F_MBAR_5</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_1k</span><span class="p">,</span> <span class="n">F_MBAR_1k</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We can plot the unitless window free energies for each max iteration number to see how our estimates converge.</p>
@@ -191,18 +190,18 @@
 </pre></div>
 </div>
 <p>The pmf can be constructed using these values for the relative partition functions. <a class="footnote-reference" href="#estimatornote" id="id1">[1]</a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">MBARpmf</span> <span class="o">=</span> <span class="n">EM</span><span class="o">.</span><span class="n">calc_pmf</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span><span class="n">nbins</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">z_MBAR_1k</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">MBARpmf</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_pmf</span><span class="p">(</span><span class="n">cv_trajs</span><span class="p">,</span><span class="n">psis</span><span class="p">,</span><span class="n">domain</span><span class="p">,</span><span class="n">nbins</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">z_MBAR_1k</span><span class="p">,</span><span class="n">kT</span><span class="o">=</span><span class="n">kT</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="calculating-averages">
 <h2>Calculating Averages<a class="headerlink" href="#calculating-averages" title="Permalink to this headline">¶</a></h2>
 <p>It is possible to use the EMUS package to calculate the averages of functions.  Here, we will calculate the probability that the dihedral takes values between 25 and 100 degrees (this roughly corresponds to the molecule being in the C7 axial basin).  This is equivalent to the average of an indicator function that is 1 if the molecule is in the desired configuration and 0 otherwise.  First, we construct the timeseries of this function for each window.  Note that if the EMUS object was constructed with the collective variable trajectories, they are contained at <code class="samp docutils literal"><span class="pre">EM.cv_trajs</span></code>. <a class="footnote-reference" href="#boolnote" id="id2">[2]</a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fdata</span> <span class="o">=</span> <span class="p">[(</span><span class="n">traj</span><span class="o">&gt;</span><span class="mi">25</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">traj</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">traj</span> <span class="ow">in</span> <span class="n">EM</span><span class="o">.</span><span class="n">cv_trajs</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fdata</span> <span class="o">=</span>  <span class="p">[(</span><span class="n">traj</span><span class="o">&gt;</span><span class="mi">25</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">traj</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">traj</span> <span class="ow">in</span> <span class="n">cv_trajs</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>We can now calculate the probability of being in this state.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">prob_C7ax</span> <span class="o">=</span> <span class="n">EM</span><span class="o">.</span><span class="n">calc_obs</span><span class="p">(</span><span class="n">fdata</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">prob_C7ax</span> <span class="o">=</span> <span class="n">EM</span><span class="o">.</span><span class="n">calculate_obs</span><span class="p">(</span><span class="n">fdata</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">prob_C7ax</span>
 </pre></div>
 </div>

@@ -3,9 +3,8 @@
 Example script with basic usage of the EMUS package.  The script follows the quickstart guide closely, with slight adjustments (for simplicity we have moved all plotting commands to the bottom of the script).
 """
 import numpy as np                  
-import usutils as uu
-import emus
-import avar
+from emus import usutils as uu
+from emus import emus, avar
 
 import matplotlib
 matplotlib.use('Qt4Agg')
