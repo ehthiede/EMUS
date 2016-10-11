@@ -76,9 +76,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#data-from-sampling">Data from Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#other-conventions">Other Conventions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/index.html">EMUS Modules</a><ul>
@@ -140,11 +139,11 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    centers : 2darray</span>
+<span class="sd">    centers : 2D array-like</span>
 <span class="sd">        The locations of the centers of each window.  The first dimension is the window index, and the second is the collective variable index.</span>
-<span class="sd">    fks : 2darray or scalar</span>
+<span class="sd">    fks : 2D array-like or scalar</span>
 <span class="sd">        If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.</span>
-<span class="sd">    kTs : 2darray or float</span>
+<span class="sd">    kTs : 2D array-like or scalar</span>
 <span class="sd">        1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.</span>
 <span class="sd">    period : 1D array-like or float</span>
 <span class="sd">        Period of the collective variable e.g. 360 for an angle. If None, all collective variables are taken to be aperiodic.  If scalar, assumed to be period of each collective variable. If 1D iterable with each value a scalar or None, each cv has periodicity of that size.</span>
@@ -153,7 +152,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    nbrs : 2d list</span>
+<span class="sd">    nbrs : 2D list</span>
 <span class="sd">        List where element i is a list with the indices of all windows neighboring window i.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -220,9 +219,9 @@
 <span class="sd">        Trajectory in collective variable space.  Can be 1-dimensional (one cv) or 2-dimensional (many cvs).  The first dimension is the time index, and (optional) second corresponds to the collective variable. </span>
 <span class="sd">    centers : array-like</span>
 <span class="sd">        The locations of the centers of each window.  The first dimension is the window index, and the (optional) second is the collective variable index.</span>
-<span class="sd">    fks : scalar or 2darray</span>
+<span class="sd">    fks : 2D array-like or scalar</span>
 <span class="sd">        If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.</span>
-<span class="sd">    kTs : scalar or 2darray</span>
+<span class="sd">    kTs : 2D array-like or scalar</span>
 <span class="sd">        1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.</span>
 <span class="sd">    period : 1D array-like or float, optional</span>
 <span class="sd">        Period of the collective variable e.g. 360 for an angle. If None, all collective variables are taken to be aperiodic.  If scalar, assumed to be period of each collective variable. If 1D iterable with each value a scalar or None, each cv has periodicity of that size.</span>
@@ -262,7 +261,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    psivals : 1d array</span>
+<span class="sd">    psivals : 1D array</span>
 <span class="sd">        Value of :math:`\psi_{ij}(x)` evaluated at the center of the window for each point in the trajectory.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>

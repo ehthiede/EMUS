@@ -55,7 +55,7 @@ def stationary_distrib(F,residtol = 1.E-10,max_iter=100):
     return z/np.sum(z) # Return normalized (by convention)
    
 
-def old_stationary_distrib(F,fix=None,residtol = 1.E-10,max_iter=100):
+def _old_stationary_distrib(F,fix=None,residtol = 1.E-10,max_iter=100):
     """
     Depricated routine to calculate the stationar distribution of F.
     """

@@ -77,9 +77,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="datastructures.html#common-data-structures">Common data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datastructures.html#data-from-sampling">Data from Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datastructures.html#other-conventions">Other Conventions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules/index.html">EMUS Modules</a><ul>
@@ -146,7 +145,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">period</span> <span class="o">=</span> <span class="mi">360</span>                        <span class="c"># Dihedral Angles periodicity</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c"># Load data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">psis</span><span class="p">,</span> <span class="n">cv_trajs</span> <span class="o">=</span> <span class="n">uu</span><span class="o">.</span><span class="n">data_from_WHAMmeta</span><span class="p">(</span><span class="s">&#39;wham_meta.txt&#39;</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psis</span><span class="p">,</span> <span class="n">cv_trajs</span><span class="p">,</span> <span class="n">neighbors</span> <span class="o">=</span> <span class="n">uu</span><span class="o">.</span><span class="n">data_from_WHAMmeta</span><span class="p">(</span><span class="s">&#39;wham_meta.txt&#39;</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

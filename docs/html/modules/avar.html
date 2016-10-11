@@ -78,9 +78,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#data-from-sampling">Data from Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#other-conventions">Other Conventions</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">EMUS Modules</a><ul class="current">
@@ -130,7 +129,7 @@
             
   <div class="section" id="module-avar">
 <span id="avar-module"></span><h1>avar module<a class="headerlink" href="#module-avar" title="Permalink to this headline">¶</a></h1>
-<p>Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator (&#8216;ipce&#8217;) and the initial convex correlation estimator (&#8216;icce&#8217;) by Geyer, and the acor algorithm (&#8216;acor&#8217;) by Jonathan Goodman.  See the documentation to the <cite>autocorrelation module &lt;autocorrelation.html&gt;</cite> for more details.</p>
+<p>Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator (&#8216;ipce&#8217;) and the initial convex correlation estimator (&#8216;icce&#8217;) by Geyer, and the acor algorithm (&#8216;acor&#8217;) by Jonathan Goodman.  See the documentation to the <a class="reference external" href="autocorrelation.html">autocorrelation module</a> for more details.</p>
 <dl class="function">
 <dt id="avar.average_ratio">
 <code class="descclassname">avar.</code><code class="descname">average_ratio</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>F</em>, <em>g1data</em>, <em>g2data=None</em>, <em>neighbors=None</em>, <em>iat_method='ipce'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/avar.html#average_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avar.average_ratio" title="Permalink to this definition">¶</a></dt>
@@ -231,7 +230,7 @@ To deal with negative weights, it removes all the negative weights, and calculat
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">autocovars: ndarray</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>autocovars</strong> : ndarray</p>
 <blockquote>
 <div><p>Array of length L (no. windows) where the i&#8217;th value corresponds to the autocovariance estimate for <span class="math">\(z_i\)</span></p>
 </div></blockquote>

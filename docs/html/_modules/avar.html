@@ -76,9 +76,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#data-from-sampling">Data from Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#other-conventions">Other Conventions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/index.html">EMUS Modules</a><ul>
@@ -126,7 +125,7 @@
             
   <h1>Source code for avar</h1><div class="highlight"><pre>
 <span class="c"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot; Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator (&#39;ipce&#39;) and the initial convex correlation estimator (&#39;icce&#39;) by Geyer, and the acor algorithm (&#39;acor&#39;) by Jonathan Goodman.  See the documentation to the `autocorrelation module &lt;autocorrelation.html&gt;` for more details.</span>
+<span class="sd">&quot;&quot;&quot; Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator (&#39;ipce&#39;) and the initial convex correlation estimator (&#39;icce&#39;) by Geyer, and the acor algorithm (&#39;acor&#39;) by Jonathan Goodman.  See the documentation to the `autocorrelation module &lt;autocorrelation.html&gt;`__ for more details.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -236,7 +235,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    autocovars: ndarray</span>
+<span class="sd">    autocovars : ndarray</span>
 <span class="sd">        Array of length L (no. windows) where the i&#39;th value corresponds to the autocovariance estimate for :math:`z_i` </span>
 <span class="sd">    z_var_contribs : ndarray </span>
 <span class="sd">        Two dimensional array, where element i,j corresponds to window j&#39;s contribution to the autocovariance of window i.</span>

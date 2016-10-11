@@ -76,9 +76,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#data-from-sampling">Data from Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#other-conventions">Other Conventions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/index.html">EMUS Modules</a><ul>
@@ -278,9 +277,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    psis : 3D data structure</span>
 <span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
-<span class="sd">    Avals : 2D matrix, optional</span>
+<span class="sd">    Avals : 2D array-like, optional</span>
 <span class="sd">        Weights in front of :math:`\psi` in the overlap matrix.</span>
-<span class="sd">    neighbors : 2D array, optional</span>
+<span class="sd">    neighbors : 2D array-like, optional</span>
 <span class="sd">        List showing which windows neighbor which.  See neighbors_harmonic in usutils. </span>
 <span class="sd">    return_iats : bool, optional</span>
 <span class="sd">        Whether or not to calculate integrated autocorrelation times of :math:`\psi_ii^*` for each window.</span>
@@ -345,9 +344,9 @@
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    Fi : 1D numpy array </span>
+<span class="sd">    Fi : 1D array </span>
 <span class="sd">        The (neighborlisted) row in the F matrix</span>
-<span class="sd">    trajs : 2D numpy array</span>
+<span class="sd">    trajs : 2D array, optional</span>
 <span class="sd">        If return_trajs is True, returns the trajectories used in calculating the values of F</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -380,7 +379,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    psis : 3D data structure</span>
 <span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
-<span class="sd">    z : 1D array</span>
+<span class="sd">    z : ndarray</span>
 <span class="sd">        Array containing the normalization constants</span>
 <span class="sd">    gdata : 2D data structure</span>
 <span class="sd">        Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.</span>

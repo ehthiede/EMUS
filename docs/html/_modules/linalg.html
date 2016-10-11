@@ -76,9 +76,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#data-from-sampling">Data from Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#other-conventions">Other Conventions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/index.html">EMUS Modules</a><ul>
@@ -182,7 +181,7 @@
     <span class="k">return</span> <span class="n">z</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="c"># Return normalized (by convention)</span>
    
 </div>
-<div class="viewcode-block" id="old_stationary_distrib"><a class="viewcode-back" href="../modules/linalg.html#linalg.old_stationary_distrib">[docs]</a><span class="k">def</span> <span class="nf">old_stationary_distrib</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">fix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">residtol</span> <span class="o">=</span> <span class="mf">1.E-10</span><span class="p">,</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_old_stationary_distrib</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">fix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">residtol</span> <span class="o">=</span> <span class="mf">1.E-10</span><span class="p">,</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Depricated routine to calculate the stationar distribution of F.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -208,7 +207,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">z</span> <span class="o">=</span> <span class="n">znew</span>
     <span class="k">return</span> <span class="n">z</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-</div>
+
 <span class="k">def</span> <span class="nf">_submatrix</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">i</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the submatrix of F with the i&#39;th row and column removed.</span>

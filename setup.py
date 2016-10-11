@@ -6,9 +6,9 @@ setup(name='emus',
     version='0.9.0',
     description="Tools and Methods associated with the Eigenvector Method "
         "Umbrella Sampling (EMUS)",
-    license='MIT',
+    license='GPL',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Topic :: Scientific/Engineering'
         ],
 #    packages=find_packages(),

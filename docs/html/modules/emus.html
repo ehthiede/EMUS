@@ -78,9 +78,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#data-from-sampling">Data from Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#other-conventions">Other Conventions</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">EMUS Modules</a><ul class="current">
@@ -157,11 +156,11 @@
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Fi</strong> : 1D numpy array</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Fi</strong> : 1D array</p>
 <blockquote>
 <div><p>The (neighborlisted) row in the F matrix</p>
 </div></blockquote>
-<p><strong>trajs</strong> : 2D numpy array</p>
+<p><strong>trajs</strong> : 2D array, optional</p>
 <blockquote class="last">
 <div><p>If return_trajs is True, returns the trajectories used in calculating the values of F</p>
 </div></blockquote>
@@ -303,11 +302,11 @@
 <blockquote>
 <div><p>The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
 </div></blockquote>
-<p><strong>Avals</strong> : 2D matrix, optional</p>
+<p><strong>Avals</strong> : 2D array-like, optional</p>
 <blockquote>
 <div><p>Weights in front of <span class="math">\(\psi\)</span> in the overlap matrix.</p>
 </div></blockquote>
-<p><strong>neighbors</strong> : 2D array, optional</p>
+<p><strong>neighbors</strong> : 2D array-like, optional</p>
 <blockquote>
 <div><p>List showing which windows neighbor which.  See neighbors_harmonic in usutils.</p>
 </div></blockquote>

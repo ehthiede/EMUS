@@ -77,9 +77,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#data-from-sampling">Data from Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#other-conventions">Other Conventions</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">EMUS Modules</a><ul class="current">
@@ -159,7 +158,7 @@ trajectory</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>psivals</strong> : 1d array</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>psivals</strong> : 1D array</p>
 <blockquote class="last">
 <div><p>Value of <span class="math">\(\psi_{ij}(x)\)</span> evaluated at the center of the window for each point in the trajectory.</p>
 </div></blockquote>
@@ -185,11 +184,11 @@ trajectory</p>
 <blockquote>
 <div><p>The locations of the centers of each window.  The first dimension is the window index, and the (optional) second is the collective variable index.</p>
 </div></blockquote>
-<p><strong>fks</strong> : scalar or 2darray</p>
+<p><strong>fks</strong> : 2D array-like or scalar</p>
 <blockquote>
 <div><p>If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.</p>
 </div></blockquote>
-<p><strong>kTs</strong> : scalar or 2darray</p>
+<p><strong>kTs</strong> : 2D array-like or scalar</p>
 <blockquote>
 <div><p>1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.</p>
 </div></blockquote>
@@ -315,15 +314,15 @@ deviations away on a flat potential.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>centers</strong> : 2darray</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>centers</strong> : 2D array-like</p>
 <blockquote>
 <div><p>The locations of the centers of each window.  The first dimension is the window index, and the second is the collective variable index.</p>
 </div></blockquote>
-<p><strong>fks</strong> : 2darray or scalar</p>
+<p><strong>fks</strong> : 2D array-like or scalar</p>
 <blockquote>
 <div><p>If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.</p>
 </div></blockquote>
-<p><strong>kTs</strong> : 2darray or float</p>
+<p><strong>kTs</strong> : 2D array-like or scalar</p>
 <blockquote>
 <div><p>1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.</p>
 </div></blockquote>
@@ -337,7 +336,7 @@ deviations away on a flat potential.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>nbrs</strong> : 2d list</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>nbrs</strong> : 2D list</p>
 <blockquote class="last">
 <div><p>List where element i is a list with the indices of all windows neighboring window i.</p>
 </div></blockquote>

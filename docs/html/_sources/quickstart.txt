@@ -28,7 +28,7 @@ The usutils module provides a method that loads data in the format used by WHAM.
 >>> period = 360                        # Dihedral Angles periodicity
 >>>
 >>> # Load data
->>> psis, cv_trajs = uu.data_from_WHAMmeta('wham_meta.txt',dim,T=T,period=period)
+>>> psis, cv_trajs, neighbors = uu.data_from_WHAMmeta('wham_meta.txt',dim,T=T,period=period)
 
 Calculating the PMF
 -------------------

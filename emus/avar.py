@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator ('ipce') and the initial convex correlation estimator ('icce') by Geyer, and the acor algorithm ('acor') by Jonathan Goodman.  See the documentation to the `autocorrelation module <autocorrelation.html>` for more details.
+""" Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator ('ipce') and the initial convex correlation estimator ('icce') by Geyer, and the acor algorithm ('acor') by Jonathan Goodman.  See the documentation to the `autocorrelation module <autocorrelation.html>`__ for more details.
 
 """
 
@@ -109,7 +109,7 @@ def partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):
 
     Returns
     -------
-    autocovars: ndarray
+    autocovars : ndarray
         Array of length L (no. windows) where the i'th value corresponds to the autocovariance estimate for :math:`z_i` 
     z_var_contribs : ndarray 
         Two dimensional array, where element i,j corresponds to window j's contribution to the autocovariance of window i.

@@ -151,9 +151,9 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method=D
     ----------
     psis : 3D data structure
         The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
-    Avals : 2D matrix, optional
+    Avals : 2D array-like, optional
         Weights in front of :math:`\psi` in the overlap matrix.
-    neighbors : 2D array, optional
+    neighbors : 2D array-like, optional
         List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
     return_iats : bool, optional
         Whether or not to calculate integrated autocorrelation times of :math:`\psi_ii^*` for each window.
@@ -218,9 +218,9 @@ def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
     
     Returns
     -------
-    Fi : 1D numpy array 
+    Fi : 1D array 
         The (neighborlisted) row in the F matrix
-    trajs : 2D numpy array
+    trajs : 2D array, optional
         If return_trajs is True, returns the trajectories used in calculating the values of F
     
     """
@@ -253,7 +253,7 @@ def _calculate_win_avgs(psis,z,gdata):
     ----------
     psis : 3D data structure
         The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
-    z : 1D array
+    z : ndarray
         Array containing the normalization constants
     gdata : 2D data structure
         Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.

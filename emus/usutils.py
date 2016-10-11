@@ -13,11 +13,11 @@ def neighbors_harmonic(centers,fks,kTs=DEFAULT_KT,period=None,nsig=6):
 
     Parameters
     ----------
-    centers : 2darray
+    centers : 2D array-like
         The locations of the centers of each window.  The first dimension is the window index, and the second is the collective variable index.
-    fks : 2darray or scalar
+    fks : 2D array-like or scalar
         If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.
-    kTs : 2darray or float
+    kTs : 2D array-like or scalar
         1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.
     period : 1D array-like or float
         Period of the collective variable e.g. 360 for an angle. If None, all collective variables are taken to be aperiodic.  If scalar, assumed to be period of each collective variable. If 1D iterable with each value a scalar or None, each cv has periodicity of that size.
@@ -26,7 +26,7 @@ def neighbors_harmonic(centers,fks,kTs=DEFAULT_KT,period=None,nsig=6):
 
     Returns
     -------
-    nbrs : 2d list
+    nbrs : 2D list
         List where element i is a list with the indices of all windows neighboring window i.
     
     """
@@ -93,9 +93,9 @@ def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
         Trajectory in collective variable space.  Can be 1-dimensional (one cv) or 2-dimensional (many cvs).  The first dimension is the time index, and (optional) second corresponds to the collective variable. 
     centers : array-like
         The locations of the centers of each window.  The first dimension is the window index, and the (optional) second is the collective variable index.
-    fks : scalar or 2darray
+    fks : 2D array-like or scalar
         If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.
-    kTs : scalar or 2darray
+    kTs : 2D array-like or scalar
         1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.
     period : 1D array-like or float, optional
         Period of the collective variable e.g. 360 for an angle. If None, all collective variables are taken to be aperiodic.  If scalar, assumed to be period of each collective variable. If 1D iterable with each value a scalar or None, each cv has periodicity of that size.
@@ -135,7 +135,7 @@ def calc_harmonic_psi_ij(cv_traj,win_center,win_fk,kT=1.0,period=None):
 
     Returns
     -------
-    psivals : 1d array
+    psivals : 1D array
         Value of :math:`\psi_{ij}(x)` evaluated at the center of the window for each point in the trajectory.
 
     """
