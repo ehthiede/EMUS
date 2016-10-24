@@ -80,9 +80,10 @@ def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=DEFAULT_KT):
             psi_i_n = psis[i][n]
             # We find the coordinate of the bin we land in.
             coordbins = (coord - domain[:,0])/domainwdth*nbins
-            coordbins = tuple(coordbins.astype(int))
+            coordbins = np.array(coordbins.astype(int))
             weight = 1./np.sum(psi_i_n)
-            hist_i[coordbins] += weight
+            if ((coordbins >= 0).all() and (coordbins < nbins).all()):
+                hist_i[coordbins] += weight
         hist+=hist_i/len(xtraj_i)*z[i]
     pmf =-kT* np.log(hist)
     pmf -= min(pmf.flatten())
