@@ -24,7 +24,7 @@ def calculate_obs(psis,z,g1data,g2data=None,neighbors=None,use_MBAR=True):
     neighbors : 2D array-like, optional
         List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
     use_MBAR : bool, optional
-        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < f / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <f / \sum_j \psi_j >_i z_i`.
+        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------
@@ -62,7 +62,7 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
     kT : float, optional
         Value of kT to scale the PMF by.  If not provided, set to 1.0
     use_MBAR : bool, optional
-        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < f / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <f / \sum_j \psi_j >_i z_i`.
+        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------
@@ -281,7 +281,7 @@ def _calculate_win_avgs(psis,z,gdata,neighbors=None,use_MBAR=True):
     neighbors : 2D array-like, optional
         List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
     use_MBAR : bool, optional
-        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < f / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <f / \sum_j \psi_j >_i z_i`.
+        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------

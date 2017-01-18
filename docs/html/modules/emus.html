@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>emus module &mdash; emus  documentation</title>
@@ -14,7 +15,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -36,7 +36,7 @@
         <link rel="prev" title="avar module" href="avar.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -46,11 +46,23 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> emus</a>
-        
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> emus
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -58,30 +70,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
           
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-averages">Calculating Averages</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
-</ul>
-</li>
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">EMUS Modules</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="autocorrelation.html">autocorrelation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="avar.html">avar module</a></li>
@@ -92,10 +92,10 @@
 </li>
 </ul>
 
+            
           
-        
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -110,7 +110,13 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
@@ -119,13 +125,16 @@
     <li>emus module</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/modules/emus.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/modules/emus.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="module-emus">
 <span id="emus-module"></span><h1>emus module<a class="headerlink" href="#module-emus" title="Permalink to this headline">¶</a></h1>
@@ -172,7 +181,7 @@
 
 <dl class="function">
 <dt id="emus.calculate_obs">
-<code class="descclassname">emus.</code><code class="descname">calculate_obs</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>g1data</em>, <em>g2data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus.html#calculate_obs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.calculate_obs" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">emus.</code><code class="descname">calculate_obs</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>g1data</em>, <em>g2data=None</em>, <em>neighbors=None</em>, <em>use_MBAR=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus.html#calculate_obs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.calculate_obs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Estimates the value of an observable or ratio of observables.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -194,6 +203,14 @@
 <blockquote>
 <div><p>Trajectory of observable in the denominator.</p>
 </div></blockquote>
+<p><strong>neighbors</strong> : 2D array-like, optional</p>
+<blockquote>
+<div><p>List showing which windows neighbor which.  See neighbors_harmonic in usutils.</p>
+</div></blockquote>
+<p><strong>use_MBAR</strong> : bool, optional</p>
+<blockquote>
+<div><p>Use the MBAR estimator for the average of f.  If true (default), uses the estimator <span class="math">\(\sum_i &lt; g / (\sum_j \psi_j/z_j) &gt;_i\)</span>.  Otherwise, uses the first iteration EMUS estimator, <span class="math">\(\sum_i &lt;g / \sum_j \psi_j &gt;_i z_i\)</span>.</p>
+</div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>avg</strong> : float</p>
@@ -208,7 +225,7 @@
 
 <dl class="function">
 <dt id="emus.calculate_pmf">
-<code class="descclassname">emus.</code><code class="descname">calculate_pmf</code><span class="sig-paren">(</span><em>cv_trajs</em>, <em>psis</em>, <em>domain</em>, <em>z</em>, <em>nbins=100</em>, <em>kT=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus.html#calculate_pmf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.calculate_pmf" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">emus.</code><code class="descname">calculate_pmf</code><span class="sig-paren">(</span><em>cv_trajs</em>, <em>psis</em>, <em>domain</em>, <em>z</em>, <em>neighbors=None</em>, <em>nbins=100</em>, <em>kT=1.0</em>, <em>use_MBAR=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus.html#calculate_pmf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.calculate_pmf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the free energy surface along a coordinate.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -226,6 +243,14 @@
 <blockquote>
 <div><p>Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window</p>
 </div></blockquote>
+<p><strong>z</strong> : 1D array</p>
+<blockquote>
+<div><p>Array containing the normalization constants</p>
+</div></blockquote>
+<p><strong>neighbors</strong> : 2D array-like, optional</p>
+<blockquote>
+<div><p>List showing which windows neighbor which.  See neighbors_harmonic in usutils.</p>
+</div></blockquote>
 <p><strong>nbins</strong> : int or tuple, optional</p>
 <blockquote>
 <div><p>Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.</p>
@@ -233,6 +258,10 @@
 <p><strong>kT</strong> : float, optional</p>
 <blockquote>
 <div><p>Value of kT to scale the PMF by.  If not provided, set to 1.0</p>
+</div></blockquote>
+<p><strong>use_MBAR</strong> : bool, optional</p>
+<blockquote>
+<div><p>Use the MBAR estimator for the average of f.  If true (default), uses the estimator <span class="math">\(\sum_i &lt; g / (\sum_j \psi_j/z_j) &gt;_i\)</span>.  Otherwise, uses the first iteration EMUS estimator, <span class="math">\(\sum_i &lt;g / \sum_j \psi_j &gt;_i z_i\)</span>.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -341,15 +370,16 @@
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="linalg.html" class="btn btn-neutral float-right" title="linalg module">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="linalg.html" class="btn btn-neutral float-right" title="linalg module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="avar.html" class="btn btn-neutral" title="avar module"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="avar.html" class="btn btn-neutral" title="avar module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -359,12 +389,13 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Erik H Thiede.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 

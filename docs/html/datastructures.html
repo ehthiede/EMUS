@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Data Structures &mdash; emus  documentation</title>
@@ -14,7 +15,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -35,7 +35,7 @@
         <link rel="prev" title="Quickstart" href="quickstart.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -45,11 +45,23 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="index.html" class="fa fa-home"> emus</a>
-        
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> emus
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -57,44 +69,29 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
           
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="theory.html">Background</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="theory.html#emus">EMUS</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#calculating-averages">Calculating Averages</a></li>
-</ul>
-</li>
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Data Structures</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#common-data-structures">Common data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="modules/index.html">EMUS Modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="modules/autocorrelation.html">autocorrelation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/avar.html">avar module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/emus.html">emus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/linalg.html">linalg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/usutils.html">usutils module</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">EMUS Modules</a></li>
 </ul>
 
+            
           
-        
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -109,20 +106,29 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
     <li>Data Structures</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="_sources/datastructures.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/datastructures.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="data-structures">
 <h1>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline">¶</a></h1>
@@ -134,8 +140,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">cv_trajs:</th><td class="field-body"><p class="first">Two or three-dimensional array-like containing the trajectories in the collective variable space.  The first dimension corresponds to the window index, the second to the timepoint in the trajectory, and the optional third to the collective variable.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cv_trajs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="c"># CV trajectory of the i&#39;th window</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cv_trajs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="c"># cv coordinate in window i, time n.</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cv_trajs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="c1"># CV trajectory of the i&#39;th window</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cv_trajs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="c1"># cv coordinate in window i, time n.</span>
 </pre></div>
 </div>
 <p>Note the trajectories need not have the same number of time points: <code class="samp docutils literal"><span class="pre">cv_trajs[i]</span></code> and <code class="samp docutils literal"><span class="pre">cv_trajs[j]</span></code> may have different lengths.</p>
@@ -145,13 +151,13 @@
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">gdata:</th><td class="field-body"><p class="first">Two-dimensional array-like containing the values of an observable.  The data structure is similar to cv_trajs.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gdata1</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="c"># observable at window i at timepoint n.</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gdata1</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="c1"># observable at window i at timepoint n.</span>
 </pre></div>
 </div>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">neighbors:</th><td class="field-body"><p class="first">Two-dimensional array-like used for the neighborlist functionality.  In practice, it is often known in advance that many combinations of i and j will result in values of <span class="math">\(\psi\)</span> that are zero or effectively zero (for instance, two harmonic windows far away in collective variable space).  In these situations, it is cheaper only to calculate and store psis for neighboring windows, and <code class="samp docutils literal"><span class="pre">psis[i][n][j]</span></code> will return <span class="math">\(\psi\)</span> evaluated for the j&#8217;th <em>neighbor</em>.  The <code class="samp docutils literal"><span class="pre">neighbors</span></code> data element then gives the true indeces of each neighbor: <code class="samp docutils literal"><span class="pre">neighbors[i][j]</span></code> returns the index of the j&#8217;th window neighboring window i.  Below is an example neighborlist for nearest neighbors in 1D, aperiodic space.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">neighbors</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]]</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">neighbors</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]]</span>
 </pre></div>
 </div>
 <p>For harmonic windows, a neighborlist can be constructed using the neighbors_harmonic function.</p>
@@ -170,9 +176,9 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">centers:</th><td class="field-body"><p class="first">Two-dimensional array-like containing the center of each harmonic window in collective variable space.  The first index corresponds to the window index, and the second to the collective variable index.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">180.</span><span class="p">,</span><span class="mf">180.</span><span class="p">],[</span><span class="mf">180.</span><span class="p">,</span><span class="mf">160.</span><span class="p">],[</span><span class="mf">180.</span><span class="p">,</span><span class="mf">140.</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">centers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c"># Returns array with the center of the middle window</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">centers</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="c"># Returns each window&#39;s y-coordinate.</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">180.</span><span class="p">,</span><span class="mf">180.</span><span class="p">],[</span><span class="mf">180.</span><span class="p">,</span><span class="mf">160.</span><span class="p">],[</span><span class="mf">180.</span><span class="p">,</span><span class="mf">140.</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">centers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># Returns array with the center of the middle window</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">centers</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># Returns each window&#39;s y-coordinate.</span>
 </pre></div>
 </div>
 </td>
@@ -184,7 +190,7 @@
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">period:</th><td class="field-body"><p class="first">One-dimensional array-like encoding the period of the collective variable.  <code class="samp docutils literal"><span class="pre">period[i]</span></code> gives the periodicity of the i&#8217;th collective variable.  If the periodicity in that dimension is none, a value of None is used.  For instance, the command below specifies that the first collective variable has a period of 360, the second has one of 1, and that the third is aperiodic.</p>
-<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">period</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">360.</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">])</span>
+<div class="last highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">period</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">360.</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">])</span>
 </pre></div>
 </div>
 </td>
@@ -206,15 +212,16 @@ for all.</td></tr>
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="modules/index.html" class="btn btn-neutral float-right" title="EMUS Modules">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="modules/index.html" class="btn btn-neutral float-right" title="EMUS Modules" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="quickstart.html" class="btn btn-neutral" title="Quickstart"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="quickstart.html" class="btn btn-neutral" title="Quickstart" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -224,12 +231,13 @@ for all.</td></tr>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Erik H Thiede.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 

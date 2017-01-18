@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Quickstart &mdash; emus  documentation</title>
@@ -14,7 +15,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -35,7 +35,7 @@
         <link rel="prev" title="Background" href="theory.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -45,11 +45,23 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="index.html" class="fa fa-home"> emus</a>
-        
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> emus
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -57,18 +69,16 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
           
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="theory.html">Background</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="theory.html#emus">EMUS</a></li>
-</ul>
-</li>
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Background</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#calculating-the-pmf">Calculating the PMF</a></li>
@@ -76,25 +86,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#calculating-averages">Calculating Averages</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="datastructures.html#common-data-structures">Common data structures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="modules/index.html">EMUS Modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="modules/autocorrelation.html">autocorrelation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/avar.html">avar module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/emus.html">emus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/linalg.html">linalg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/usutils.html">usutils module</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">EMUS Modules</a></li>
 </ul>
 
+            
           
-        
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -109,63 +108,72 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
     <li>Quickstart</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="_sources/quickstart.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/quickstart.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="quickstart">
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
 <p>This guide covers how to perform typical tasks with the EMUS package in a pythonic environment.  The required data files, as well as a (slightly modified) script containing all of the python commands used below, can be found in the examples directory of the package in the AlaDipeptide_1D directory. The guide will make use of the numpy and matplotlib packages.</p>
 <p>Note that most common functionality of the EMUS package can be accessed from command line using the wemus.py script.  To see a full list of command line options, use the command</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">wemus</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">help</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">wemus</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
 <div class="section" id="loading-from-wham-like-formats">
 <h2>Loading from WHAM-like Formats<a class="headerlink" href="#loading-from-wham-like-formats" title="Permalink to this headline">¶</a></h2>
 <p>The usutils module provides a method that loads data in the format used by WHAM.  It outputs the trajectory in collective variable space as well as the <span class="math">\(\psi_ij(x_n)\)</span> values.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">emus</span> <span class="kn">import</span> <span class="n">usutils</span> <span class="k">as</span> <span class="n">uu</span>
 <span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c"># Define Simulation Parameters</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="mi">310</span>                             <span class="c"># Temperature in Kelvin</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">meta_file</span> <span class="o">=</span> <span class="s">&#39;wham_meta.txt&#39;</span>         <span class="c"># Path to Meta File</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span>                             <span class="c"># 1 Dimensional CV space.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">period</span> <span class="o">=</span> <span class="mi">360</span>                        <span class="c"># Dihedral Angles periodicity</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Define Simulation Parameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="mi">310</span>                             <span class="c1"># Temperature in Kelvin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">meta_file</span> <span class="o">=</span> <span class="s1">&#39;wham_meta.txt&#39;</span>         <span class="c1"># Path to Meta File</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span>                             <span class="c1"># 1 Dimensional CV space.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">period</span> <span class="o">=</span> <span class="mi">360</span>                        <span class="c1"># Dihedral Angles periodicity</span>
 <span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c"># Load data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">psis</span><span class="p">,</span> <span class="n">cv_trajs</span><span class="p">,</span> <span class="n">neighbors</span> <span class="o">=</span> <span class="n">uu</span><span class="o">.</span><span class="n">data_from_WHAMmeta</span><span class="p">(</span><span class="s">&#39;wham_meta.txt&#39;</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psis</span><span class="p">,</span> <span class="n">cv_trajs</span><span class="p">,</span> <span class="n">neighbors</span> <span class="o">=</span> <span class="n">uu</span><span class="o">.</span><span class="n">data_from_WHAMmeta</span><span class="p">(</span><span class="s1">&#39;wham_meta.txt&#39;</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="calculating-the-pmf">
 <h2>Calculating the PMF<a class="headerlink" href="#calculating-the-pmf" title="Permalink to this headline">¶</a></h2>
 <p>We now import the emus code, and calculate the normalization constants.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">emus</span> <span class="kn">import</span> <span class="n">emus</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">emus</span> <span class="kn">import</span> <span class="n">emus</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">neighbors</span><span class="o">=</span><span class="n">neighbors</span><span class="p">,)</span>
 </pre></div>
 </div>
 <p>To calculate the potential of mean force, we provide the number of histogram bins and the range of the collective variable, and call the appropriate method of the EMUS object.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">domain</span> <span class="o">=</span> <span class="p">((</span><span class="o">-</span><span class="mf">180.0</span><span class="p">,</span><span class="mf">180.</span><span class="p">))</span>            <span class="c"># Range of dihedral angle values</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="mi">310</span>                             <span class="c"># Temperature in Kelvin</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">k_B</span> <span class="o">=</span> <span class="mf">1.9872041E-3</span>                  <span class="c"># Boltzmann factor in kcal/mol</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">domain</span> <span class="o">=</span> <span class="p">((</span><span class="o">-</span><span class="mf">180.0</span><span class="p">,</span><span class="mf">180.</span><span class="p">))</span>            <span class="c1"># Range of dihedral angle values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="mi">310</span>                             <span class="c1"># Temperature in Kelvin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k_B</span> <span class="o">=</span> <span class="mf">1.9872041E-3</span>                  <span class="c1"># Boltzmann factor in kcal/mol</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kT</span> <span class="o">=</span> <span class="n">k_B</span> <span class="o">*</span> <span class="n">T</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pmf</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_pmf</span><span class="p">(</span><span class="n">cv_trajs</span><span class="p">,</span><span class="n">psis</span><span class="p">,</span><span class="n">domain</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">nbins</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span><span class="n">kT</span><span class="o">=</span><span class="n">kT</span><span class="p">)</span>   <span class="c"># Calculate the pmf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pmf</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_pmf</span><span class="p">(</span><span class="n">cv_trajs</span><span class="p">,</span><span class="n">psis</span><span class="p">,</span><span class="n">domain</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">nbins</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span><span class="n">kT</span><span class="o">=</span><span class="n">kT</span><span class="p">)</span>   <span class="c1"># Calculate the pmf</span>
 </pre></div>
 </div>
 <p>We can now plot the potential of mean force using pyplot or other tools.  Note that this returns the unitless free energy by default: the user can either multiply the pmf by <span class="math">\(k_B T\)</span> in postprocessing, or specify <span class="math">\(k_B T\)</span> as a parameter for calc_pmf.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">177</span><span class="p">,</span><span class="mi">177</span><span class="p">,</span><span class="mi">60</span><span class="p">)</span>  <span class="c"># Center of the histogram bins</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">177</span><span class="p">,</span><span class="mi">177</span><span class="p">,</span><span class="mi">60</span><span class="p">)</span>  <span class="c1"># Center of the histogram bins</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">centers</span><span class="p">,</span><span class="n">pmf</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -174,51 +182,51 @@
 <div class="section" id="estimating-window-partition-functions">
 <h2>Estimating Window Partition Functions<a class="headerlink" href="#estimating-window-partition-functions" title="Permalink to this headline">¶</a></h2>
 <p>The EMUS package also has the ability to calculate the relative partition functions from the MBAR estimator.  This requires solving a self-consistent iteration.  The nMBAR parameter specifies the maximum number of iterations.  Note that truncating early still provides a consistent estimator, and introduces no systematic bias.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_1</span><span class="p">,</span> <span class="n">F_MBAR_1</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_1</span><span class="p">,</span> <span class="n">F_MBAR_1</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_2</span><span class="p">,</span> <span class="n">F_MBAR_2</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_5</span><span class="p">,</span> <span class="n">F_MBAR_5</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">z_MBAR_1k</span><span class="p">,</span> <span class="n">F_MBAR_1k</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We can plot the unitless window free energies for each max iteration number to see how our estimates converge.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">EM</span><span class="o">.</span><span class="n">z</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Iteration 0&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">z_MBAR_1</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Iteration 1&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">z_MBAR_2</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Iteration 2&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">z_MBAR_5</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Iteration 5&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">z_MBAR_1k</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Iteration 1k&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">EM</span><span class="o">.</span><span class="n">z</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Iteration 0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">z_MBAR_1</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Iteration 1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">z_MBAR_2</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Iteration 2&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">z_MBAR_5</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Iteration 5&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">z_MBAR_1k</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Iteration 1k&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The pmf can be constructed using these values for the relative partition functions. <a class="footnote-reference" href="#estimatornote" id="id1">[1]</a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">MBARpmf</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_pmf</span><span class="p">(</span><span class="n">cv_trajs</span><span class="p">,</span><span class="n">psis</span><span class="p">,</span><span class="n">domain</span><span class="p">,</span><span class="n">nbins</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">z_MBAR_1k</span><span class="p">,</span><span class="n">kT</span><span class="o">=</span><span class="n">kT</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">MBARpmf</span> <span class="o">=</span> <span class="n">emus</span><span class="o">.</span><span class="n">calculate_pmf</span><span class="p">(</span><span class="n">cv_trajs</span><span class="p">,</span><span class="n">psis</span><span class="p">,</span><span class="n">domain</span><span class="p">,</span><span class="n">nbins</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">z_MBAR_1k</span><span class="p">,</span><span class="n">kT</span><span class="o">=</span><span class="n">kT</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="calculating-averages">
 <h2>Calculating Averages<a class="headerlink" href="#calculating-averages" title="Permalink to this headline">¶</a></h2>
 <p>It is possible to use the EMUS package to calculate the averages of functions.  Here, we will calculate the probability that the dihedral takes values between 25 and 100 degrees (this roughly corresponds to the molecule being in the C7 axial basin).  This is equivalent to the average of an indicator function that is 1 if the molecule is in the desired configuration and 0 otherwise.  First, we construct the timeseries of this function for each window.  Note that if the EMUS object was constructed with the collective variable trajectories, they are contained at <code class="samp docutils literal"><span class="pre">EM.cv_trajs</span></code>. <a class="footnote-reference" href="#boolnote" id="id2">[2]</a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fdata</span> <span class="o">=</span>  <span class="p">[(</span><span class="n">traj</span><span class="o">&gt;</span><span class="mi">25</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">traj</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">traj</span> <span class="ow">in</span> <span class="n">cv_trajs</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fdata</span> <span class="o">=</span>  <span class="p">[(</span><span class="n">traj</span><span class="o">&gt;</span><span class="mi">25</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">traj</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">traj</span> <span class="ow">in</span> <span class="n">cv_trajs</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>We can now calculate the probability of being in this state.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">prob_C7ax</span> <span class="o">=</span> <span class="n">EM</span><span class="o">.</span><span class="n">calculate_obs</span><span class="p">(</span><span class="n">fdata</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">prob_C7ax</span> <span class="o">=</span> <span class="n">EM</span><span class="o">.</span><span class="n">calculate_obs</span><span class="p">(</span><span class="n">fdata</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">prob_C7ax</span>
 </pre></div>
 </div>
 <p>The EMUS package also introduces a new meta file for functions of configuration space.  The format is a simple text file, where the i&#8217;th line is the path to the function data collected in window i.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">/</span><span class="n">fdata_0</span><span class="o">.</span><span class="n">txt</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">/</span><span class="n">fdata_0</span><span class="o">.</span><span class="n">txt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">/</span><span class="n">fdata_1</span><span class="o">.</span><span class="n">txt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">/</span><span class="n">fdata_2</span><span class="o">.</span><span class="n">txt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>
 </pre></div>
 </div>
 <p>In each of the data files, the first column is the timestamp, and each successive column is the value of the n&#8217;th function at that timestep.  The data can be loaded using a method in usutils</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fxndata</span> <span class="o">=</span> <span class="n">uu</span><span class="o">.</span><span class="n">data_from_fxnmeta</span><span class="p">(</span><span class="s">&#39;fxn_meta.txt&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fxndata</span> <span class="o">=</span> <span class="n">uu</span><span class="o">.</span><span class="n">data_from_fxnmeta</span><span class="p">(</span><span class="s1">&#39;fxn_meta.txt&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The format of the data is similar to psis.  The first index is the index of the umbrella where the data was collected.  The second is the timepoint of the data, and the third index corresponds to the function.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fxndata</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c"># Data collected in the first window.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">fxndata</span><span class="p">[</span><span class="n">fxn_i</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">fxn_i</span> <span class="ow">in</span> <span class="n">fxndata</span><span class="p">]</span> <span class="c"># First function evaluated in each window.</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fxndata</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Data collected in the first window.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fxndata</span><span class="p">[</span><span class="n">fxn_i</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">fxn_i</span> <span class="ow">in</span> <span class="n">fxndata</span><span class="p">]</span> <span class="c1"># First function evaluated in each window.</span>
 </pre></div>
 </div>
 <table class="docutils footnote" frame="void" id="estimatornote" rules="none">
@@ -237,15 +245,16 @@
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="datastructures.html" class="btn btn-neutral float-right" title="Data Structures">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="datastructures.html" class="btn btn-neutral float-right" title="Data Structures" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="theory.html" class="btn btn-neutral" title="Background"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="theory.html" class="btn btn-neutral" title="Background" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -255,12 +264,13 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Erik H Thiede.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 

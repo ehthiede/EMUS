@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>emus &mdash; emus  documentation</title>
@@ -14,7 +15,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -34,7 +34,7 @@
         <link rel="up" title="Module code" href="index.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -44,11 +44,23 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="../index.html" class="fa fa-home"> emus</a>
-        
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> emus
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -56,44 +68,25 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
-
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
-          
-          
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-averages">Calculating Averages</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/index.html">EMUS Modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../modules/autocorrelation.html">autocorrelation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/avar.html">avar module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/emus.html">emus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/linalg.html">linalg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/usutils.html">usutils module</a></li>
-</ul>
-</li>
-</ul>
 
           
-        
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/index.html">EMUS Modules</a></li>
+</ul>
+
+            
+          
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -108,7 +101,13 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
@@ -117,14 +116,17 @@
     <li>emus</li>
       <li class="wy-breadcrumbs-aside">
         
+          
+        
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for emus</h1><div class="highlight"><pre>
-<span class="c"># -*- coding: utf-8 -*-</span>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot; Container for the primary EMUS routines.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -134,7 +136,7 @@
 <span class="kn">from</span> <span class="nn">usutils</span> <span class="kn">import</span> <span class="n">unpackNbrs</span>
 <span class="kn">from</span> <span class="nn">_defaults</span> <span class="kn">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="calculate_obs"><a class="viewcode-back" href="../modules/emus.html#emus.calculate_obs">[docs]</a><span class="k">def</span> <span class="nf">calculate_obs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">g1data</span><span class="p">,</span><span class="n">g2data</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="calculate_obs"><a class="viewcode-back" href="../modules/emus.html#emus.calculate_obs">[docs]</a><span class="k">def</span> <span class="nf">calculate_obs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">g1data</span><span class="p">,</span><span class="n">g2data</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">neighbors</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">use_MBAR</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Estimates the value of an observable or ratio of observables.</span>
 
 <span class="sd">    Parameters</span>
@@ -147,6 +149,10 @@
 <span class="sd">        Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.</span>
 <span class="sd">    g2data : 2D data structure, optional</span>
 <span class="sd">        Trajectory of observable in the denominator.  </span>
+<span class="sd">    neighbors : 2D array-like, optional</span>
+<span class="sd">        List showing which windows neighbor which.  See neighbors_harmonic in usutils. </span>
+<span class="sd">    use_MBAR : bool, optional</span>
+<span class="sd">        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i &lt; g / (\sum_j \psi_j/z_j) &gt;_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i &lt;g / \sum_j \psi_j &gt;_i z_i`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -154,17 +160,17 @@
 <span class="sd">        The estimate of :math:`&lt;g_1&gt;/&lt;g_2&gt;`.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># Clean the input and set defaults</span>
+    <span class="c1"># Clean the input and set defaults</span>
     <span class="n">g1data</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">g1i</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">g1i</span> <span class="ow">in</span> <span class="n">g1data</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">g2data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">g2data</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">g1data_i</span><span class="p">))</span> <span class="k">for</span> <span class="n">g1data_i</span> <span class="ow">in</span> <span class="n">g1data</span><span class="p">]</span>
         
-    <span class="n">g1star</span> <span class="o">=</span> <span class="n">_calculate_win_avgs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">g1data</span><span class="p">)</span>
-    <span class="n">g2star</span> <span class="o">=</span> <span class="n">_calculate_win_avgs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">g2data</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">g1star</span><span class="p">,</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">g2star</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">g1star</span> <span class="o">=</span> <span class="n">_calculate_win_avgs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">g1data</span><span class="p">,</span><span class="n">neighbors</span><span class="p">,</span><span class="n">use_MBAR</span><span class="p">)</span>
+    <span class="n">g2star</span> <span class="o">=</span> <span class="n">_calculate_win_avgs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">g2data</span><span class="p">,</span><span class="n">neighbors</span><span class="p">,</span><span class="n">use_MBAR</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">g1star</span><span class="p">,</span><span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">g2star</span><span class="p">,</span><span class="n">z</span><span class="p">)</span></div>
 
-</div>
-<div class="viewcode-block" id="calculate_pmf"><a class="viewcode-back" href="../modules/emus.html#emus.calculate_pmf">[docs]</a><span class="k">def</span> <span class="nf">calculate_pmf</span><span class="p">(</span><span class="n">cv_trajs</span><span class="p">,</span> <span class="n">psis</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">nbins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span><span class="n">kT</span><span class="o">=</span><span class="n">DEFAULT_KT</span><span class="p">):</span>
+
+<div class="viewcode-block" id="calculate_pmf"><a class="viewcode-back" href="../modules/emus.html#emus.calculate_pmf">[docs]</a><span class="k">def</span> <span class="nf">calculate_pmf</span><span class="p">(</span><span class="n">cv_trajs</span><span class="p">,</span> <span class="n">psis</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span><span class="n">neighbors</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nbins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span><span class="n">kT</span><span class="o">=</span><span class="n">DEFAULT_KT</span><span class="p">,</span> <span class="n">use_MBAR</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the free energy surface along a coordinate.</span>
 
 <span class="sd">    Parameters</span>
@@ -175,10 +181,16 @@
 <span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 <span class="sd">    domain : tuple</span>
 <span class="sd">        Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window</span>
+<span class="sd">    z : 1D array</span>
+<span class="sd">        Array containing the normalization constants</span>
+<span class="sd">    neighbors : 2D array-like, optional</span>
+<span class="sd">        List showing which windows neighbor which.  See neighbors_harmonic in usutils. </span>
 <span class="sd">    nbins : int or tuple, optional</span>
 <span class="sd">        Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.</span>
 <span class="sd">    kT : float, optional</span>
 <span class="sd">        Value of kT to scale the PMF by.  If not provided, set to 1.0</span>
+<span class="sd">    use_MBAR : bool, optional</span>
+<span class="sd">        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i &lt; g / (\sum_j \psi_j/z_j) &gt;_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i &lt;g / \sum_j \psi_j &gt;_i z_i`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -193,29 +205,40 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">domain</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">domain</span><span class="p">,(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">domain</span><span class="p">)))</span>
     <span class="n">ndims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">domain</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">nbins</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span> <span class="c"># Make nbins to an iterable in the 1d case.</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">nbins</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span> <span class="c1"># Make nbins to an iterable in the 1d case.</span>
         <span class="n">nbins</span> <span class="o">=</span> <span class="p">[</span><span class="n">nbins</span><span class="p">]</span><span class="o">*</span><span class="n">ndims</span>
     <span class="n">domainwdth</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">domain</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
     
-    <span class="c"># Calculate the PMF</span>
+    <span class="c1"># Calculate the PMF</span>
     <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nbins</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">xtraj_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cv_trajs</span><span class="p">):</span>
-<span class="c">#        xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]</span>
-        <span class="n">hist_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nbins</span><span class="p">)</span> <span class="c"># Histogram of window i</span>
-        <span class="k">for</span> <span class="n">n</span><span class="p">,</span><span class="n">coord</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xtraj_i</span><span class="p">):</span>
-            <span class="n">psi_i_n</span> <span class="o">=</span> <span class="n">psis</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">n</span><span class="p">]</span>
-            <span class="c"># We find the coordinate of the bin we land in.</span>
-            <span class="n">coordbins</span> <span class="o">=</span> <span class="p">(</span><span class="n">coord</span> <span class="o">-</span> <span class="n">domain</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">domainwdth</span><span class="o">*</span><span class="n">nbins</span>
-            <span class="n">coordbins</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">coordbins</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
-            <span class="n">weight</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psi_i_n</span><span class="p">)</span>
-            <span class="n">hist_i</span><span class="p">[</span><span class="n">coordbins</span><span class="p">]</span> <span class="o">+=</span> <span class="n">weight</span>
+<span class="c1">#        xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]</span>
+        <span class="n">hist_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nbins</span><span class="p">)</span> <span class="c1"># Histogram of window i</span>
+        <span class="k">if</span> <span class="n">use_MBAR</span><span class="p">:</span>
+            <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">psis</span><span class="p">)</span> <span class="c1"># Number of windows</span>
+            <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">L</span><span class="p">),</span><span class="nb">range</span><span class="p">(</span><span class="n">L</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">nbrs_i</span> <span class="o">=</span> <span class="n">neighbors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">z_nbr</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">nbrs_i</span><span class="p">]</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">psis</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="mf">1.</span><span class="o">/</span><span class="n">z_nbr</span><span class="p">))</span>
+            <span class="n">hist_i</span><span class="p">,</span><span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogramdd</span><span class="p">(</span><span class="n">xtraj_i</span><span class="p">,</span><span class="n">nbins</span><span class="p">,</span><span class="n">domain</span><span class="p">,</span><span class="n">normed</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">psi_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psis</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">hist_i</span><span class="p">,</span><span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogramdd</span><span class="p">(</span><span class="n">xtraj_i</span><span class="p">,</span><span class="n">nbins</span><span class="p">,</span><span class="n">domain</span><span class="p">,</span><span class="n">normed</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">weights</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="n">psi_sum</span><span class="p">)</span>
+            <span class="n">hist_i</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xtraj_i</span><span class="p">)</span>
+<span class="c1">#        for n,coord in enumerate(xtraj_i):</span>
+<span class="c1">#            psi_i_n = psis[i][n]</span>
+<span class="c1">#            # We find the coordinate of the bin we land in.</span>
+<span class="c1">#            coordbins = (coord - domain[:,0])/domainwdth*nbins</span>
+<span class="c1">#            coordbins = np.array(coordbins.astype(int))</span>
+<span class="c1">#            weight = 1./np.sum(psi_i_n)</span>
+<span class="c1">#            if ((coordbins &gt;= 0).all() and (coordbins &lt; nbins).all()):</span>
+<span class="c1">#                hist_i[coordbins] += weight</span>
         <span class="n">hist</span><span class="o">+=</span><span class="n">hist_i</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">xtraj_i</span><span class="p">)</span><span class="o">*</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="n">pmf</span> <span class="o">=-</span><span class="n">kT</span><span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">hist</span><span class="p">)</span>
     <span class="n">pmf</span> <span class="o">-=</span> <span class="nb">min</span><span class="p">(</span><span class="n">pmf</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
 
-    <span class="c"># Calculate the centers of each histogram bin.</span>
-    <span class="k">return</span> <span class="n">pmf</span>
-</div>
+    <span class="k">return</span> <span class="n">pmf</span></div>
+
 <div class="viewcode-block" id="calculate_zs"><a class="viewcode-back" href="../modules/emus.html#emus.calculate_zs">[docs]</a><span class="k">def</span> <span class="nf">calculate_zs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">neighbors</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">nMBAR</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">tol</span><span class="o">=</span><span class="n">DEFAULT_MBAR_TOL</span><span class="p">,</span><span class="n">use_iats</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">iat_method</span><span class="o">=</span><span class="n">DEFAULT_IAT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the normalization constants for the windows.</span>
 
@@ -240,7 +263,7 @@
 <span class="sd">        Estimated values of the autocorrelation time.  Only returned if use_iats is true.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">psis</span><span class="p">)</span> <span class="c"># Number of windows</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">psis</span><span class="p">)</span> <span class="c1"># Number of windows</span>
     <span class="n">Npnts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">psis_i</span><span class="p">)</span> <span class="k">for</span> <span class="n">psis_i</span> <span class="ow">in</span> <span class="n">psis</span><span class="p">])</span>
     <span class="n">Npnts</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Npnts</span><span class="p">)</span>
 
@@ -250,7 +273,7 @@
         <span class="n">z</span><span class="p">,</span><span class="n">F</span> <span class="o">=</span> <span class="n">emus_iter</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">neighbors</span><span class="o">=</span><span class="n">neighbors</span><span class="p">,</span><span class="n">return_iats</span><span class="o">=</span><span class="n">use_iats</span><span class="p">,</span><span class="n">iat_method</span><span class="o">=</span><span class="n">iat_method</span><span class="p">)</span>
         <span class="n">iats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
-    <span class="c"># we perform the self-consistent polishing iteration</span>
+    <span class="c1"># we perform the self-consistent polishing iteration</span>
     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">nMBAR</span><span class="p">):</span>
         <span class="n">z_old</span> <span class="o">=</span> <span class="n">z</span>
         <span class="n">Apart</span> <span class="o">=</span> <span class="n">Npnts</span><span class="o">/</span><span class="n">z_old</span>
@@ -260,16 +283,16 @@
             <span class="n">z</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">iats</span> <span class="o">=</span> <span class="n">emus_iter</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">Amat</span><span class="p">,</span><span class="n">neighbors</span><span class="o">=</span><span class="n">neighbors</span><span class="p">,</span><span class="n">return_iats</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">iat_method</span><span class="o">=</span><span class="n">iat_method</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">z</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">emus_iter</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">Amat</span><span class="p">,</span><span class="n">neighbors</span><span class="o">=</span><span class="n">neighbors</span><span class="p">)</span>
-        <span class="c"># Check if we have converged.	</span>
+        <span class="c1"># Check if we have converged.	</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z</span><span class="o">-</span><span class="n">z_old</span><span class="p">)</span><span class="o">/</span><span class="n">z_old</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
             <span class="k">break</span>
                             
     <span class="k">if</span> <span class="n">use_iats</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">z</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">iats</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">z</span><span class="p">,</span> <span class="n">F</span>
+        <span class="k">return</span> <span class="n">z</span><span class="p">,</span> <span class="n">F</span></div>
 
-</div>
+
 <div class="viewcode-block" id="emus_iter"><a class="viewcode-back" href="../modules/emus.html#emus.emus_iter">[docs]</a><span class="k">def</span> <span class="nf">emus_iter</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span> <span class="n">Avals</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">neighbors</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">return_iats</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span><span class="n">iat_method</span><span class="o">=</span><span class="n">DEFAULT_IAT</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Performs one step of the the EMUS iteration.</span>
 <span class="sd">    </span>
@@ -297,10 +320,10 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="c"># Initialize variables</span>
-    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">psis</span><span class="p">)</span> <span class="c"># Number of windows</span>
-    <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">L</span><span class="p">,</span><span class="n">L</span><span class="p">))</span> <span class="c"># Initialize F Matrix</span>
-    <span class="c"># Take care of defaults..</span>
+    <span class="c1"># Initialize variables</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">psis</span><span class="p">)</span> <span class="c1"># Number of windows</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">L</span><span class="p">,</span><span class="n">L</span><span class="p">))</span> <span class="c1"># Initialize F Matrix</span>
+    <span class="c1"># Take care of defaults..</span>
     <span class="k">if</span> <span class="n">return_iats</span><span class="p">:</span>
         <span class="n">iats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
         <span class="n">iatroutine</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">_get_iat_method</span><span class="p">(</span><span class="n">iat_method</span><span class="p">)</span>
@@ -319,15 +342,15 @@
             <span class="n">iats</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">iatroutine</span><span class="p">(</span><span class="n">trajs</span><span class="p">[</span><span class="n">nbr_index</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">Fi</span> <span class="o">=</span> <span class="n">Fi_out</span>
-        <span class="c"># Unpack the Neighbor list</span>
+        <span class="c1"># Unpack the Neighbor list</span>
         <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">unpackNbrs</span><span class="p">(</span><span class="n">Fi</span><span class="p">,</span><span class="n">nbrs_i</span><span class="p">,</span><span class="n">L</span><span class="p">)</span>
 
     <span class="n">z</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">stationary_distrib</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">return_iats</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">z</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">iats</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">z</span><span class="p">,</span> <span class="n">F</span>
-</div>
+        <span class="k">return</span> <span class="n">z</span><span class="p">,</span> <span class="n">F</span></div>
+
 <div class="viewcode-block" id="calculate_Fi"><a class="viewcode-back" href="../modules/emus.html#emus.calculate_Fi">[docs]</a><span class="k">def</span> <span class="nf">calculate_Fi</span><span class="p">(</span><span class="n">psi_i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">Avals_i</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">return_trajs</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the values of a single row in the F matrix.  If neighborlists are being used, psi_i, and Avals_i should be the neighborlisted data structure, and the row will be need to be unpacked using the neighborlist.</span>
 <span class="sd">    </span>
@@ -350,10 +373,10 @@
 <span class="sd">        If return_trajs is True, returns the trajectories used in calculating the values of F</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># Setup</span>
-    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">psi_i</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="c"># Number of neighboring windows</span>
+    <span class="c1"># Setup</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">psi_i</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># Number of neighboring windows</span>
     <span class="n">Fi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-    <span class="c"># Take care of defaults</span>
+    <span class="c1"># Take care of defaults</span>
     <span class="k">if</span> <span class="n">Avals_i</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">Avals_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
      
@@ -362,7 +385,7 @@
     <span class="k">if</span> <span class="n">return_trajs</span><span class="p">:</span>
         <span class="n">trajs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">psi_i</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
-        <span class="n">Ftraj</span> <span class="o">=</span> <span class="n">psi_i</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span><span class="o">/</span><span class="n">denom</span> <span class="c"># traj \psi_j/{\sum_k \psi_k A_k}</span>
+        <span class="n">Ftraj</span> <span class="o">=</span> <span class="n">psi_i</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span><span class="o">/</span><span class="n">denom</span> <span class="c1"># traj \psi_j/{\sum_k \psi_k A_k}</span>
         <span class="n">Fi</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">Ftraj</span><span class="p">)</span>
         <span class="n">Fi</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*=</span> <span class="n">Avals_i</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">return_trajs</span><span class="p">:</span>
@@ -370,9 +393,9 @@
     <span class="k">if</span> <span class="n">return_trajs</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Fi</span><span class="p">,</span> <span class="n">trajs</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Fi</span>
-    </div>
-<span class="k">def</span> <span class="nf">_calculate_win_avgs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">gdata</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Fi</span></div>
+    
+<span class="k">def</span> <span class="nf">_calculate_win_avgs</span><span class="p">(</span><span class="n">psis</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">gdata</span><span class="p">,</span><span class="n">neighbors</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">use_MBAR</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Helper method estimating the scaled averages in each window.</span>
 
 <span class="sd">    Parameters</span>
@@ -383,6 +406,10 @@
 <span class="sd">        Array containing the normalization constants</span>
 <span class="sd">    gdata : 2D data structure</span>
 <span class="sd">        Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.</span>
+<span class="sd">    neighbors : 2D array-like, optional</span>
+<span class="sd">        List showing which windows neighbor which.  See neighbors_harmonic in usutils. </span>
+<span class="sd">    use_MBAR : bool, optional</span>
+<span class="sd">        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i &lt; g / (\sum_j \psi_j/z_j) &gt;_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i &lt;g / \sum_j \psi_j &gt;_i z_i`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -391,12 +418,26 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gstar</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">psi_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">psis</span><span class="p">):</span>
-        <span class="n">denom_i</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psi_i</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">gstar</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">gdata</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">denom_i</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">use_MBAR</span><span class="p">:</span>
+        <span class="c1"># Initialize neighbors if they don&#39;t exist.</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">psis</span><span class="p">)</span> <span class="c1"># Number of windows</span>
+        <span class="k">if</span> <span class="n">neighbors</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">L</span><span class="p">),</span><span class="nb">range</span><span class="p">(</span><span class="n">L</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">psi_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">psis</span><span class="p">):</span>
+            <span class="n">nbrs_i</span> <span class="o">=</span> <span class="n">neighbors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">z_nbr</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">nbrs_i</span><span class="p">]</span>
+            <span class="n">denom_i</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">psi_i</span><span class="p">,</span><span class="mf">1.</span><span class="o">/</span><span class="n">z_nbr</span><span class="p">)</span>
+            <span class="n">gstar</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">gdata</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">denom_i</span><span class="p">)</span><span class="o">/</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">psi_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">psis</span><span class="p">):</span>
+            <span class="n">denom_i</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psi_i</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">gstar</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">gdata</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">denom_i</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gstar</span><span class="p">)</span>
+
+
 </pre></div>
 
+           </div>
           </div>
           <footer>
   
@@ -406,12 +447,13 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Erik H Thiede.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 

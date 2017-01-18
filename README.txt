@@ -9,7 +9,7 @@ please contact the author at `thiede [at symbol] uchicago [dot] edu` with
 any bugs, errors, or questions.
 
 For usage and documentations, see the HTML documentation, which can be 
-accessed by opening html_doc/html/index.html in a browser.
+accessed by opening docs/html/index.html in a browser.
 
 If you are using this code, please also cite the [EMUS paper](http://arxiv.org/abs/1603.04505/)
 
