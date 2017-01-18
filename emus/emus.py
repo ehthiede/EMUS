@@ -8,7 +8,7 @@ import autocorrelation as ac
 from usutils import unpackNbrs
 from _defaults import *
 
-def calculate_obs(psis,z,g1data,g2data=None):
+def calculate_obs(psis,z,g1data,g2data=None,neighbors=None,use_MBAR=True):
     """Estimates the value of an observable or ratio of observables.
 
     Parameters
@@ -21,6 +21,10 @@ def calculate_obs(psis,z,g1data,g2data=None):
         Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.
     g2data : 2D data structure, optional
         Trajectory of observable in the denominator.  
+    neighbors : 2D array-like, optional
+        List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
+    use_MBAR : bool, optional
+        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < f / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <f / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------
@@ -33,12 +37,12 @@ def calculate_obs(psis,z,g1data,g2data=None):
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
         
-    g1star = _calculate_win_avgs(psis,z,g1data)
-    g2star = _calculate_win_avgs(psis,z,g2data)
+    g1star = _calculate_win_avgs(psis,z,g1data,neighbors,use_MBAR)
+    g2star = _calculate_win_avgs(psis,z,g2data,neighbors,use_MBAR)
     return np.dot(g1star,z)/np.dot(g2star,z)
 
 
-def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=DEFAULT_KT):
+def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAULT_KT, use_MBAR=True):
     """Calculates the free energy surface along a coordinate.
 
     Parameters
@@ -49,10 +53,16 @@ def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=DEFAULT_KT):
         The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     domain : tuple
         Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window
+    z : 1D array
+        Array containing the normalization constants
+    neighbors : 2D array-like, optional
+        List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
     nbins : int or tuple, optional
         Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.
     kT : float, optional
         Value of kT to scale the PMF by.  If not provided, set to 1.0
+    use_MBAR : bool, optional
+        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < f / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <f / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------
@@ -76,19 +86,29 @@ def calculate_pmf(cv_trajs, psis, domain, z, nbins = 100,kT=DEFAULT_KT):
     for i,xtraj_i in enumerate(cv_trajs):
 #        xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]
         hist_i = np.zeros(nbins) # Histogram of window i
-        for n,coord in enumerate(xtraj_i):
-            psi_i_n = psis[i][n]
-            # We find the coordinate of the bin we land in.
-            coordbins = (coord - domain[:,0])/domainwdth*nbins
-            coordbins = np.array(coordbins.astype(int))
-            weight = 1./np.sum(psi_i_n)
-            if ((coordbins >= 0).all() and (coordbins < nbins).all()):
-                hist_i[coordbins] += weight
+        if use_MBAR:
+            L = len(psis) # Number of windows
+            neighbors = np.outer(np.ones(L),range(L)).astype(int)
+            nbrs_i = neighbors[i]
+            z_nbr = z[nbrs_i]
+            weights = 1./(z[i]*np.dot(psis[i],1./z_nbr))
+            hist_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=weights)
+        else:
+            psi_sum = np.sum(psis[i],axis=1)
+            hist_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=1./psi_sum)
+            hist_i /= len(xtraj_i)
+#        for n,coord in enumerate(xtraj_i):
+#            psi_i_n = psis[i][n]
+#            # We find the coordinate of the bin we land in.
+#            coordbins = (coord - domain[:,0])/domainwdth*nbins
+#            coordbins = np.array(coordbins.astype(int))
+#            weight = 1./np.sum(psi_i_n)
+#            if ((coordbins >= 0).all() and (coordbins < nbins).all()):
+#                hist_i[coordbins] += weight
         hist+=hist_i/len(xtraj_i)*z[i]
     pmf =-kT* np.log(hist)
     pmf -= min(pmf.flatten())
 
-    # Calculate the centers of each histogram bin.
     return pmf
 
 def calculate_zs(psis,neighbors=None,nMBAR=0,tol=DEFAULT_MBAR_TOL,use_iats=False,iat_method=DEFAULT_IAT):
@@ -247,7 +267,7 @@ def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
     else:
         return Fi
     
-def _calculate_win_avgs(psis,z,gdata):
+def _calculate_win_avgs(psis,z,gdata,neighbors=None,use_MBAR=True):
     """Helper method estimating the scaled averages in each window.
 
     Parameters
@@ -258,6 +278,10 @@ def _calculate_win_avgs(psis,z,gdata):
         Array containing the normalization constants
     gdata : 2D data structure
         Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.
+    neighbors : 2D array-like, optional
+        List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
+    use_MBAR : bool, optional
+        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < f / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <f / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------
@@ -266,9 +290,20 @@ def _calculate_win_avgs(psis,z,gdata):
 
     """
     gstar = []
-    for i,psi_i in enumerate(psis):
-        denom_i = 1./np.sum(psi_i,axis=1)
-        gstar.append(np.average(gdata[i]*denom_i))
+    if use_MBAR:
+        # Initialize neighbors if they don't exist.
+        L = len(psis) # Number of windows
+        if neighbors is None:
+            neighbors = np.outer(np.ones(L),range(L)).astype(int)
+        for i,psi_i in enumerate(psis):
+            nbrs_i = neighbors[i]
+            z_nbr = z[nbrs_i]
+            denom_i = 1./np.dot(psi_i,1./z_nbr)
+            gstar.append(np.average(gdata[i]*denom_i)/z[i])
+    else:
+        for i,psi_i in enumerate(psis):
+            denom_i = 1./np.sum(psi_i,axis=1)
+            gstar.append(np.average(gdata[i]*denom_i))
     return np.array(gstar)
 
 

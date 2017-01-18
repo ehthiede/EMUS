@@ -9,7 +9,7 @@ from scipy.linalg import solve
 import numpy as np
 
 
-def stationary_distrib(F,residtol = 1.E-10,max_iter=100):
+def _stationary_distrib_QR(F,residtol = 1.E-10,max_iter=1000):
     """
     Calculates the eigenvector of the matrix F with eigenvalue 1 (if it exists).
     
@@ -55,7 +55,7 @@ def stationary_distrib(F,residtol = 1.E-10,max_iter=100):
     return z/np.sum(z) # Return normalized (by convention)
    
 
-def _old_stationary_distrib(F,fix=None,residtol = 1.E-10,max_iter=100):
+def stationary_distrib(F,fix=None,residtol = 1.E-10,max_iter=10000,verbose=False):
     """
     Depricated routine to calculate the stationar distribution of F.
     """
@@ -77,9 +77,13 @@ def _old_stationary_distrib(F,fix=None,residtol = 1.E-10,max_iter=100):
         znew = np.dot(z,F)
         maxresid = np.max(np.abs(znew - z)/z) # Convergence Criterion 
         if maxresid < residtol:
+            if verbose:
+                print "Reached Tolerance"
             break
         else:
             z = znew
+    if verbose:
+        print "Used %d iterations"%itr
     return z/np.sum(z)
 
 def _submatrix(F,i):
