@@ -49,17 +49,16 @@ def average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
 
     # Compute average of functions in each window.
-    g1star= emus._calculate_win_avgs(psis,z,g1data)
-    g2star= emus._calculate_win_avgs(psis,z,g2data)
+    g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_MBAR=False)
+    g2star= emus._calculate_win_avgs(psis,z,g2data,neighbors,use_MBAR=False)
     g1avg = np.dot(g1star,z)
     g2avg = np.dot(g2star,z)
 
     # Compute partial derivatives
     gI = lm.groupInverse(np.eye(L)-F)
-    for i in xrange(L):
-        dBdF = np.outer(z,np.dot(gI,g1star-g1avg/g2avg*g2star))/g2avg
-        dBdg1 = z/g2avg
-        dBdg2 = -(g1avg/g2avg)*z/g2avg
+    dBdF = np.outer(z,np.dot(gI,g1star-g1avg/g2avg*g2star))/g2avg
+    dBdg1 = z/g2avg
+    dBdg2 = -(g1avg/g2avg)*z/g2avg
     iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
     return iats, g1avg/g2avg, variances
 
@@ -76,17 +75,16 @@ def log_average(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IA
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
     
     # Compute average of functions in each window.
-    g1star= emus._calculate_win_avgs(psis,z,g1data)
-    g2star= emus._calculate_win_avgs(psis,z,g2data)
+    g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_MBAR=False)
+    g2star= emus._calculate_win_avgs(psis,z,g2data,neighbors,use_MBAR=False)
     g1avg = np.dot(g1star,z)
     g2avg = np.dot(g2star,z)
 
     # Compute partial derivatives
     gI = lm.groupInverse(np.eye(L)-F)
-    for i in xrange(L):
-        dBdF = np.outer(z,np.dot(gI,g1star/g1avg-g2star/g2avg))
-        dBdg1 = z/g1avg
-        dBdg2 = -z/g2avg
+    dBdF = np.outer(z,np.dot(gI,g1star/g1avg-g2star/g2avg))
+    dBdg1 = z/g1avg
+    dBdg2 = -z/g2avg
     iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
     return iats, -np.log(g1avg/g2avg), variances
 
@@ -179,7 +177,6 @@ def _calculate_acovar(psis,dBdF,gdata=None,dBdg=None,neighbors=None,iat_method=D
     if neighbors is None:
         neighbors = np.outer(np.ones(L),range(L)).astype(int)
     dBdF = np.array(dBdF)
-
     iat_routine = ac._get_iat_method(iat_method)
 
     sigmas = np.zeros(L)

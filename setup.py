@@ -3,7 +3,7 @@
 from setuptools import setup,find_packages
 
 setup(name='emus',
-    version='0.9.0',
+    version='0.9.1',
     description="Tools and Methods associated with the Eigenvector Method "
         "Umbrella Sampling (EMUS)",
     license='GPL',
