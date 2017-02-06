@@ -109,7 +109,7 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
     pmf =-kT* np.log(hist)
     pmf -= min(pmf.flatten())
 
-    return pmf
+    return pmf,edges
 
 def calculate_zs(psis,neighbors=None,nMBAR=0,tol=DEFAULT_MBAR_TOL,use_iats=False,iat_method=DEFAULT_IAT):
     """Calculates the normalization constants for the windows.
