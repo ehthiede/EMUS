@@ -5,6 +5,7 @@ calculations that do not rely directly on the EMUS estimator.
 """
 import numpy as np
 from _defaults import *
+import numbers
 
 def neighbors_harmonic(centers,fks,kTs=DEFAULT_KT,period=None,nsig=6):
     """Calculates neighborlist for harmonic windows.  Neighbors are chosen 
@@ -33,14 +34,14 @@ def neighbors_harmonic(centers,fks,kTs=DEFAULT_KT,period=None,nsig=6):
     L = len(centers) # Number of Windows
 
     # Enforce Typing
-    if not hasattr(kTs,'__getitem__'): # Check if kTs is a scalar
+    if isinstance(kTs,numbers.Number):
         kTs = kTs*np.ones(L)
-    if not hasattr(fks,'__getitem__'): # Check if force constant is a scalar
+    if isinstance(fks,numbers.Number):
         fks = fks*np.ones(np.shape(centers))
     kTs = np.outer(kTs,np.ones(np.shape(fks[0])))
     rad = nsig*np.sqrt(kTs/fks) 
     if period is not None: 
-        if not hasattr(period,'__getitem__'): # Check if period is scalar
+        if isinstance(period,numbers.Number): # Check if period is scalar
             period = [period]
     
     # Iterate through window centers and find neighboring umbrellas.
@@ -107,9 +108,9 @@ def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
             
     """
     L = len(centers) # Number of windows
-    if not hasattr(kTs,'__getitem__'): # Check if kTs is a scalar
+    if isinstance(kTs,numbers.Number):
         kTs = kTs*np.ones(L)
-    if not hasattr(fks,'__getitem__'): # Check if force constant is a scalar
+    if isinstance(fks,numbers.Number):
         fks = fks*np.ones(np.shape(centers))
 
     psis = np.zeros((len(cv_traj),L))
