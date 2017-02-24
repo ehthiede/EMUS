@@ -66,8 +66,10 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
 
     Returns
     -------
-    pmf : nd array
+    pmf : ndarray
         Returns the potential of mean force as a d dimensional array, where d is the number of collective variables.
+    edges : ndarray
+        Edges of the histogram bins, in the syntax and order used by numpy's histogramdd method.
 
     """    
     if domain is None:
@@ -109,7 +111,7 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
     pmf =-kT* np.log(hist)
     pmf -= min(pmf.flatten())
 
-    return pmf
+    return pmf,edges
 
 def calculate_zs(psis,neighbors=None,nMBAR=0,tol=DEFAULT_MBAR_TOL,use_iats=False,iat_method=DEFAULT_IAT):
     """Calculates the normalization constants for the windows.
@@ -136,7 +138,7 @@ def calculate_zs(psis,neighbors=None,nMBAR=0,tol=DEFAULT_MBAR_TOL,use_iats=False
 
     """
     L = len(psis) # Number of windows
-    Npnts = np.array([len(psis_i) for psis_i in psis])
+    Npnts = np.array([len(psis_i) for psis_i in psis]).astype('float')
     Npnts /= np.max(Npnts)
 
     if use_iats:
@@ -216,7 +218,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method=D
             Fi = Fi_out
         # Unpack the Neighbor list
         F[i] = unpackNbrs(Fi,nbrs_i,L)
-
+#    np.save('Fmat',F)
     z = lm.stationary_distrib(F)
     if return_iats:
         return z, F, iats
