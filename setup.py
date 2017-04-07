@@ -15,6 +15,7 @@ setup(name='emus',
 #    package_dir=['emus'],
     packages=['emus'],
     scripts=['scripts/wemus.py'],
-    install_requires=['numpy','h5py','acor'], # Does this do what you think, Erik?
+#    install_requires=['numpy','scipy','h5py','acor'],
+    install_requires=['numpy','scipy'],
 
     )

@@ -72,6 +72,7 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
         Edges of the histogram bins, in the syntax and order used by numpy's histogramdd method.
 
     """    
+    L = len(z)
     if domain is None:
         raise NotImplementedError
 
@@ -83,6 +84,8 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
         nbins = [nbins]*ndims
     domainwdth = domain[:,1] - domain[:,0]
     
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
     # Calculate the PMF
     hist = np.zeros(nbins)
     for i,xtraj_i in enumerate(cv_trajs):
@@ -90,7 +93,6 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
         hist_i = np.zeros(nbins) # Histogram of window i
         if use_MBAR:
             L = len(psis) # Number of windows
-            neighbors = np.outer(np.ones(L),range(L)).astype(int)
             nbrs_i = neighbors[i]
             z_nbr = z[nbrs_i]
             weights = 1./(z[i]*np.dot(psis[i],1./z_nbr))
