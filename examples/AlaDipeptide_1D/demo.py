@@ -53,10 +53,7 @@ pmf_av_mns, pmf_avars = avar.pmf(cv_trajs,psis,domain,z,F,nbins=nbins,kT=kT,iat_
 # Plot the EMUS, MBAR pmfs.
 pmf_centers = (edges[0][1:]+edges[0][:-1])/2.
 plt.figure()
-plt.plot(pmf_centers,pmf,label='EMUS PMF')
-####### DEBUG #######  
-plt.errorbar(pmf_centers,pmf_av_mns-np.min(pmf_av_mns),yerr=np.sqrt(pmf_avars),label='EMUS PMF AVAR')
-#####################  
+plt.errorbar(pmf_centers,pmf,yerr=np.sqrt(pmf_avars),label='EMUS PMF w. AVAR')
 plt.plot(pmf_centers,MBARpmf,label='MBAR PMF')
 plt.xlabel('$\psi$ dihedral angle')
 plt.ylabel('Unitless FE')
@@ -65,7 +62,7 @@ plt.title('EMUS and MBAR potentials of Mean Force')
 plt.show()
 
 # Plot the relative normalization constants as fxn of max iteration. 
-plt.plot(-np.log(z),label="Iteration 0")
+plt.errorbar(-np.log(z),yerr=np.sqrt(zerr)/z,label="Iteration 0")
 plt.plot(-np.log(z_MBAR_1),label="Iteration 1")
 plt.plot(-np.log(z_MBAR_1k),label="Iteration 1k",linestyle='--')
 plt.xlabel('Window Index')
@@ -80,7 +77,3 @@ print "Probability of C7ax basin is %f +/- %f"% (probC7ax,probC7ax_std)
 # err, taus = avar_zfe(psis,z,F,5,16)
 print "Asymptotic coefficient of variation for each partition function:"
 print np.sqrt(zerr)/z
-plt.plot(np.linspace(-171,171,len(z)),kT*np.sqrt(zerr),label='z avar')
-plt.plot(pmf_centers,np.sqrt(pmf_avars),label='pmf avar')
-plt.legend()
-plt.show()
