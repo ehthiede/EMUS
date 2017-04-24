@@ -60,7 +60,7 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
     nbins : int or tuple, optional
         Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.
     kT : float, optional
-        Value of kT to scale the PMF by.  If not provided, set to 1.0
+        Value of kT to scale the PMF by.  If not provided, set to the Default value.
     use_MBAR : bool, optional
         Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
 
@@ -68,8 +68,8 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
     -------
     pmf : ndarray
         Returns the potential of mean force as a d dimensional array, where d is the number of collective variables.
-    edges : ndarray
-        Edges of the histogram bins, in the syntax and order used by numpy's histogramdd method.
+    edges : list
+        Edges of the histogram bins, in the syntax and order used by numpy's histogramdd method.  Element d is the edges of the histograms in dimension d.
 
     """    
     L = len(z)
