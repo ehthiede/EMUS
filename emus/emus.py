@@ -101,14 +101,6 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
             psi_sum = np.sum(psis[i],axis=1)
             hist_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=1./psi_sum)
             hist_i /= len(xtraj_i)
-#        for n,coord in enumerate(xtraj_i):
-#            psi_i_n = psis[i][n]
-#            # We find the coordinate of the bin we land in.
-#            coordbins = (coord - domain[:,0])/domainwdth*nbins
-#            coordbins = np.array(coordbins.astype(int))
-#            weight = 1./np.sum(psi_i_n)
-#            if ((coordbins >= 0).all() and (coordbins < nbins).all()):
-#                hist_i[coordbins] += weight
         hist+=hist_i/len(xtraj_i)*z[i]
     pmf =-kT* np.log(hist)
     pmf -= min(pmf.flatten())
@@ -220,7 +212,6 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method=D
             Fi = Fi_out
         # Unpack the Neighbor list
         F[i] = unpackNbrs(Fi,nbrs_i,L)
-#    np.save('Fmat',F)
     z = lm.stationary_distrib(F)
     if return_iats:
         return z, F, iats

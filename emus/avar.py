@@ -147,9 +147,8 @@ def pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat_meth
             g1_i = np.ones(len(traj))
             for d,edge_d in enumerate(edges):
                 hd_ndx = index[d]
-#                print d,edge_d[hd_ndx]
                 inhist_d = (traj[:,d] > edge_d[hd_ndx])
-                inhist_d *= (traj[:,d] < edge_d[hd_ndx+1])
+                inhist_d *= (traj[:,d] <= edge_d[hd_ndx+1])
                 g1_i *= inhist_d
             g1data.append(g1_i)
         g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_MBAR=False)

@@ -14,7 +14,7 @@ kT = k_B * T
 meta_file = 'wham_meta.txt'         # Path to Meta File
 dim = 1                             # 1 Dimensional CV space.
 period = 360                        # Dihedral Angles periodicity
-nbins = 30                          # Number of Histogram Bins.
+nbins = 60                          # Number of Histogram Bins.
 
 # Load data
 psis, cv_trajs, neighbors = uu.data_from_WHAMmeta('wham_meta.txt',dim,T=T,k_B=k_B,period=period)
@@ -27,7 +27,7 @@ zerr, zcontribs, ztaus  = avar.partition_functions(psis,z,F,iat_method='acor')
 
 # Calculate the PMF from EMUS
 domain = ((-180.0,180.))            # Range of dihedral angle values
-pmf,edges = emus.calculate_pmf(cv_trajs,psis,domain,z,nbins=nbins,kT=kT)   # Calculate the pmf
+pmf,edges = emus.calculate_pmf(cv_trajs,psis,domain,z,nbins=nbins,kT=kT,use_MBAR=False)   # Calculate the pmf
 
 # Calculate z using the MBAR iteration.
 z_MBAR_1, F_MBAR_1 = emus.calculate_zs(psis,nMBAR=1)
@@ -54,6 +54,7 @@ pmf_av_mns, pmf_avars = avar.pmf(cv_trajs,psis,domain,z,F,nbins=nbins,kT=kT,iat_
 pmf_centers = (edges[0][1:]+edges[0][:-1])/2.
 plt.figure()
 plt.errorbar(pmf_centers,pmf,yerr=np.sqrt(pmf_avars),label='EMUS PMF w. AVAR')
+plt.errorbar(pmf_centers,pmf_av_mns,yerr=np.sqrt(pmf_avars),label='EMUS PMF w. AVAR')
 plt.plot(pmf_centers,MBARpmf,label='MBAR PMF')
 plt.xlabel('$\psi$ dihedral angle')
 plt.ylabel('Unitless FE')
@@ -62,7 +63,7 @@ plt.title('EMUS and MBAR potentials of Mean Force')
 plt.show()
 
 # Plot the relative normalization constants as fxn of max iteration. 
-plt.errorbar(-np.log(z),yerr=np.sqrt(zerr)/z,label="Iteration 0")
+plt.errorbar(np.arange(len(z)),-np.log(z),yerr=np.sqrt(zerr)/z,label="Iteration 0")
 plt.plot(-np.log(z_MBAR_1),label="Iteration 1")
 plt.plot(-np.log(z_MBAR_1k),label="Iteration 1k",linestyle='--')
 plt.xlabel('Window Index')
@@ -72,7 +73,8 @@ plt.legend(loc='upper left')
 plt.show()
 
 # Print the C7 ax basin probability
-print "Probability of C7ax basin is %f +/- %f"% (probC7ax,probC7ax_std)
+print "EMUS Probability of C7ax basin is %f +/- %f"% (probC7ax,probC7ax_std)
+print "MBAR Probability of C7ax basin is %f +/- %f"% (probC7ax,probC7ax_std)
 
 # err, taus = avar_zfe(psis,z,F,5,16)
 print "Asymptotic coefficient of variation for each partition function:"
