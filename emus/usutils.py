@@ -7,6 +7,7 @@ import numpy as np
 from _defaults import *
 import numbers
 
+
 def neighbors_harmonic(centers,fks,kTs=DEFAULT_KT,period=None,nsig=6):
     """Calculates neighborlist for harmonic windows.  Neighbors are chosen 
     such that neighboring umbrellas are no more than nsig standard
@@ -50,14 +51,14 @@ def neighbors_harmonic(centers,fks,kTs=DEFAULT_KT,period=None,nsig=6):
         rad_i = rad[i]
         nbrs_i = []
         rv = centers - cntr_i
-        rvmin = minimage_traj(rv,period) 
+        rvmin = _minimage_traj(rv,period) 
         for j, rv in enumerate(rvmin):
             if (np.abs(rv) < rad_i).all():
                 nbrs_i.append(j)
         nbrs.append(nbrs_i)
     return nbrs
 
-def unpackNbrs(compd_array,neighbors,L):
+def unpack_nbrs(compd_array,neighbors,L):
     """Unpacks an array of neighborlisted data.  Currently, assumes axis 0 is the compressed axis.
     
     Parameters
@@ -115,10 +116,10 @@ def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
 
     psis = np.zeros((len(cv_traj),L))
     for j in xrange(L):
-        psis[:,j] = calc_harmonic_psi_ij(cv_traj,centers[j],fks[j],kTs[j],period=period)
+        psis[:,j] = _calc_harmonic_psi_ij(cv_traj,centers[j],fks[j],kTs[j],period=period)
     return psis
 
-def calc_harmonic_psi_ij(cv_traj,win_center,win_fk,kT=1.0,period=None):
+def _calc_harmonic_psi_ij(cv_traj,win_center,win_fk,kT=1.0,period=None):
     """Helper routine for calc_harm_psis.  Evaluates the value of the bias
     function for a single harmonic window over a trajectory.
 
@@ -149,7 +150,7 @@ def calc_harmonic_psi_ij(cv_traj,win_center,win_fk,kT=1.0,period=None):
             period = [period]*ndim
     rv = cv_traj - win_center
     # Enforce Minimum Image Convention.
-    rvmin = minimage_traj(rv,period)
+    rvmin = _minimage_traj(rv,period)
 
     # Calculate psi_ij
     U = rvmin*rvmin*win_fk
@@ -175,8 +176,13 @@ def data_from_fxnmeta(filepath):
     """
     fxn_paths = []
     with open(filepath,'r') as f:
-        for line in f:
-            fxn_paths.append(line.strip())
+        for full_line in f:
+            line = full_line.strip()
+            if not line:
+                continue
+            if line.startswith("#"):
+                continue
+            fxn_paths.append(line)
 
     fxndata = []
     for i,path in enumerate(fxn_paths):
@@ -217,7 +223,7 @@ def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period
 
     """
     # Parse Wham Meta file.
-    trajlocs, cntrs, fks, iats, temps  = parse_metafile(filepath,dim)
+    trajlocs, cntrs, fks, iats, temps  = _parse_metafile(filepath,dim)
     L = len(cntrs)
     # Calculate kT for each window.  Involves some type management...
     if not temps:
@@ -245,7 +251,7 @@ def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period
 
     return psis, trajs, neighbors
 
-def parse_metafile(filepath,dim):
+def _parse_metafile(filepath,dim):
     """
     Parses the meta file located at filepath. Assumes Wham-like Syntax.
 
@@ -277,7 +283,12 @@ def parse_metafile(filepath,dim):
     iats = []
     temps = []
     with open(filepath,'r') as f:
-        for line in f:
+        for full_line in f:
+            line = full_line.strip()
+            if not line:
+                continue
+            if line.startswith("#"):
+                continue
             windowparams = line.split()
             traj_paths.append(windowparams[0])
             centers.append(windowparams[1:1+dim])
@@ -311,7 +322,7 @@ def _minimage(rv,period):
     """
     return rv - period * np.rint(rv/period)
 
-def minimage_traj(rv,period):
+def _minimage_traj(rv,period):
     """Calculates the minimum trajectory
 
     Parameters

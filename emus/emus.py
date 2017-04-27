@@ -5,7 +5,7 @@
 import numpy as np
 import linalg as lm
 import autocorrelation as ac
-from usutils import unpackNbrs
+from usutils import unpack_nbrs
 from _defaults import *
 
 def calculate_obs(psis,z,g1data,g2data=None,neighbors=None,use_MBAR=True):
@@ -211,7 +211,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method=D
         else:
             Fi = Fi_out
         # Unpack the Neighbor list
-        F[i] = unpackNbrs(Fi,nbrs_i,L)
+        F[i] = unpack_nbrs(Fi,nbrs_i,L)
     z = lm.stationary_distrib(F)
     if return_iats:
         return z, F, iats
