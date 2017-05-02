@@ -185,16 +185,18 @@ def data_from_fxnmeta(filepath):
             fxn_paths.append(line)
 
     fxndata = []
+    nfxns = None # Placeholder value
     for i,path in enumerate(fxn_paths):
         data_i = np.loadtxt(path)
-        nfxns = None # Placeholder value
+        print i, path, nfxns, np.shape(data_i)
         if i == 0:
-            nfxns = len(data_i[0])
+            nfxns = int(len(data_i[0])-1)
+            print nfxns
             for n in xrange(nfxns):
                 fxndata.append([data_i[:,(n+1)]])
         else:
             for n in xrange(nfxns):
-                fxndata[(n+1)].append(data_i[:,(n+1)])
+                fxndata[n].append(data_i[:,(n+1)])
 
     return fxndata
 
