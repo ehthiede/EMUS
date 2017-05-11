@@ -47,7 +47,7 @@ def calculate_obs(psis,z,g1data,g2data=None,neighbors=None,use_MBAR=True):
     """
     return calculate_avg(psis,z,g1data,g2data,neighbors,use_MBAR)
 
-def calculate_avg_on_pmf(cv_trajs,psis,domain,z,g1data,neighbors=None, nbins = 100,use_MBAR = True):
+def calculate_avg_on_pmf(cv_trajs,psis,domain,z,g1data,g2data=None,neighbors=None, nbins = 100,use_MBAR = True):
     """Calculates the average of a function in each histogram bin on a potential of mean force.
 
     IN BETA!
@@ -73,22 +73,24 @@ def calculate_avg_on_pmf(cv_trajs,psis,domain,z,g1data,neighbors=None, nbins = 1
     hist_g2 = np.zeros(nbins)
     for i,xtraj_i in enumerate(cv_trajs):
 #        xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]
-        g1_data = g1data[i]
-        g2_data = g2data[i]
+        g1_data_i = g1data[i]
+        g2_data_i = g2data[i]
+        print i
         if use_MBAR:
             L = len(psis) # Number of windows
             nbrs_i = neighbors[i]
             z_nbr = z[nbrs_i]
             weights = 1./(z[i]*np.dot(psis[i],1./z_nbr))
-            hist_g1_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=weights*g1_data)
-            hist_g2_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=weights*g2_data)
+            print np.shape(weights), np.shape(g1_data_i)
+            hist_g1_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=weights*g1_data_i)
+            hist_g2_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=weights*g2_data_i)
         else:
             psi_sum = np.sum(psis[i],axis=1)
-            hist_g1_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=1./psi_sum*g1_data)
-            hist_g2_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=1./psi_sum*g2_data)
+            hist_g1_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=1./psi_sum*g1_data_i)
+            hist_g2_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=1./psi_sum*g2_data_i)
         hist_g1 += hist_g1_i/len(xtraj_i)*z[i]
         hist_g2 += hist_g2_i/len(xtraj_i)*z[i]
-    return hist_g1/hist_g2
+    return hist_g1/hist_g2, edges
 
 
 def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAULT_KT, use_MBAR=True):
