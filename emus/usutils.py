@@ -210,7 +210,7 @@ def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period
     dim : int
         The number of dimensions of the cv space.
     T : scalar, optional
-        Temperature of the system.
+        Temperature of the system if not provided in the meta file.
     k_B : scalar, optional
         Boltzmann Constant for the system. Default is in natural units (1.0)
     nsig : scalar or None, optional
@@ -296,9 +296,9 @@ def _parse_metafile(filepath,dim):
             centers.append(windowparams[1:1+dim])
             fks.append(windowparams[1+dim:1+2*dim])
             if len(windowparams) > 1+2*dim: # If Correlation Time provided
-                iats.append(windowparams[2+2*dim])
+                iats.append(windowparams[1+2*dim])
             if len(windowparams) > 2+2*dim: # If Temperature is provided
-                temps.append(windowparams[3+2*dim])
+                temps.append(windowparams[2+2*dim])
     # Move to numpy arrays, convert to appropriate data types
     fks = np.array(fks).astype('float')
     centers = np.array(centers).astype('float')
