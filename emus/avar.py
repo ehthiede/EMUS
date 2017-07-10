@@ -144,6 +144,8 @@ def pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat_meth
         # Find part of trajectory inside the histogram bin.
         g1data = []
         for i,traj in enumerate(cv_trajs):
+            if len(np.shape(traj)) == 1:
+                traj = np.transpose([traj])
             g1_i = np.ones(len(traj))
             for d,edge_d in enumerate(edges):
                 hd_ndx = index[d]
@@ -229,7 +231,6 @@ def partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):
             else:
                 iat = iats[i]
                 z_var_contribs[k,i] = np.var(err_t_series)*(iat/len(err_t_series))
-                print 'moose'
             z_var_iats[k,i] = iat
     autocovars = np.sum(z_var_contribs,axis=1)
     return autocovars, z_var_contribs, z_var_iats
@@ -274,6 +275,7 @@ def _calculate_acovar(psis,dBdF,gdata=None,dBdg=None,neighbors=None,iat_method=D
             iats = np.array([float(v) for v in iat_method])
         except (ValueError, TypeError) as err:
             err.message = "Was unable to interpret the input provided as a method to calculate the autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " + err.message
+            raise err
         iat_routine = None
         if len(iats) != L:
             raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).'%(len(iats),L))
