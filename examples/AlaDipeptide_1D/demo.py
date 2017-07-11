@@ -20,7 +20,7 @@ nbins = 60                          # Number of Histogram Bins.
 psis, cv_trajs, neighbors = uu.data_from_WHAMmeta('wham_meta.txt',dim,T=T,k_B=k_B,period=period)
 
 # Calculate the partition function for each window
-z, F = emus.calculate_zs(psis,neighbors=neighbors,) 
+z, F = emus.calculate_zs(psis,neighbors=neighbors) 
 
 # Calculate error in each z value from the first iteration.
 zerr, zcontribs, ztaus  = avar.partition_functions(psis,z,F,iat_method='acor')

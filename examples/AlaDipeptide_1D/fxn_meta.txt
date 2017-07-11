@@ -1,3 +1,4 @@
+# Meta file giving paths to function data
 data/fdata_0.txt
 data/fdata_1.txt
 data/fdata_2.txt
