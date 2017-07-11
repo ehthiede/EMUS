@@ -147,4 +147,6 @@ def _get_iat_method(iatmethod):
     elif iatmethod == 'icce':
         from autocorrelation import icce
         iatroutine = icce
+    else:
+        raise ValueError('Method for calculation iat not recognized.')
     return iatroutine

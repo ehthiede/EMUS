@@ -7,6 +7,7 @@ import numpy as np
 from _defaults import *
 import numbers
 
+
 def neighbors_harmonic(centers,fks,kTs=DEFAULT_KT,period=None,nsig=6):
     """Calculates neighborlist for harmonic windows.  Neighbors are chosen 
     such that neighboring umbrellas are no more than nsig standard
@@ -50,14 +51,14 @@ def neighbors_harmonic(centers,fks,kTs=DEFAULT_KT,period=None,nsig=6):
         rad_i = rad[i]
         nbrs_i = []
         rv = centers - cntr_i
-        rvmin = minimage_traj(rv,period) 
+        rvmin = _minimage_traj(rv,period) 
         for j, rv in enumerate(rvmin):
             if (np.abs(rv) < rad_i).all():
                 nbrs_i.append(j)
         nbrs.append(nbrs_i)
     return nbrs
 
-def unpackNbrs(compd_array,neighbors,L):
+def unpack_nbrs(compd_array,neighbors,L):
     """Unpacks an array of neighborlisted data.  Currently, assumes axis 0 is the compressed axis.
     
     Parameters
@@ -115,10 +116,10 @@ def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
 
     psis = np.zeros((len(cv_traj),L))
     for j in xrange(L):
-        psis[:,j] = calc_harmonic_psi_ij(cv_traj,centers[j],fks[j],kTs[j],period=period)
+        psis[:,j] = _calc_harmonic_psi_ij(cv_traj,centers[j],fks[j],kTs[j],period=period)
     return psis
 
-def calc_harmonic_psi_ij(cv_traj,win_center,win_fk,kT=1.0,period=None):
+def _calc_harmonic_psi_ij(cv_traj,win_center,win_fk,kT=1.0,period=None):
     """Helper routine for calc_harm_psis.  Evaluates the value of the bias
     function for a single harmonic window over a trajectory.
 
@@ -149,7 +150,7 @@ def calc_harmonic_psi_ij(cv_traj,win_center,win_fk,kT=1.0,period=None):
             period = [period]*ndim
     rv = cv_traj - win_center
     # Enforce Minimum Image Convention.
-    rvmin = minimage_traj(rv,period)
+    rvmin = _minimage_traj(rv,period)
 
     # Calculate psi_ij
     U = rvmin*rvmin*win_fk
@@ -159,7 +160,7 @@ def calc_harmonic_psi_ij(cv_traj,win_center,win_fk,kT=1.0,period=None):
 
     return np.exp(-U/kT)
 
-def data_from_fxnmeta(filepath):
+def fxn_data_from_meta(filepath):
     """Parses the meta file associated with observable data
 
     Parameters
@@ -175,25 +176,32 @@ def data_from_fxnmeta(filepath):
     """
     fxn_paths = []
     with open(filepath,'r') as f:
-        for line in f:
-            fxn_paths.append(line.strip())
+        for full_line in f:
+            line = full_line.strip()
+            if not line:
+                continue
+            if line.startswith("#"):
+                continue
+            fxn_paths.append(line)
 
     fxndata = []
+    nfxns = None # Placeholder value
     for i,path in enumerate(fxn_paths):
         data_i = np.loadtxt(path)
-        nfxns = None # Placeholder value
+        print i, path, nfxns, np.shape(data_i)
         if i == 0:
-            nfxns = len(data_i[0])
+            nfxns = int(len(data_i[0])-1)
+            print nfxns
             for n in xrange(nfxns):
                 fxndata.append([data_i[:,(n+1)]])
         else:
             for n in xrange(nfxns):
-                fxndata[(n+1)].append(data_i[:,(n+1)])
+                fxndata[n].append(data_i[:,(n+1)])
 
     return fxndata
 
-def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period=None):
-    """Reads data saved on disk according to the format used by the WHAM implementation by Grossfield.
+def data_from_meta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period=None):
+    """Reads collective variable data from as tabulated by a meta file of the same format used in Grossfield's implementation of the WHAM algorithm, and calculates the value of the biasing functions.
 
     Parameters
     ----------
@@ -202,7 +210,7 @@ def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period
     dim : int
         The number of dimensions of the cv space.
     T : scalar, optional
-        Temperature of the system.
+        Temperature of the system if not provided in the meta file.
     k_B : scalar, optional
         Boltzmann Constant for the system. Default is in natural units (1.0)
     nsig : scalar or None, optional
@@ -216,8 +224,8 @@ def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period
         The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
 
     """
-    # Parse Wham Meta file.
-    trajlocs, cntrs, fks, iats, temps  = parse_metafile(filepath,dim)
+    # Parse Meta file.
+    trajlocs, cntrs, fks, iats, temps  = _parse_metafile(filepath,dim)
     L = len(cntrs)
     # Calculate kT for each window.  Involves some type management...
     if not temps:
@@ -245,7 +253,7 @@ def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period
 
     return psis, trajs, neighbors
 
-def parse_metafile(filepath,dim):
+def _parse_metafile(filepath,dim):
     """
     Parses the meta file located at filepath. Assumes Wham-like Syntax.
 
@@ -277,15 +285,20 @@ def parse_metafile(filepath,dim):
     iats = []
     temps = []
     with open(filepath,'r') as f:
-        for line in f:
+        for full_line in f:
+            line = full_line.strip()
+            if not line:
+                continue
+            if line.startswith("#"):
+                continue
             windowparams = line.split()
             traj_paths.append(windowparams[0])
             centers.append(windowparams[1:1+dim])
             fks.append(windowparams[1+dim:1+2*dim])
             if len(windowparams) > 1+2*dim: # If Correlation Time provided
-                iats.append(windowparams[2+2*dim])
+                iats.append(windowparams[1+2*dim])
             if len(windowparams) > 2+2*dim: # If Temperature is provided
-                temps.append(windowparams[3+2*dim])
+                temps.append(windowparams[2+2*dim])
     # Move to numpy arrays, convert to appropriate data types
     fks = np.array(fks).astype('float')
     centers = np.array(centers).astype('float')
@@ -311,7 +324,7 @@ def _minimage(rv,period):
     """
     return rv - period * np.rint(rv/period)
 
-def minimage_traj(rv,period):
+def _minimage_traj(rv,period):
     """Calculates the minimum trajectory
 
     Parameters

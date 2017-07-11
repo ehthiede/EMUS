@@ -5,10 +5,10 @@
 import numpy as np
 import linalg as lm
 import autocorrelation as ac
-from usutils import unpackNbrs
+from usutils import unpack_nbrs
 from _defaults import *
 
-def calculate_obs(psis,z,g1data,g2data=None,neighbors=None,use_MBAR=True):
+def calculate_avg(psis,z,g1data,g2data=None,neighbors=None,use_iter=True):
     """Estimates the value of an observable or ratio of observables.
 
     Parameters
@@ -23,8 +23,8 @@ def calculate_obs(psis,z,g1data,g2data=None,neighbors=None,use_MBAR=True):
         Trajectory of observable in the denominator.  
     neighbors : 2D array-like, optional
         List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
-    use_MBAR : bool, optional
-        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
+    use_iter : bool, optional
+        Use the iterative EMUS estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------
@@ -33,16 +33,93 @@ def calculate_obs(psis,z,g1data,g2data=None,neighbors=None,use_MBAR=True):
 
     """
     # Clean the input and set defaults
-    g1data = [np.array(g1i).flatten() for g1i in g1data]
+    g1data = [np.array(g1i) for g1i in g1data]
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
         
-    g1star = _calculate_win_avgs(psis,z,g1data,neighbors,use_MBAR)
-    g2star = _calculate_win_avgs(psis,z,g2data,neighbors,use_MBAR)
+    g1star = _calculate_win_avgs(psis,z,g1data,neighbors,use_iter)
+    g2star = _calculate_win_avgs(psis,z,g2data,neighbors,use_iter)
     return np.dot(g1star,z)/np.dot(g2star,z)
 
+def calculate_obs(psis,z,g1data,g2data=None,neighbors=None,use_iter=True):
+    """Old call for calculate_avg for backwards compatibility. Inputs and outputs are the same.
+    
+    """
+    return calculate_avg(psis,z,g1data,g2data,neighbors,use_iter)
 
-def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAULT_KT, use_MBAR=True):
+def calculate_avg_on_pmf(cv_trajs,psis,domain,z,g1data,g2data=None,neighbors=None, nbins = 100,use_iter = True):
+    """Calculates the average of a function in each histogram bin on a potential of mean force.
+
+    Parameters
+    ----------
+    cv_trajs : 2D data structure
+        Data structure containing trajectories in the collective variable space.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+    psis : 3D data structure
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+    domain : tuple
+        Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window
+    z : 1D array
+        Array containing the normalization constants
+    g1data : 2D data structure
+        Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.
+    g2data : 2D data structure, optional
+        Trajectory of observable in the denominator.  
+    neighbors : 2D array-like, optional
+        List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
+    nbins : int or tuple, optional
+        Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.
+    use_iter : bool, optional
+        Use the iterative EMUS estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
+
+    Returns
+    -------
+    pmf_avgs : ndarray
+        Returns the average of g1/g2 in each histogram bin, same format as for calculating the pmf
+    edges : list
+        Edges of the histogram bins, in the syntax and order used by numpy's histogramdd method.  Element d is the edges of the histograms in dimension d.
+    """
+    L = len(z)
+    if domain is None:
+        raise NotImplementedError
+
+    domain = np.asarray(domain)
+    if len(np.shape(domain)) == 1:
+        domain = np.reshape(domain,(1,len(domain)))
+    ndims = np.shape(domain)[0]
+    if type(nbins) is int: # Make nbins to an iterable in the 1d case.
+        nbins = [nbins]*ndims
+    domainwdth = domain[:,1] - domain[:,0]
+    if g2data is None:
+        g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
+    
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
+    # Calculate the PMF
+    hist_g1 = np.zeros(nbins)
+    hist_g2 = np.zeros(nbins)
+    for i,xtraj_i in enumerate(cv_trajs):
+#        xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]
+        g1_data_i = g1data[i]
+        g2_data_i = g2data[i]
+        print i
+        if use_iter:
+            L = len(psis) # Number of windows
+            nbrs_i = neighbors[i]
+            z_nbr = z[nbrs_i]
+            weights = 1./(z[i]*np.dot(psis[i],1./z_nbr))
+            print np.shape(weights), np.shape(g1_data_i)
+            hist_g1_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=weights*g1_data_i)
+            hist_g2_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=weights*g2_data_i)
+        else:
+            psi_sum = np.sum(psis[i],axis=1)
+            hist_g1_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=1./psi_sum*g1_data_i)
+            hist_g2_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=1./psi_sum*g2_data_i)
+        hist_g1 += hist_g1_i/len(xtraj_i)*z[i]
+        hist_g2 += hist_g2_i/len(xtraj_i)*z[i]
+    return hist_g1/hist_g2, edges
+
+
+def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAULT_KT, use_iter=True):
     """Calculates the free energy surface along a coordinate.
 
     Parameters
@@ -60,18 +137,19 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
     nbins : int or tuple, optional
         Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.
     kT : float, optional
-        Value of kT to scale the PMF by.  If not provided, set to 1.0
-    use_MBAR : bool, optional
-        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
+        Value of kT to scale the PMF by.  If not provided, set to the Default value.
+    use_iter : bool, optional
+        Use the iterative EMUS estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------
     pmf : ndarray
         Returns the potential of mean force as a d dimensional array, where d is the number of collective variables.
-    edges : ndarray
-        Edges of the histogram bins, in the syntax and order used by numpy's histogramdd method.
+    edges : list
+        Edges of the histogram bins, in the syntax and order used by numpy's histogramdd method.  Element d is the edges of the histograms in dimension d.
 
     """    
+    L = len(z)
     if domain is None:
         raise NotImplementedError
 
@@ -83,14 +161,14 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
         nbins = [nbins]*ndims
     domainwdth = domain[:,1] - domain[:,0]
     
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
     # Calculate the PMF
     hist = np.zeros(nbins)
     for i,xtraj_i in enumerate(cv_trajs):
 #        xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]
-        hist_i = np.zeros(nbins) # Histogram of window i
-        if use_MBAR:
+        if use_iter:
             L = len(psis) # Number of windows
-            neighbors = np.outer(np.ones(L),range(L)).astype(int)
             nbrs_i = neighbors[i]
             z_nbr = z[nbrs_i]
             weights = 1./(z[i]*np.dot(psis[i],1./z_nbr))
@@ -98,32 +176,26 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
         else:
             psi_sum = np.sum(psis[i],axis=1)
             hist_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=1./psi_sum)
-            hist_i /= len(xtraj_i)
-#        for n,coord in enumerate(xtraj_i):
-#            psi_i_n = psis[i][n]
-#            # We find the coordinate of the bin we land in.
-#            coordbins = (coord - domain[:,0])/domainwdth*nbins
-#            coordbins = np.array(coordbins.astype(int))
-#            weight = 1./np.sum(psi_i_n)
-#            if ((coordbins >= 0).all() and (coordbins < nbins).all()):
-#                hist_i[coordbins] += weight
         hist+=hist_i/len(xtraj_i)*z[i]
-    pmf =-kT* np.log(hist)
-    pmf -= min(pmf.flatten())
+    # Calculate area of each histogram bin
+    dA =  np.prod([(edg_i[1]-edg_i[0]) for edg_i in edges])
+    print dA
+    pmf =-kT* np.log(hist/(dA*np.sum(hist)))
+#    pmf -= min(pmf.flatten())
 
     return pmf,edges
 
-def calculate_zs(psis,neighbors=None,nMBAR=0,tol=DEFAULT_MBAR_TOL,use_iats=False,iat_method=DEFAULT_IAT):
+def calculate_zs(psis,neighbors=None,n_iter=0,tol=DEFAULT_ITER_TOL,use_iats=False,iat_method=DEFAULT_IAT):
     """Calculates the normalization constants for the windows.
 
     Parameters
     ----------
-    nMBAR : int, optional (default 0)
-         Maximum number of MBAR iterations to perform.
+    n_iter : int, optional (default 0)
+         Maximum number of iterative EMUS iterations to perform.
     tol : float, optional (see _defaults.py for default)
-        If the relative residual falls beneath the tolerance, the MBAR iteration is truncated.
+        If the relative residual falls beneath the tolerance, the iterative EMUS iteration is truncated.
     use_iats : bool, optional
-        If true, estimate integrated autocorrelation time in each MBAR iteration.  Likely unnecessary unless dynamics are expected to be drastically different in each window. If iats is provided, the iteration will use those rather than estimating them in each step.
+        If true, estimate integrated autocorrelation time in each iterative EMUS iteration.  Likely unnecessary unless dynamics are expected to be drastically different in each window. If iats is provided, the iteration will use those rather than estimating them in each step.
     iat_method : string, optional
         Routine to use for calculating integrated autocorrelation times.  Currently accepts DEFAULT_IAT, 'acor', and 'icce'.
     
@@ -132,7 +204,7 @@ def calculate_zs(psis,neighbors=None,nMBAR=0,tol=DEFAULT_MBAR_TOL,use_iats=False
     z : 1D array
         Values for the Normalization constant in each window.
     F : 2D array
-        Matrix to take the eigenvalue of for MBAR.
+        Matrix to take the eigenvalue of for iterative EMUS.
     iats : 1D array
         Estimated values of the autocorrelation time.  Only returned if use_iats is true.
 
@@ -148,7 +220,7 @@ def calculate_zs(psis,neighbors=None,nMBAR=0,tol=DEFAULT_MBAR_TOL,use_iats=False
         iats = np.ones(z.shape)
 
     # we perform the self-consistent polishing iteration
-    for n in xrange(nMBAR):
+    for n in xrange(n_iter):
         z_old = z
         Apart = Npnts/z_old
         Amat = np.outer(np.ones(L),Apart)
@@ -217,8 +289,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method=D
         else:
             Fi = Fi_out
         # Unpack the Neighbor list
-        F[i] = unpackNbrs(Fi,nbrs_i,L)
-#    np.save('Fmat',F)
+        F[i] = unpack_nbrs(Fi,nbrs_i,L)
     z = lm.stationary_distrib(F)
     if return_iats:
         return z, F, iats
@@ -269,7 +340,7 @@ def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
     else:
         return Fi
     
-def _calculate_win_avgs(psis,z,gdata,neighbors=None,use_MBAR=True):
+def _calculate_win_avgs(psis,z,gdata,neighbors=None,use_iter=True):
     """Helper method estimating the scaled averages in each window.
 
     Parameters
@@ -282,8 +353,8 @@ def _calculate_win_avgs(psis,z,gdata,neighbors=None,use_MBAR=True):
         Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.
     neighbors : 2D array-like, optional
         List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
-    use_MBAR : bool, optional
-        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
+    use_iter : bool, optional
+        Use the iterative EMUS estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------
@@ -292,7 +363,7 @@ def _calculate_win_avgs(psis,z,gdata,neighbors=None,use_MBAR=True):
 
     """
     gstar = []
-    if use_MBAR:
+    if use_iter:
         # Initialize neighbors if they don't exist.
         L = len(psis) # Number of windows
         if neighbors is None:
