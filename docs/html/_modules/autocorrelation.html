@@ -275,6 +275,8 @@
     <span class="k">elif</span> <span class="n">iatmethod</span> <span class="o">==</span> <span class="s1">&#39;icce&#39;</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">autocorrelation</span> <span class="kn">import</span> <span class="n">icce</span>
         <span class="n">iatroutine</span> <span class="o">=</span> <span class="n">icce</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Method for calculation iat not recognized.&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">iatroutine</span>
 </pre></div>
 

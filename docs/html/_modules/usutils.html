@@ -133,6 +133,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">_defaults</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numbers</span>
+
 
 <div class="viewcode-block" id="neighbors_harmonic"><a class="viewcode-back" href="../modules/usutils.html#usutils.neighbors_harmonic">[docs]</a><span class="k">def</span> <span class="nf">neighbors_harmonic</span><span class="p">(</span><span class="n">centers</span><span class="p">,</span><span class="n">fks</span><span class="p">,</span><span class="n">kTs</span><span class="o">=</span><span class="n">DEFAULT_KT</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">nsig</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates neighborlist for harmonic windows.  Neighbors are chosen </span>
@@ -161,14 +163,14 @@
     <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span> <span class="c1"># Number of Windows</span>
 
     <span class="c1"># Enforce Typing</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">kTs</span><span class="p">,</span><span class="s1">&#39;__getitem__&#39;</span><span class="p">):</span> <span class="c1"># Check if kTs is a scalar</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kTs</span><span class="p">,</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
         <span class="n">kTs</span> <span class="o">=</span> <span class="n">kTs</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fks</span><span class="p">,</span><span class="s1">&#39;__getitem__&#39;</span><span class="p">):</span> <span class="c1"># Check if force constant is a scalar</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fks</span><span class="p">,</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
         <span class="n">fks</span> <span class="o">=</span> <span class="n">fks</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">centers</span><span class="p">))</span>
     <span class="n">kTs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">kTs</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">fks</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
     <span class="n">rad</span> <span class="o">=</span> <span class="n">nsig</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">kTs</span><span class="o">/</span><span class="n">fks</span><span class="p">)</span> 
     <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span> 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">period</span><span class="p">,</span><span class="s1">&#39;__getitem__&#39;</span><span class="p">):</span> <span class="c1"># Check if period is scalar</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">period</span><span class="p">,</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span> <span class="c1"># Check if period is scalar</span>
             <span class="n">period</span> <span class="o">=</span> <span class="p">[</span><span class="n">period</span><span class="p">]</span>
     
     <span class="c1"># Iterate through window centers and find neighboring umbrellas.</span>
@@ -177,14 +179,14 @@
         <span class="n">rad_i</span> <span class="o">=</span> <span class="n">rad</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">nbrs_i</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">rv</span> <span class="o">=</span> <span class="n">centers</span> <span class="o">-</span> <span class="n">cntr_i</span>
-        <span class="n">rvmin</span> <span class="o">=</span> <span class="n">minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span><span class="n">period</span><span class="p">)</span> 
+        <span class="n">rvmin</span> <span class="o">=</span> <span class="n">_minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span><span class="n">period</span><span class="p">)</span> 
         <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">rv</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rvmin</span><span class="p">):</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">rad_i</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
                 <span class="n">nbrs_i</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
         <span class="n">nbrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbrs_i</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">nbrs</span></div>
 
-<div class="viewcode-block" id="unpackNbrs"><a class="viewcode-back" href="../modules/usutils.html#usutils.unpackNbrs">[docs]</a><span class="k">def</span> <span class="nf">unpackNbrs</span><span class="p">(</span><span class="n">compd_array</span><span class="p">,</span><span class="n">neighbors</span><span class="p">,</span><span class="n">L</span><span class="p">):</span>
+<div class="viewcode-block" id="unpack_nbrs"><a class="viewcode-back" href="../modules/usutils.html#usutils.unpack_nbrs">[docs]</a><span class="k">def</span> <span class="nf">unpack_nbrs</span><span class="p">(</span><span class="n">compd_array</span><span class="p">,</span><span class="n">neighbors</span><span class="p">,</span><span class="n">L</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Unpacks an array of neighborlisted data.  Currently, assumes axis 0 is the compressed axis.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
@@ -235,17 +237,17 @@
 <span class="sd">            </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span> <span class="c1"># Number of windows</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">kTs</span><span class="p">,</span><span class="s1">&#39;__getitem__&#39;</span><span class="p">):</span> <span class="c1"># Check if kTs is a scalar</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kTs</span><span class="p">,</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
         <span class="n">kTs</span> <span class="o">=</span> <span class="n">kTs</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fks</span><span class="p">,</span><span class="s1">&#39;__getitem__&#39;</span><span class="p">):</span> <span class="c1"># Check if force constant is a scalar</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fks</span><span class="p">,</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
         <span class="n">fks</span> <span class="o">=</span> <span class="n">fks</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">centers</span><span class="p">))</span>
 
     <span class="n">psis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">),</span><span class="n">L</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
-        <span class="n">psis</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_harmonic_psi_ij</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">,</span><span class="n">centers</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">fks</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">kTs</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
+        <span class="n">psis</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">_calc_harmonic_psi_ij</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">,</span><span class="n">centers</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">fks</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">kTs</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">psis</span></div>
 
-<div class="viewcode-block" id="calc_harmonic_psi_ij"><a class="viewcode-back" href="../modules/usutils.html#usutils.calc_harmonic_psi_ij">[docs]</a><span class="k">def</span> <span class="nf">calc_harmonic_psi_ij</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">,</span><span class="n">win_center</span><span class="p">,</span><span class="n">win_fk</span><span class="p">,</span><span class="n">kT</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_calc_harmonic_psi_ij</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">,</span><span class="n">win_center</span><span class="p">,</span><span class="n">win_fk</span><span class="p">,</span><span class="n">kT</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Helper routine for calc_harm_psis.  Evaluates the value of the bias</span>
 <span class="sd">    function for a single harmonic window over a trajectory.</span>
 
@@ -276,7 +278,7 @@
             <span class="n">period</span> <span class="o">=</span> <span class="p">[</span><span class="n">period</span><span class="p">]</span><span class="o">*</span><span class="n">ndim</span>
     <span class="n">rv</span> <span class="o">=</span> <span class="n">cv_traj</span> <span class="o">-</span> <span class="n">win_center</span>
     <span class="c1"># Enforce Minimum Image Convention.</span>
-    <span class="n">rvmin</span> <span class="o">=</span> <span class="n">minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span><span class="n">period</span><span class="p">)</span>
+    <span class="n">rvmin</span> <span class="o">=</span> <span class="n">_minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span><span class="n">period</span><span class="p">)</span>
 
     <span class="c1"># Calculate psi_ij</span>
     <span class="n">U</span> <span class="o">=</span> <span class="n">rvmin</span><span class="o">*</span><span class="n">rvmin</span><span class="o">*</span><span class="n">win_fk</span>
@@ -284,9 +286,9 @@
         <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">U</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">U</span><span class="o">/=</span><span class="mf">2.</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">U</span><span class="o">/</span><span class="n">kT</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">U</span><span class="o">/</span><span class="n">kT</span><span class="p">)</span>
 
-<div class="viewcode-block" id="data_from_fxnmeta"><a class="viewcode-back" href="../modules/usutils.html#usutils.data_from_fxnmeta">[docs]</a><span class="k">def</span> <span class="nf">data_from_fxnmeta</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<div class="viewcode-block" id="fxn_data_from_meta"><a class="viewcode-back" href="../modules/usutils.html#usutils.fxn_data_from_meta">[docs]</a><span class="k">def</span> <span class="nf">fxn_data_from_meta</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parses the meta file associated with observable data</span>
 
 <span class="sd">    Parameters</span>
@@ -302,25 +304,32 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fxn_paths</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">fxn_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">full_line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">full_line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">fxn_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
     <span class="n">fxndata</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">nfxns</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1"># Placeholder value</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fxn_paths</span><span class="p">):</span>
         <span class="n">data_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="n">nfxns</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1"># Placeholder value</span>
+        <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">nfxns</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data_i</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">nfxns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">nfxns</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">nfxns</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">nfxns</span><span class="p">):</span>
                 <span class="n">fxndata</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">data_i</span><span class="p">[:,(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)]])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">nfxns</span><span class="p">):</span>
-                <span class="n">fxndata</span><span class="p">[(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_i</span><span class="p">[:,(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+                <span class="n">fxndata</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_i</span><span class="p">[:,(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
 
     <span class="k">return</span> <span class="n">fxndata</span></div>
 
-<div class="viewcode-block" id="data_from_WHAMmeta"><a class="viewcode-back" href="../modules/usutils.html#usutils.data_from_WHAMmeta">[docs]</a><span class="k">def</span> <span class="nf">data_from_WHAMmeta</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">DEFAULT_T</span><span class="p">,</span><span class="n">k_B</span><span class="o">=</span><span class="n">DEFAULT_K_B</span><span class="p">,</span><span class="n">nsig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Reads data saved on disk according to the format used by the WHAM implementation by Grossfield.</span>
+<div class="viewcode-block" id="data_from_meta"><a class="viewcode-back" href="../modules/usutils.html#usutils.data_from_meta">[docs]</a><span class="k">def</span> <span class="nf">data_from_meta</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">DEFAULT_T</span><span class="p">,</span><span class="n">k_B</span><span class="o">=</span><span class="n">DEFAULT_K_B</span><span class="p">,</span><span class="n">nsig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reads collective variable data from as tabulated by a meta file of the same format used in Grossfield&#39;s implementation of the WHAM algorithm, and calculates the value of the biasing functions.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -329,7 +338,7 @@
 <span class="sd">    dim : int</span>
 <span class="sd">        The number of dimensions of the cv space.</span>
 <span class="sd">    T : scalar, optional</span>
-<span class="sd">        Temperature of the system.</span>
+<span class="sd">        Temperature of the system if not provided in the meta file.</span>
 <span class="sd">    k_B : scalar, optional</span>
 <span class="sd">        Boltzmann Constant for the system. Default is in natural units (1.0)</span>
 <span class="sd">    nsig : scalar or None, optional</span>
@@ -343,8 +352,8 @@
 <span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Parse Wham Meta file.</span>
-    <span class="n">trajlocs</span><span class="p">,</span> <span class="n">cntrs</span><span class="p">,</span> <span class="n">fks</span><span class="p">,</span> <span class="n">iats</span><span class="p">,</span> <span class="n">temps</span>  <span class="o">=</span> <span class="n">parse_metafile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">)</span>
+    <span class="c1"># Parse Meta file.</span>
+    <span class="n">trajlocs</span><span class="p">,</span> <span class="n">cntrs</span><span class="p">,</span> <span class="n">fks</span><span class="p">,</span> <span class="n">iats</span><span class="p">,</span> <span class="n">temps</span>  <span class="o">=</span> <span class="n">_parse_metafile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">)</span>
     <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cntrs</span><span class="p">)</span>
     <span class="c1"># Calculate kT for each window.  Involves some type management...</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">temps</span><span class="p">:</span>
@@ -372,7 +381,7 @@
 
     <span class="k">return</span> <span class="n">psis</span><span class="p">,</span> <span class="n">trajs</span><span class="p">,</span> <span class="n">neighbors</span></div>
 
-<div class="viewcode-block" id="parse_metafile"><a class="viewcode-back" href="../modules/usutils.html#usutils.parse_metafile">[docs]</a><span class="k">def</span> <span class="nf">parse_metafile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_parse_metafile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses the meta file located at filepath. Assumes Wham-like Syntax.</span>
 
@@ -404,21 +413,26 @@
     <span class="n">iats</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">temps</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">full_line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">full_line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
             <span class="n">windowparams</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
             <span class="n">traj_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">centers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="o">+</span><span class="n">dim</span><span class="p">])</span>
             <span class="n">fks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">dim</span><span class="p">:</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">])</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">windowparams</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">:</span> <span class="c1"># If Correlation Time provided</span>
-                <span class="n">iats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">])</span>
+                <span class="n">iats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">])</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">windowparams</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">:</span> <span class="c1"># If Temperature is provided</span>
-                <span class="n">temps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">])</span>
+                <span class="n">temps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">])</span>
     <span class="c1"># Move to numpy arrays, convert to appropriate data types</span>
     <span class="n">fks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
     <span class="n">centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
     <span class="n">iats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iats</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
     <span class="n">temps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">temps</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">traj_paths</span><span class="p">,</span><span class="n">centers</span><span class="p">,</span><span class="n">fks</span><span class="p">,</span><span class="n">iats</span><span class="p">,</span><span class="n">temps</span></div>
+    <span class="k">return</span> <span class="n">traj_paths</span><span class="p">,</span><span class="n">centers</span><span class="p">,</span><span class="n">fks</span><span class="p">,</span><span class="n">iats</span><span class="p">,</span><span class="n">temps</span>
 
 <span class="k">def</span> <span class="nf">_minimage</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span><span class="n">period</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the minimum vector.</span>
@@ -438,7 +452,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">rv</span> <span class="o">-</span> <span class="n">period</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">rv</span><span class="o">/</span><span class="n">period</span><span class="p">)</span>
 
-<div class="viewcode-block" id="minimage_traj"><a class="viewcode-back" href="../modules/usutils.html#usutils.minimage_traj">[docs]</a><span class="k">def</span> <span class="nf">minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span><span class="n">period</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span><span class="n">period</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the minimum trajectory</span>
 
 <span class="sd">    Parameters</span>
@@ -470,7 +484,7 @@
     <span class="k">else</span><span class="p">:</span> <span class="c1"># User provided something weird...</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Trajectory provided has wrong dimensionality </span><span class="si">%d</span><span class="s2">, &quot;</span><span class="o">+</span> \
             <span class="s2">&quot;dimension should be 1 or 2.&quot;</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">rv</span><span class="p">)))</span>
-    <span class="k">return</span> <span class="n">rvmin</span></div>
+    <span class="k">return</span> <span class="n">rvmin</span>
     
 </pre></div>
 

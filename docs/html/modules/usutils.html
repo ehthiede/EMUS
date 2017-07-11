@@ -140,44 +140,6 @@
 <p>Module containing methods useful for analyzing umbrella sampling 
 calculations that do not rely directly on the EMUS estimator.</p>
 <dl class="function">
-<dt id="usutils.calc_harmonic_psi_ij">
-<code class="descclassname">usutils.</code><code class="descname">calc_harmonic_psi_ij</code><span class="sig-paren">(</span><em>cv_traj</em>, <em>win_center</em>, <em>win_fk</em>, <em>kT=1.0</em>, <em>period=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#calc_harmonic_psi_ij"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.calc_harmonic_psi_ij" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper routine for calc_harm_psis.  Evaluates the value of the bias
-function for a single harmonic window over a trajectory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cv_traj</strong> : array-like</p>
-<blockquote>
-<div><p>Trajectory in collective variable space.  Can be 1-dimensional (one cv) or 2-dimensional (many cvs).  The first dimension is the time index, and (optional) second corresponds to the collective variable. 
-trajectory</p>
-</div></blockquote>
-<p><strong>win_center</strong> : array-like or scalar</p>
-<blockquote>
-<div><p>Array of the centers of the window.</p>
-</div></blockquote>
-<p><strong>win_fk</strong> : array-like or scalar</p>
-<blockquote>
-<div><p>Force constants for the windows divided by -kT.</p>
-</div></blockquote>
-<p><strong>period</strong> : 1D array-like or float, optional</p>
-<blockquote>
-<div><p>Period of the collective variables.  See documentation for calc_harmonic_psis.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>psivals</strong> : 1D array</p>
-<blockquote class="last">
-<div><p>Value of <span class="math">\(\psi_{ij}(x)\)</span> evaluated at the center of the window for each point in the trajectory.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="usutils.calc_harmonic_psis">
 <code class="descclassname">usutils.</code><code class="descname">calc_harmonic_psis</code><span class="sig-paren">(</span><em>cv_traj</em>, <em>centers</em>, <em>fks</em>, <em>kTs</em>, <em>period=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#calc_harmonic_psis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.calc_harmonic_psis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the values of each bias function from a trajectory of points in a single window.</p>
@@ -218,9 +180,9 @@ trajectory</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="usutils.data_from_WHAMmeta">
-<code class="descclassname">usutils.</code><code class="descname">data_from_WHAMmeta</code><span class="sig-paren">(</span><em>filepath</em>, <em>dim</em>, <em>T=1.0</em>, <em>k_B=1.0</em>, <em>nsig=None</em>, <em>period=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#data_from_WHAMmeta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.data_from_WHAMmeta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads data saved on disk according to the format used by the WHAM implementation by Grossfield.</p>
+<dt id="usutils.data_from_meta">
+<code class="descclassname">usutils.</code><code class="descname">data_from_meta</code><span class="sig-paren">(</span><em>filepath</em>, <em>dim</em>, <em>T=1.0</em>, <em>k_B=1.0</em>, <em>nsig=None</em>, <em>period=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#data_from_meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.data_from_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads collective variable data from as tabulated by a meta file of the same format used in Grossfield&#8217;s implementation of the WHAM algorithm, and calculates the value of the biasing functions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -235,7 +197,7 @@ trajectory</p>
 </div></blockquote>
 <p><strong>T</strong> : scalar, optional</p>
 <blockquote>
-<div><p>Temperature of the system.</p>
+<div><p>Temperature of the system if not provided in the meta file.</p>
 </div></blockquote>
 <p><strong>k_B</strong> : scalar, optional</p>
 <blockquote>
@@ -262,8 +224,8 @@ trajectory</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="usutils.data_from_fxnmeta">
-<code class="descclassname">usutils.</code><code class="descname">data_from_fxnmeta</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#data_from_fxnmeta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.data_from_fxnmeta" title="Permalink to this definition">¶</a></dt>
+<dt id="usutils.fxn_data_from_meta">
+<code class="descclassname">usutils.</code><code class="descname">fxn_data_from_meta</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#fxn_data_from_meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.fxn_data_from_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses the meta file associated with observable data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -278,34 +240,6 @@ trajectory</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>fxndata</strong> : List of 2D arrays</p>
 <blockquote class="last">
 <div><p>Three dimensional data structure containing observable information.  The first index corresponds to the observable being calculated, the second to the window index, and the third to the time point in the window.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="usutils.minimage_traj">
-<code class="descclassname">usutils.</code><code class="descname">minimage_traj</code><span class="sig-paren">(</span><em>rv</em>, <em>period</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#minimage_traj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.minimage_traj" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the minimum trajectory</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>rv</strong> : 1 or 2D array-like</p>
-<blockquote>
-<div><p>Minimum image trajectory</p>
-</div></blockquote>
-<p><strong>period</strong> : array-like or scalar</p>
-<blockquote>
-<div><p>Periodicity in each dimension.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>minimage</strong> : array-like</p>
-<blockquote class="last">
-<div><p>minimum image trajectory</p>
 </div></blockquote>
 </td>
 </tr>
@@ -356,53 +290,8 @@ deviations away on a flat potential.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="usutils.parse_metafile">
-<code class="descclassname">usutils.</code><code class="descname">parse_metafile</code><span class="sig-paren">(</span><em>filepath</em>, <em>dim</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#parse_metafile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.parse_metafile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses the meta file located at filepath. Assumes Wham-like Syntax.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filepath</strong> : string</p>
-<blockquote>
-<div><p>The path to the meta file.</p>
-</div></blockquote>
-<p><strong>dim</strong> : int</p>
-<blockquote>
-<div><p>The number of dimensions of the cv space.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>traj_paths</strong> : list of strings</p>
-<blockquote>
-<div><p>A list containing the paths to the trajectories for each window.</p>
-</div></blockquote>
-<p><strong>centers</strong> : 2D array of floats</p>
-<blockquote>
-<div><p>Array with the center of each harmonic window. See calc_harm_psis for syntax.</p>
-</div></blockquote>
-<p><strong>fks</strong> : 2D array of floats</p>
-<blockquote>
-<div><p>Array with the force constants for each harmonic window. See calc_harm_psis for syntax.</p>
-</div></blockquote>
-<p><strong>iats</strong> : 1D array of floats or None</p>
-<blockquote>
-<div><p>Array with the integrated autocorrelation times of each window.  None if not given in 
-the meta file</p>
-</div></blockquote>
-<p><strong>temps</strong> : 1D array of floats or None</p>
-<blockquote class="last">
-<div><p>Array with the temperature of each window in the umbrella sampling calculation.  If not given in the meta file, this will just be None.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="usutils.unpackNbrs">
-<code class="descclassname">usutils.</code><code class="descname">unpackNbrs</code><span class="sig-paren">(</span><em>compd_array</em>, <em>neighbors</em>, <em>L</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#unpackNbrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.unpackNbrs" title="Permalink to this definition">¶</a></dt>
+<dt id="usutils.unpack_nbrs">
+<code class="descclassname">usutils.</code><code class="descname">unpack_nbrs</code><span class="sig-paren">(</span><em>compd_array</em>, <em>neighbors</em>, <em>L</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#unpack_nbrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.unpack_nbrs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unpacks an array of neighborlisted data.  Currently, assumes axis 0 is the compressed axis.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

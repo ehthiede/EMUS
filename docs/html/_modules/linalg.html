@@ -137,7 +137,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="stationary_distrib"><a class="viewcode-back" href="../modules/linalg.html#linalg.stationary_distrib">[docs]</a><span class="k">def</span> <span class="nf">stationary_distrib</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">residtol</span> <span class="o">=</span> <span class="mf">1.E-10</span><span class="p">,</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_stationary_distrib_QR</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">residtol</span> <span class="o">=</span> <span class="mf">1.E-10</span><span class="p">,</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the eigenvector of the matrix F with eigenvalue 1 (if it exists).</span>
 <span class="sd">    </span>
@@ -166,7 +166,7 @@
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="c1"># Number of States</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="c1"># Number of states </span>
     <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">L</span><span class="p">)</span><span class="o">-</span><span class="n">F</span>
     <span class="n">q</span><span class="p">,</span><span class="n">r</span><span class="o">=</span><span class="n">qr</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
     <span class="n">z</span><span class="o">=</span><span class="n">q</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># Stationary dist. is last column of QR fact</span>
@@ -180,11 +180,14 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">z</span> <span class="o">=</span> <span class="n">znew</span>
 
-    <span class="k">return</span> <span class="n">z</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="c1"># Return normalized (by convention)</span></div>
+    <span class="k">return</span> <span class="n">z</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="c1"># Return normalized (by convention)</span>
    
 
-<div class="viewcode-block" id="old_stationary_distrib"><a class="viewcode-back" href="../modules/linalg.html#linalg.old_stationary_distrib">[docs]</a><span class="k">def</span> <span class="nf">old_stationary_distrib</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">fix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">residtol</span> <span class="o">=</span> <span class="mf">1.E-10</span><span class="p">,</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="c1"># Number of States</span>
+<div class="viewcode-block" id="stationary_distrib"><a class="viewcode-back" href="../modules/linalg.html#linalg.stationary_distrib">[docs]</a><span class="k">def</span> <span class="nf">stationary_distrib</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">fix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">residtol</span> <span class="o">=</span> <span class="mf">1.E-10</span><span class="p">,</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Depricated routine to calculate the stationar distribution of F.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="c1"># Number of states</span>
     <span class="c1"># If no fixed state is specified, we find a state with high weight in z.</span>
     <span class="k">if</span> <span class="n">fix</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">testz</span> <span class="o">=</span> <span class="n">stationary_distrib</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -202,9 +205,13 @@
         <span class="n">znew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">F</span><span class="p">)</span>
         <span class="n">maxresid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">znew</span> <span class="o">-</span> <span class="n">z</span><span class="p">)</span><span class="o">/</span><span class="n">z</span><span class="p">)</span> <span class="c1"># Convergence Criterion </span>
         <span class="k">if</span> <span class="n">maxresid</span> <span class="o">&lt;</span> <span class="n">residtol</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s2">&quot;Reached Tolerance&quot;</span>
             <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">z</span> <span class="o">=</span> <span class="n">znew</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s2">&quot;Used </span><span class="si">%d</span><span class="s2"> iterations&quot;</span><span class="o">%</span><span class="n">itr</span>
     <span class="k">return</span> <span class="n">z</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">z</span><span class="p">)</span></div>
 
 <span class="k">def</span> <span class="nf">_submatrix</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">i</span><span class="p">):</span>

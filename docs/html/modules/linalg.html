@@ -168,47 +168,9 @@ G. H. Golub and C. D. Meyer, Jr, SIAM J. Alg. Disc. Meth. 7, 273-
 </dd></dl>
 
 <dl class="function">
-<dt id="linalg.old_stationary_distrib">
-<code class="descclassname">linalg.</code><code class="descname">old_stationary_distrib</code><span class="sig-paren">(</span><em>F</em>, <em>fix=None</em>, <em>residtol=1e-10</em>, <em>max_iter=100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/linalg.html#old_stationary_distrib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#linalg.old_stationary_distrib" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
 <dt id="linalg.stationary_distrib">
-<code class="descclassname">linalg.</code><code class="descname">stationary_distrib</code><span class="sig-paren">(</span><em>F</em>, <em>residtol=1e-10</em>, <em>max_iter=100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/linalg.html#stationary_distrib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#linalg.stationary_distrib" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the eigenvector of the matrix F with eigenvalue 1 (if it exists).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>F</strong> : ndarray</p>
-<blockquote>
-<div><p>A matrix known to have a single left eigenvector with 
-eigenvalue 1.</p>
-</div></blockquote>
-<p><strong>residtol</strong> : float or scalar</p>
-<blockquote>
-<div><p>To improve the accuracy of the computation, the algorithm will
-&#8220;polish&#8221; the final result using several iterations of the power
-method, z^T F = z^T.  Residtol gives the tolerance for the 
-associated relative residual to determine convergence.</p>
-</div></blockquote>
-<p><strong>maxiter</strong> : int</p>
-<blockquote>
-<div><p>Maximum number of iterations to use the power method to reduce
-the residual.  In practice, should never be reached.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong> : ndarray</p>
-<blockquote class="last">
-<div><p>The eigenvector of the matrix F with eigenvalue 1.  For a Markov
-chain stationary distribution, this is the stationary distribution.
-Normalization is chosen s.t. entries sum to one.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+<code class="descclassname">linalg.</code><code class="descname">stationary_distrib</code><span class="sig-paren">(</span><em>F</em>, <em>fix=None</em>, <em>residtol=1e-10</em>, <em>max_iter=10000</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/linalg.html#stationary_distrib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#linalg.stationary_distrib" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depricated routine to calculate the stationar distribution of F.</p>
 </dd></dl>
 
 </div>
