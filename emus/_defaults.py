@@ -9,7 +9,7 @@ DEFAULT_KT = DEFAULT_K_B * DEFAULT_T
 DEFAULT_IAT = 'ipce'
 
 ##### emus.py #####
-D0EFAULT_ITER_TOL = 1E-8
+DEFAULT_ITER_TOL = 1E-8
 
 ##### wemus.py #####
 DEFAULT_EXT='hdf5'

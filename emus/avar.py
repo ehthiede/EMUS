@@ -45,7 +45,7 @@ def average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_
     L = len(psis)
     if neighbors is None:
         neighbors = np.outer(np.ones(L),range(L)).astype(int)
-    g1data = [np.array(g1i).flatten() for g1i in g1data]
+    g1data = [np.array(g1i) for g1i in g1data]
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
 
@@ -71,7 +71,7 @@ def log_average(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IA
     L = len(psis)
     if neighbors is None:
         neighbors = np.outer(np.ones(L),range(L)).astype(int)
-    g1data = [np.array(g1i).flatten() for g1i in g1data]
+    g1data = [np.array(g1i) for g1i in g1data]
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
     
@@ -88,6 +88,7 @@ def log_average(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IA
     dBdg2 = -z/g2avg
     iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
     return iats, -np.log(g1avg/g2avg), variances
+
 def avg_on_pmf(cv_trajs,psis,domain,z,F,g1data,g2data=None,neighbors=None,nbins=100,iat_method=None):
     """Estimates the asymptotic variance of an average on a pmf.
 
@@ -141,6 +142,9 @@ def avg_on_pmf(cv_trajs,psis,domain,z,F,g1data,g2data=None,neighbors=None,nbins=
     # Get the edges for each histogram bin
     edges = [np.linspace(domain[i,0],domain[i,1],nb+1) for i,nb in enumerate(nbins)]
 
+    # Get Group Inverse for the matrix
+    gI = lm.groupInverse(np.eye(L)-F)
+
     means = np.zeros(nbins)
     avars = np.zeros(nbins)
     # Iterate over histogram_bins.
@@ -156,16 +160,21 @@ def avg_on_pmf(cv_trajs,psis,domain,z,F,g1data,g2data=None,neighbors=None,nbins=
                 inhist_d = (traj[:,d] > edge_d[hd_ndx])
                 inhist_d *= (traj[:,d] <= edge_d[hd_ndx+1])
                 inbin *= inhist_d
-            g1data.append(inbin*g1data[i])
-            g2data.append(inbin*g2data[i])
-        g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_iter=False)
+#            print np.shape(inbin), np.shape(g1data[i])
+            g1data_hist.append(inbin*g1data[i])
+            g2data_hist.append(inbin*g2data[i])
+        g1star= emus._calculate_win_avgs(psis,z,g1data_hist,neighbors,use_iter=False)
         g1avg = np.dot(g1star,z)
-        g2star= emus._calculate_win_avgs(psis,z,g2data,neighbors,use_iter=False)
+        g2star= emus._calculate_win_avgs(psis,z,g2data_hist,neighbors,use_iter=False)
         g2avg = np.dot(g2star,z)
         dBdF = np.outer(z,np.dot(gI,g1star-g1avg/g2avg*g2star))/g2avg
         dBdg1 = z/g2avg
         dBdg2 = -(g1avg/g2avg)*z/g2avg
-        iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
+#        print np.shape(psis), np.shape(dBdF)
+        print np.shape(g1data), np.shape(g1data_hist)
+        print np.shape(g2data), np.shape(g2data_hist)
+#        print np.shape(dBdg1)
+        iats, variances = _calculate_acovar(psis,dBdF,(g1data_hist,g2data_hist),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
         avars[index] = np.sum(variances)
         means[index] = g1avg/g2avg
     return means, avars
@@ -241,6 +250,8 @@ def pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat_meth
                 inhist_d *= (traj[:,d] <= edge_d[hd_ndx+1])
                 g1_i *= inhist_d
             g1data.append(g1_i)
+        dA =  np.prod([(edg_i[1]-edg_i[0]) for edg_i in edges])
+
         g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_iter=False)
         g1avg = np.dot(g1star,z)
         dBdF = np.outer(z,np.dot(gI,g1star/g1avg-g2star/g2avg))
@@ -248,7 +259,7 @@ def pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat_meth
         dBdg2 = -z/g2avg
         iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
         avars[index] = np.sum(variances)*(kT**2)
-        fes[index] = -kT*np.log(g1avg/g2avg)
+        fes[index] = -kT*np.log(g1avg/(dA*g2avg))
     return fes,avars
 
 def partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):

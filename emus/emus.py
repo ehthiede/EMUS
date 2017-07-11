@@ -33,7 +33,7 @@ def calculate_avg(psis,z,g1data,g2data=None,neighbors=None,use_iter=True):
 
     """
     # Clean the input and set defaults
-    g1data = [np.array(g1i).flatten() for g1i in g1data]
+    g1data = [np.array(g1i) for g1i in g1data]
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
         
@@ -177,8 +177,11 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
             psi_sum = np.sum(psis[i],axis=1)
             hist_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=1./psi_sum)
         hist+=hist_i/len(xtraj_i)*z[i]
-    pmf =-kT* np.log(hist)
-    pmf -= min(pmf.flatten())
+    # Calculate area of each histogram bin
+    dA =  np.prod([(edg_i[1]-edg_i[0]) for edg_i in edges])
+    print dA
+    pmf =-kT* np.log(hist/(dA*np.sum(hist)))
+#    pmf -= min(pmf.flatten())
 
     return pmf,edges
 
