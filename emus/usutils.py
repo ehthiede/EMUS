@@ -160,7 +160,7 @@ def _calc_harmonic_psi_ij(cv_traj,win_center,win_fk,kT=1.0,period=None):
 
     return np.exp(-U/kT)
 
-def data_from_fxnmeta(filepath):
+def fxn_data_from_meta(filepath):
     """Parses the meta file associated with observable data
 
     Parameters
@@ -200,8 +200,8 @@ def data_from_fxnmeta(filepath):
 
     return fxndata
 
-def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period=None):
-    """Reads data saved on disk according to the format used by the WHAM implementation by Grossfield.
+def data_from_meta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period=None):
+    """Reads collective variable data from as tabulated by a meta file of the same format used in Grossfield's implementation of the WHAM algorithm, and calculates the value of the biasing functions.
 
     Parameters
     ----------
@@ -224,7 +224,7 @@ def data_from_WHAMmeta(filepath,dim,T=DEFAULT_T,k_B=DEFAULT_K_B,nsig=None,period
         The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
 
     """
-    # Parse Wham Meta file.
+    # Parse Meta file.
     trajlocs, cntrs, fks, iats, temps  = _parse_metafile(filepath,dim)
     L = len(cntrs)
     # Calculate kT for each window.  Involves some type management...

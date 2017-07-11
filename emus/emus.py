@@ -8,7 +8,7 @@ import autocorrelation as ac
 from usutils import unpack_nbrs
 from _defaults import *
 
-def calculate_avg(psis,z,g1data,g2data=None,neighbors=None,use_MBAR=True):
+def calculate_avg(psis,z,g1data,g2data=None,neighbors=None,use_iter=True):
     """Estimates the value of an observable or ratio of observables.
 
     Parameters
@@ -23,8 +23,8 @@ def calculate_avg(psis,z,g1data,g2data=None,neighbors=None,use_MBAR=True):
         Trajectory of observable in the denominator.  
     neighbors : 2D array-like, optional
         List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
-    use_MBAR : bool, optional
-        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
+    use_iter : bool, optional
+        Use the iterative EMUS estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------
@@ -37,20 +37,46 @@ def calculate_avg(psis,z,g1data,g2data=None,neighbors=None,use_MBAR=True):
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
         
-    g1star = _calculate_win_avgs(psis,z,g1data,neighbors,use_MBAR)
-    g2star = _calculate_win_avgs(psis,z,g2data,neighbors,use_MBAR)
+    g1star = _calculate_win_avgs(psis,z,g1data,neighbors,use_iter)
+    g2star = _calculate_win_avgs(psis,z,g2data,neighbors,use_iter)
     return np.dot(g1star,z)/np.dot(g2star,z)
 
-def calculate_obs(psis,z,g1data,g2data=None,neighbors=None,use_MBAR=True):
+def calculate_obs(psis,z,g1data,g2data=None,neighbors=None,use_iter=True):
     """Old call for calculate_avg for backwards compatibility. Inputs and outputs are the same.
     
     """
-    return calculate_avg(psis,z,g1data,g2data,neighbors,use_MBAR)
+    return calculate_avg(psis,z,g1data,g2data,neighbors,use_iter)
 
-def calculate_avg_on_pmf(cv_trajs,psis,domain,z,g1data,g2data=None,neighbors=None, nbins = 100,use_MBAR = True):
+def calculate_avg_on_pmf(cv_trajs,psis,domain,z,g1data,g2data=None,neighbors=None, nbins = 100,use_iter = True):
     """Calculates the average of a function in each histogram bin on a potential of mean force.
 
-    IN BETA!
+    Parameters
+    ----------
+    cv_trajs : 2D data structure
+        Data structure containing trajectories in the collective variable space.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+    psis : 3D data structure
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+    domain : tuple
+        Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window
+    z : 1D array
+        Array containing the normalization constants
+    g1data : 2D data structure
+        Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.
+    g2data : 2D data structure, optional
+        Trajectory of observable in the denominator.  
+    neighbors : 2D array-like, optional
+        List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
+    nbins : int or tuple, optional
+        Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.
+    use_iter : bool, optional
+        Use the iterative EMUS estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
+
+    Returns
+    -------
+    pmf_avgs : ndarray
+        Returns the average of g1/g2 in each histogram bin, same format as for calculating the pmf
+    edges : list
+        Edges of the histogram bins, in the syntax and order used by numpy's histogramdd method.  Element d is the edges of the histograms in dimension d.
     """
     L = len(z)
     if domain is None:
@@ -76,7 +102,7 @@ def calculate_avg_on_pmf(cv_trajs,psis,domain,z,g1data,g2data=None,neighbors=Non
         g1_data_i = g1data[i]
         g2_data_i = g2data[i]
         print i
-        if use_MBAR:
+        if use_iter:
             L = len(psis) # Number of windows
             nbrs_i = neighbors[i]
             z_nbr = z[nbrs_i]
@@ -93,7 +119,7 @@ def calculate_avg_on_pmf(cv_trajs,psis,domain,z,g1data,g2data=None,neighbors=Non
     return hist_g1/hist_g2, edges
 
 
-def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAULT_KT, use_MBAR=True):
+def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAULT_KT, use_iter=True):
     """Calculates the free energy surface along a coordinate.
 
     Parameters
@@ -112,8 +138,8 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
         Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.
     kT : float, optional
         Value of kT to scale the PMF by.  If not provided, set to the Default value.
-    use_MBAR : bool, optional
-        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
+    use_iter : bool, optional
+        Use the iterative EMUS estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------
@@ -141,7 +167,7 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
     hist = np.zeros(nbins)
     for i,xtraj_i in enumerate(cv_trajs):
 #        xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]
-        if use_MBAR:
+        if use_iter:
             L = len(psis) # Number of windows
             nbrs_i = neighbors[i]
             z_nbr = z[nbrs_i]
@@ -156,17 +182,17 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
 
     return pmf,edges
 
-def calculate_zs(psis,neighbors=None,nMBAR=0,tol=DEFAULT_MBAR_TOL,use_iats=False,iat_method=DEFAULT_IAT):
+def calculate_zs(psis,neighbors=None,n_iter=0,tol=DEFAULT_ITER_TOL,use_iats=False,iat_method=DEFAULT_IAT):
     """Calculates the normalization constants for the windows.
 
     Parameters
     ----------
-    nMBAR : int, optional (default 0)
-         Maximum number of MBAR iterations to perform.
+    n_iter : int, optional (default 0)
+         Maximum number of iterative EMUS iterations to perform.
     tol : float, optional (see _defaults.py for default)
-        If the relative residual falls beneath the tolerance, the MBAR iteration is truncated.
+        If the relative residual falls beneath the tolerance, the iterative EMUS iteration is truncated.
     use_iats : bool, optional
-        If true, estimate integrated autocorrelation time in each MBAR iteration.  Likely unnecessary unless dynamics are expected to be drastically different in each window. If iats is provided, the iteration will use those rather than estimating them in each step.
+        If true, estimate integrated autocorrelation time in each iterative EMUS iteration.  Likely unnecessary unless dynamics are expected to be drastically different in each window. If iats is provided, the iteration will use those rather than estimating them in each step.
     iat_method : string, optional
         Routine to use for calculating integrated autocorrelation times.  Currently accepts DEFAULT_IAT, 'acor', and 'icce'.
     
@@ -175,7 +201,7 @@ def calculate_zs(psis,neighbors=None,nMBAR=0,tol=DEFAULT_MBAR_TOL,use_iats=False
     z : 1D array
         Values for the Normalization constant in each window.
     F : 2D array
-        Matrix to take the eigenvalue of for MBAR.
+        Matrix to take the eigenvalue of for iterative EMUS.
     iats : 1D array
         Estimated values of the autocorrelation time.  Only returned if use_iats is true.
 
@@ -191,7 +217,7 @@ def calculate_zs(psis,neighbors=None,nMBAR=0,tol=DEFAULT_MBAR_TOL,use_iats=False
         iats = np.ones(z.shape)
 
     # we perform the self-consistent polishing iteration
-    for n in xrange(nMBAR):
+    for n in xrange(n_iter):
         z_old = z
         Apart = Npnts/z_old
         Amat = np.outer(np.ones(L),Apart)
@@ -311,7 +337,7 @@ def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
     else:
         return Fi
     
-def _calculate_win_avgs(psis,z,gdata,neighbors=None,use_MBAR=True):
+def _calculate_win_avgs(psis,z,gdata,neighbors=None,use_iter=True):
     """Helper method estimating the scaled averages in each window.
 
     Parameters
@@ -324,8 +350,8 @@ def _calculate_win_avgs(psis,z,gdata,neighbors=None,use_MBAR=True):
         Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.
     neighbors : 2D array-like, optional
         List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
-    use_MBAR : bool, optional
-        Use the MBAR estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
+    use_iter : bool, optional
+        Use the iterative EMUS estimator for the average of f.  If true (default), uses the estimator :math:`\sum_i < g / (\sum_j \psi_j/z_j) >_i`.  Otherwise, uses the first iteration EMUS estimator, :math:`\sum_i <g / \sum_j \psi_j >_i z_i`.
 
     Returns
     -------
@@ -334,7 +360,7 @@ def _calculate_win_avgs(psis,z,gdata,neighbors=None,use_MBAR=True):
 
     """
     gstar = []
-    if use_MBAR:
+    if use_iter:
         # Initialize neighbors if they don't exist.
         L = len(psis) # Number of windows
         if neighbors is None:

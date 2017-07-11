@@ -24,7 +24,7 @@ def average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_
     g1data : 2D data structure
         Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.
     g2data : 2D data structure, optional
-        Trajectory of observable in the denominator of the ratio.  
+        Trajectory of observable in the denominator of the ratio.  If not provided, taken to be all ones.
     neighbors : 2D array, optional
         List showing which windows neighbor which.  Element i,j is the j'th neighboring window of window i.
     iat_method : string or 1D array-like, optional
@@ -50,8 +50,8 @@ def average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
 
     # Compute average of functions in each window.
-    g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_MBAR=False)
-    g2star= emus._calculate_win_avgs(psis,z,g2data,neighbors,use_MBAR=False)
+    g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_iter=False)
+    g2star= emus._calculate_win_avgs(psis,z,g2data,neighbors,use_iter=False)
     g1avg = np.dot(g1star,z)
     g2avg = np.dot(g2star,z)
 
@@ -76,8 +76,8 @@ def log_average(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IA
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
     
     # Compute average of functions in each window.
-    g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_MBAR=False)
-    g2star= emus._calculate_win_avgs(psis,z,g2data,neighbors,use_MBAR=False)
+    g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_iter=False)
+    g2star= emus._calculate_win_avgs(psis,z,g2data,neighbors,use_iter=False)
     g1avg = np.dot(g1star,z)
     g2avg = np.dot(g2star,z)
 
@@ -88,6 +88,87 @@ def log_average(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IA
     dBdg2 = -z/g2avg
     iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
     return iats, -np.log(g1avg/g2avg), variances
+def avg_on_pmf(cv_trajs,psis,domain,z,F,g1data,g2data=None,neighbors=None,nbins=100,iat_method=None):
+    """Estimates the asymptotic variance of an average on a pmf.
+
+    Parameters
+    ----------
+    cv_trajs : 2D data structure
+        Data structure containing trajectories in the collective variable space.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+    psis : 3D data structure
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+    domain : tuple
+        Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window
+    z : 1D array
+        Array containing the normalization constants
+    F : 2D array
+        Overlap matrix for the first EMUS iteration.
+    g1data : 2D data structure
+        Trajectory of the observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.
+    g2data : 2D data structure, optional
+        Trajectory of observable in the denominator of the ratio.  If not provided, taken to be all ones.
+    neighbors : 2D array-like, optional
+        List showing which windows neighbor which.  See neighbors_harmonic in usutils. 
+    nbins : int or tuple, optional
+        Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.
+    iat_method : string or 1D array-like, optional
+        Method used to estimate autocorrelation time.  Choices are 'acor', 'ipce', and 'icce'.  Alternatively, if an array of length no. windows is provided, element i is taken to be the autocorrelation time of window i.
+
+    Returns
+    -------
+
+    """
+    # Clean the input and set defaults
+    L = len(psis)
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L),range(L)).astype(int)
+    domain = np.asarray(domain)
+    if len(np.shape(domain)) == 1:
+        domain = np.reshape(domain,(1,len(domain)))
+    ndims = np.shape(domain)[0]
+    if type(nbins) is int: # Make nbins to an iterable in the 1d case.
+        nbins = [nbins]*ndims
+    domainwdth = domain[:,1] - domain[:,0]
+    if g2data is None:
+        g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
+    g1data = [np.array(g1_i) for g1_i in g1data]
+    g2data = [np.array(g2_i) for g2_i in g2data]
+
+    # Warn user if they want to calculate each autocorrelation by hand.
+    if isinstance(iat_method,str):
+        warnings.warn("Programs is set to compute the iat for every observable.  Since for a potential of mean force each point is an observable, this is going to be REALLY SLOW.  It is strongly suggested that you compute representative autocorrelation times for each window, and use those instead.")
+
+    # Get the edges for each histogram bin
+    edges = [np.linspace(domain[i,0],domain[i,1],nb+1) for i,nb in enumerate(nbins)]
+
+    means = np.zeros(nbins)
+    avars = np.zeros(nbins)
+    # Iterate over histogram_bins.
+    for index,aval in np.ndenumerate(avars):
+        g1data_hist = []
+        g2data_hist = []
+        for i,traj in enumerate(cv_trajs):
+            if len(np.shape(traj)) == 1:
+                traj = np.transpose([traj])
+            inbin = np.ones(len(traj))
+            for d,edge_d in enumerate(edges):
+                hd_ndx = index[d]
+                inhist_d = (traj[:,d] > edge_d[hd_ndx])
+                inhist_d *= (traj[:,d] <= edge_d[hd_ndx+1])
+                inbin *= inhist_d
+            g1data.append(inbin*g1data[i])
+            g2data.append(inbin*g2data[i])
+        g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_iter=False)
+        g1avg = np.dot(g1star,z)
+        g2star= emus._calculate_win_avgs(psis,z,g2data,neighbors,use_iter=False)
+        g2avg = np.dot(g2star,z)
+        dBdF = np.outer(z,np.dot(gI,g1star-g1avg/g2avg*g2star))/g2avg
+        dBdg1 = z/g2avg
+        dBdg2 = -(g1avg/g2avg)*z/g2avg
+        iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
+        avars[index] = np.sum(variances)
+        means[index] = g1avg/g2avg
+    return means, avars
 
 def pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat_method=None):
     """Estimates the asymptotic variance of a free energy surface.
@@ -113,6 +194,13 @@ def pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat_meth
     iat_method : string or 1D array-like, optional
         Method used to estimate autocorrelation time.  Choices are 'acor', 'ipce', and 'icce'.  Alternatively, if an array of length no. windows is provided, element i is taken to be the autocorrelation time of window i.
 
+    Returns
+    -------
+    fes : ndarray
+        Value of the free energy in each histogram bin.
+    avars : ndarray
+        Asymptotic variance of each histogram bin.
+
     """
     # Clean the input and set defaults
     L = len(psis)
@@ -134,10 +222,10 @@ def pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat_meth
     # Calculate quantities used for each histogram bin.
     gI = lm.groupInverse(np.eye(L)-F)
     g2data = [np.ones(len(traj)) for traj in cv_trajs]
-    g2star = emus._calculate_win_avgs(psis,z,g2data,neighbors,use_MBAR=False)
+    g2star = emus._calculate_win_avgs(psis,z,g2data,neighbors,use_iter=False)
     g2avg = np.dot(g2star,z)
 
-    means = np.zeros(nbins)
+    fes = np.zeros(nbins)
     avars = np.zeros(nbins)
     # Iterate over histogram_bins.
     for index,aval in np.ndenumerate(avars):
@@ -153,15 +241,15 @@ def pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat_meth
                 inhist_d *= (traj[:,d] <= edge_d[hd_ndx+1])
                 g1_i *= inhist_d
             g1data.append(g1_i)
-        g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_MBAR=False)
+        g1star= emus._calculate_win_avgs(psis,z,g1data,neighbors,use_iter=False)
         g1avg = np.dot(g1star,z)
         dBdF = np.outer(z,np.dot(gI,g1star/g1avg-g2star/g2avg))
         dBdg1 = z/g1avg
         dBdg2 = -z/g2avg
         iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
         avars[index] = np.sum(variances)*(kT**2)
-        means[index] = -kT*np.log(g1avg/g2avg)
-    return means,avars
+        fes[index] = -kT*np.log(g1avg/g2avg)
+    return fes,avars
 
 def partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):
     """Estimates the asymptotic variance of the partition function (normalization constant) for each window.  To get an estimate of the autocovariance of the free energy for each window, multiply the autocovariance of window :math:`i` by :math:` (k_B T / z_i)^2`.

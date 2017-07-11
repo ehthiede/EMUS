@@ -3,7 +3,7 @@
 from setuptools import setup,find_packages
 
 setup(name='emus',
-    version='0.9.1',
+    version='0.9.2',
     description="Tools and Methods associated with the Eigenvector Method "
         "Umbrella Sampling (EMUS)",
     license='GPL',
@@ -15,7 +15,7 @@ setup(name='emus',
 #    package_dir=['emus'],
     packages=['emus'],
     scripts=['scripts/wemus.py'],
-#    install_requires=['numpy','scipy','h5py','acor'],
-    install_requires=['numpy','scipy'],
+    install_requires=['numpy','scipy','h5py','acor'],
+#    install_requires=['numpy','scipy'],
 
     )
