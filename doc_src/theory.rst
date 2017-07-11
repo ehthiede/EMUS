@@ -36,15 +36,15 @@ However, for complicated probability densities, this convergence can be particul
 
 .. math:: \pi_i(x) = \frac{ \psi_i(x) \pi(x)}{\int  \psi_i(x) \pi(x)dx}.
 
-Here :math`\psi_i` is a collection of :math:`L` nonnegative functions, which we refer to as "bias functions".  In molecular dynamics, gaussian bias functions are commonly used,
+Here :math:`\psi_i` is a collection of :math:`L` nonnegative functions, which we refer to as "bias functions".  In molecular dynamics, gaussian bias functions are commonly used,
 
 .. math:: \psi_i(x) = \exp \left( -\frac{1}{2}k_i \left(q(x)-q^0_i\right)^2/k_B T\right),
 
 where :math:`q` is a collective variable, a function of the coordinates that encodes the large-scale structure of the system and regulates its dynamics.  This choice gives the following biased density.  
 
-.. math:: \pi_i (x) \propto \exp \left[- \left( H_0(x)+\frac{1}{2} k_i \left(q-q^0_i\right)^2\right) / k_B T \right].
+.. math:: \pi_i (x) \propto \exp \left[- \left( H_0(x)+\frac{1}{2} k_i \left(q(x)-q^0_i\right)^2\right) / k_B T \right].
 
-This corresponds to adding a harmonic potential centered at :math:`q_i^0` with spring constant :math:`k_i` to the system Hamiltonian.  The simulation corresponding to the :math:`i`'th biasing function is referred to as the simulation "in the :math:`i'th` window."  We then collect a dataseries samplig each biased density, :math:`X_t^i`.  If the bias functions are chosen intelligently, sample means converge much more quickly in the biased densities than in the unbiased probability density.  However, this leaves the task of recombining the data across multiple biased distributions.  **EMUS** is algorithm for performing this task.
+This corresponds to adding a harmonic potential centered at :math:`q_i^0` with spring constant :math:`k_i` to the system Hamiltonian.  The simulation corresponding to the :math:`i`'th biasing function is referred to as the simulation "in the :math:`i'th` window."  We then collect a dataseries sampling each biased density, :math:`X_t^i`.  If the bias functions are chosen intelligently, sample means converge much more quickly in the biased densities than in the unbiased probability density.  However, this leaves the task of recombining the data across multiple biased distributions.  **EMUS** is algorithm for performing this task.
 
 EMUS
 ----

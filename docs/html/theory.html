@@ -158,13 +158,13 @@
 <p>However, for complicated probability densities, this convergence can be particularly slow.  Umbrella sampling overcomes this by instead sampling from multiple biased probability densities,</p>
 <div class="math">
 \[\pi_i(x) = \frac{ \psi_i(x) \pi(x)}{\int  \psi_i(x) \pi(x)dx}.\]</div>
-<p>Here :math`psi_i` is a collection of <span class="math">\(L\)</span> nonnegative functions, which we refer to as &#8220;bias functions&#8221;.  In molecular dynamics, gaussian bias functions are commonly used,</p>
+<p>Here <span class="math">\(\psi_i\)</span> is a collection of <span class="math">\(L\)</span> nonnegative functions, which we refer to as &#8220;bias functions&#8221;.  In molecular dynamics, gaussian bias functions are commonly used,</p>
 <div class="math">
 \[\psi_i(x) = \exp \left( -\frac{1}{2}k_i \left(q(x)-q^0_i\right)^2/k_B T\right),\]</div>
 <p>where <span class="math">\(q\)</span> is a collective variable, a function of the coordinates that encodes the large-scale structure of the system and regulates its dynamics.  This choice gives the following biased density.</p>
 <div class="math">
-\[\pi_i (x) \propto \exp \left[- \left( H_0(x)+\frac{1}{2} k_i \left(q-q^0_i\right)^2\right) / k_B T \right].\]</div>
-<p>This corresponds to adding a harmonic potential centered at <span class="math">\(q_i^0\)</span> with spring constant <span class="math">\(k_i\)</span> to the system Hamiltonian.  The simulation corresponding to the <span class="math">\(i\)</span>&#8216;th biasing function is referred to as the simulation &#8220;in the <span class="math">\(i'th\)</span> window.&#8221;  We then collect a dataseries samplig each biased density, <span class="math">\(X_t^i\)</span>.  If the bias functions are chosen intelligently, sample means converge much more quickly in the biased densities than in the unbiased probability density.  However, this leaves the task of recombining the data across multiple biased distributions.  <strong>EMUS</strong> is algorithm for performing this task.</p>
+\[\pi_i (x) \propto \exp \left[- \left( H_0(x)+\frac{1}{2} k_i \left(q(x)-q^0_i\right)^2\right) / k_B T \right].\]</div>
+<p>This corresponds to adding a harmonic potential centered at <span class="math">\(q_i^0\)</span> with spring constant <span class="math">\(k_i\)</span> to the system Hamiltonian.  The simulation corresponding to the <span class="math">\(i\)</span>&#8216;th biasing function is referred to as the simulation &#8220;in the <span class="math">\(i'th\)</span> window.&#8221;  We then collect a dataseries sampling each biased density, <span class="math">\(X_t^i\)</span>.  If the bias functions are chosen intelligently, sample means converge much more quickly in the biased densities than in the unbiased probability density.  However, this leaves the task of recombining the data across multiple biased distributions.  <strong>EMUS</strong> is algorithm for performing this task.</p>
 </div>
 <div class="section" id="emus">
 <h2>EMUS<a class="headerlink" href="#emus" title="Permalink to this headline">¶</a></h2>
