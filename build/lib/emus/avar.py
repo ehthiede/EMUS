@@ -10,7 +10,7 @@ import linalg as lm
 from _defaults import *
 import warnings
 
-def average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IAT):
+def calc_avg_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IAT):
     """Estimates the asymptotic variance in the estimate of :math:`<g_1>/<g_2>`. If :math:`g_2` is not given, it just calculates the asymptotic variance associated with the average of :math:`g_1`.
 
     Parameters
@@ -63,7 +63,7 @@ def average_ratio(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_
     iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
     return iats, g1avg/g2avg, variances
 
-def log_average(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IAT):
+def calc_log_avg(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IAT):
     """Estimates the asymptotic variance in the EMUS estimate of :math:`-log <g_1>/<g_2>`.  If :math:`g_2` data is not provided, it estimates the asymptotic variance in the estimate of :math:`-log <g_1>/<g_2>`.  Input and output is as in average_ratio.  Note that if this is used for free energy differences, the result does not use the Boltzmann factor (i.e. :math:`k_B T=1`).  In that case, resulting variances should be scaled by the Boltzmann factor *squared*.
 
     """
@@ -89,7 +89,7 @@ def log_average(psis,z,F,g1data,g2data=None,neighbors=None,iat_method=DEFAULT_IA
     iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
     return iats, -np.log(g1avg/g2avg), variances
 
-def avg_on_pmf(cv_trajs,psis,domain,z,F,g1data,g2data=None,neighbors=None,nbins=100,iat_method=None):
+def calc_avg_on_pmf(cv_trajs,psis,domain,z,F,g1data,g2data=None,neighbors=None,nbins=100,iat_method=None):
     """Estimates the asymptotic variance of an average on a pmf.
 
     Parameters
@@ -160,7 +160,6 @@ def avg_on_pmf(cv_trajs,psis,domain,z,F,g1data,g2data=None,neighbors=None,nbins=
                 inhist_d = (traj[:,d] > edge_d[hd_ndx])
                 inhist_d *= (traj[:,d] <= edge_d[hd_ndx+1])
                 inbin *= inhist_d
-#            print np.shape(inbin), np.shape(g1data[i])
             g1data_hist.append(inbin*g1data[i])
             g2data_hist.append(inbin*g2data[i])
         g1star= emus._calculate_win_avgs(psis,z,g1data_hist,neighbors,use_iter=False)
@@ -170,16 +169,12 @@ def avg_on_pmf(cv_trajs,psis,domain,z,F,g1data,g2data=None,neighbors=None,nbins=
         dBdF = np.outer(z,np.dot(gI,g1star-g1avg/g2avg*g2star))/g2avg
         dBdg1 = z/g2avg
         dBdg2 = -(g1avg/g2avg)*z/g2avg
-#        print np.shape(psis), np.shape(dBdF)
-        print np.shape(g1data), np.shape(g1data_hist)
-        print np.shape(g2data), np.shape(g2data_hist)
-#        print np.shape(dBdg1)
         iats, variances = _calculate_acovar(psis,dBdF,(g1data_hist,g2data_hist),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
         avars[index] = np.sum(variances)
         means[index] = g1avg/g2avg
     return means, avars
 
-def pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat_method=None):
+def calc_pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat_method=None):
     """Estimates the asymptotic variance of a free energy surface.
 
     Parameters
@@ -262,7 +257,7 @@ def pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat_meth
         fes[index] = -kT*np.log(g1avg/(dA*g2avg))
     return fes,avars
 
-def partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):
+def calc_partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):
     """Estimates the asymptotic variance of the partition function (normalization constant) for each window.  To get an estimate of the autocovariance of the free energy for each window, multiply the autocovariance of window :math:`i` by :math:` (k_B T / z_i)^2`.
 
     Parameters

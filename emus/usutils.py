@@ -188,7 +188,6 @@ def fxn_data_from_meta(filepath):
     nfxns = None # Placeholder value
     for i,path in enumerate(fxn_paths):
         data_i = np.loadtxt(path)
-        print i, path, nfxns, np.shape(data_i)
         if i == 0:
             nfxns = int(len(data_i[0])-1)
             print nfxns

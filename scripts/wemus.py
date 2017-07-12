@@ -8,87 +8,90 @@ from emus import emus, avar
 import argparse
 import os
 from emus._defaults import *
-
+import h5py
 
 def main():
     a = _parse_args() # Get Dictionary of Arguments
     kT = a['k_B'] * a['T']
     
     # Load data
-    psis, cv_trajs, neighbors = uu.data_from_WHAMmeta(a['meta_file'],a['n_dim'],T=a['T'], k_B=a['k_B'],period=a['period'],nsig=a['sigma'])
+    psis, cv_trajs, neighbors = uu.data_from_meta(a['meta_file'],a['n_dim'],T=a['T'], k_B=a['k_B'],period=a['period'],nsig=a['sigma'])
     if a['fxn_file'] is not None:
-        fdata = uu.data_from_fxnmeta(a['fxn_file'])
+        fdata = uu.fxn_data_from_meta(a['fxn_file'])
     else:
         fdata = None
 
     # Calculate the partition function for each window
     z, F= emus.calculate_zs(psis,neighbors=neighbors,n_iter=a['n_iter'])
     # Calculate the PMF
-    pmf = emus.calculate_pmf(cv_trajs,psis,a['domain'],z,nbins=a['nbins'],kT=kT)   
+    pmf,edges = emus.calculate_pmf(cv_trajs,psis,a['domain'],z,neighbors=neighbors,nbins=a['nbins'],kT=kT)   
 
     # Calculate any averages of functions.
     if fdata is not None:
         favgs = []
         for n, fdata_i in enumerate(fdata):
-            favgs.append(emus.calculate_obs(psis,z,fdata_i))
+            favgs.append(emus.calculate_obs(psis,z,fdata_i,neighbors=neighbors))
 
     # Perform Error analysis if requested.
     if a['error'] is not None:
         zEMUS, FEMUS= emus.calculate_zs(psis,neighbors=neighbors,n_iter=0)
-        zvars, z_contribs, z_iats = avar.partition_functions(psis,zEMUS,FEMUS,neighbors=neighbors,iat_method=a['error'])
+        zvars, z_contribs, z_iats = avar.calc_partition_functions(psis,zEMUS,FEMUS,neighbors=neighbors,iat_method=a['error'])
+        z_avg_taus = np.average(z_iats,axis=0)
+        pmf_EMUS, pmf_EMUS_avar = avar.calc_pmf(cv_trajs,psis,a['domain'],zEMUS,FEMUS,neighbors=neighbors,nbins=a['nbins'],kT=kT,iat_method=z_avg_taus)
         # Perform analysis on any provided functions.
         if fdata is not None:
             favgs_EM = []
             ferrs = []
             fcontribs = []
             nfxns = len(fdata[0][0])
-            for n in xrange(nfxns):
-                fdata_i = [fi[:,n] for fi in fdata]
-                iat, mean, variances = avar.average_ratio(psis,zEMUS,FEMUS,fdata_i,neighbors=neighbors,iat_method=a['error'])
+            for fdata_i in fdata:
+                iat, mean, variances = avar.calc_avg_ratio(psis,zEMUS,FEMUS,fdata_i,neighbors=neighbors,iat_method=a['error'])
+                print iat
                 favgs_EM.append(mean)
                 fcontribs.append(variances)
                 ferrs.append(np.sum(variances))
 
     # Save Data
-    if a['ext'] == 'txt':
-        np.savetxt(a['output']+'_pmf.txt',pmf)
-        np.savetxt(a['output']+'_z.txt',z)
-        np.savetxt(a['output']+'_F.txt',F)
-        if fdata is not None:
-            np.savetxt(a['output']+'_f.txt',favgs)
-        if a['error'] is not None:
-            np.savetxt(a['output']+'_zvars.txt',zvars)
-            if fdata is not None:
-                np.savetxt(a['output']+'_fvars.txt',ferrs)
 
-    elif a['ext'] == 'hdf5':
-        import h5py
-        f = h5py.File(a['output']+'_out.hdf5',"w")
-        # Save PMF
-        pmf_grp = f.create_group("PMF")
-        pmf_dset = pmf_grp.create_dataset("pmf",pmf.shape,dtype='f')
-        dmn_dset = pmf_grp.create_dataset("domain",np.array(a['domain']).shape,dtype='f')
-        pmf_dset[...] = pmf
-        dmn_dset[...] = np.array(a['domain'])
-        # Save partition functions
-        z_grp = f.create_group("partition_function")
-        z_dset = z_grp.create_dataset("z",z.shape,dtype='f')
-        z_dset[...] = z
-        F_dset = z_grp.create_dataset("F",F.shape,dtype='f')
-        F_dset[...] = F
+    f = h5py.File(a['output']+'_out.hdf5',"w")
+    # Save PMF
+    pmf_grp = f.create_group("PMF")
+    pmf_dset = pmf_grp.create_dataset("pmf",pmf.shape,dtype='f')
+    dmn_dset = pmf_grp.create_dataset("domain",np.array(a['domain']).shape,dtype='f')
+    pmf_dset[...] = pmf
+    dmn_dset[...] = np.array(a['domain'])
+    for ie,edg in enumerate(edges):
+        edg_dset = pmf_grp.create_dataset("edge_%d"%ie,edg.shape,dtype='f')
+        edg_dset[...] = edg
+    if a['error'] is not None:
+        pmf_EMUS_dset = pmf_grp.create_dataset("pmf_no_iter",pmf_EMUS.shape,dtype='f')
+        pmf_EMUS_dset[...] = pmf_EMUS
+        pmf_EMUS_avar_dset = pmf_grp.create_dataset("pmf_no_iter_avars",pmf_EMUS_avar.shape,dtype='f')
+        pmf_EMUS_avar_dset[...] = pmf_EMUS_avar
+
+    # Save partition functions
+    z_grp = f.create_group("partition_function")
+    z_dset = z_grp.create_dataset("z",z.shape,dtype='f')
+    z_dset[...] = z
+    F_dset = z_grp.create_dataset("F",F.shape,dtype='f')
+    F_dset[...] = F
+    if a['error'] is not None:
+        zerr_dset = z_grp.create_dataset("z_avars",np.array(zvars).shape,dtype='f')
+        zerr_dset[...] = np.array(zvars)
+        zEMUS_dset = z_grp.create_dataset("z_no_iter",zEMUS.shape,dtype='f')
+        zEMUS_dset[...] = zEMUS
+        FEMUS_dset = z_grp.create_dataset("F_no_iter",FEMUS.shape,dtype='f')
+        FEMUS_dset[...] = FEMUS
+
+    # Save function data.
+    if fdata is not None:
+        f_grp = f.create_group('function_averages')
+        f_dset = f_grp.create_dataset("f",np.shape(favgs),dtype='f')
+        f_dset[...] = np.array(favgs)
         if a['error'] is not None:
-            zerr_dset = z_grp.create_dataset("z_vars",np.array(zvars).shape,dtype='f')
-            zerr_dset[...] = np.array(zvars)
-        if fdata is not None:
-            f_grp = f.create_group('function_averages')
-            f_dset = f_grp.create_dataset("f",np.shape(favgs),dtype='f')
-            f_dset[...] = np.array(favgs)
-            if a['error'] is not None:
-                fvar_dset = f_grp.create_dataset("f_variances",np.shape(fvars),dtype='f')
-                fvar_dset[...] = ferrs
-        f.close()
-    else:
-        raise Warning('No valid output method detected.')
+            fvar_dset = f_grp.create_dataset("f_avars",np.shape(ferrs),dtype='f')
+            fvar_dset[...] = ferrs
+    f.close()
 
 
 def _parse_args():
@@ -105,11 +108,9 @@ def _parse_args():
     parser.add_argument('-T','--temperature',type=float,default=DEFAULT_T,help='Temperature of the data, default is %.4f.  Any temperature that is provided in the meta file overrides this.'% DEFAULT_T)
     parser.add_argument('-k','--boltz',type=str,help="Units for the Boltzmann constant. Default is k_B=%.4f, other choices include 'kCal' for kCal/mol and 'kJ', or a numerical value of the Boltzmann constant."% DEFAULT_K_B)
     parser.add_argument('-n','--n_iter',type=int,default=0,help="Number of iterative EMUS iterations to perform on the data set.  Note that error analysis is only for the initial iteration.")
-    parser.add_argument('-s','--sigma',type=float,default=6,help="Do not evaluate F_{ij} if window centers are more than this number of standard deviations apart.")
+    parser.add_argument('-s','--sigma',type=float,default=6,help="Do not evaluate F_{ij} if window centers are more than this number of standard deviations apart.  Default is 6.")
     parser.add_argument('-e','--error',type=str,choices=['acor','ipce','icce'],help="If given, performs error analysis on z values and any function given.  The autocorrelation time is estimated using the selected function ('acor' is recommended, although this requires separate installation of the acor package).Note: currently no error analysis is available on the PMF, due to the expense in estimating the autocorrelation time for each histogram bin.")
-    parser.add_argument('--ext',type=str,choices=['hdf5', 'txt'],default=DEFAULT_EXT,help=r"File extension for output. Default is %s; supported options are 'hdf5' and 'txt' (text output only available n_dim < 3, hdf5 requires h5py to be installed).  Note that hdf5 saves everything to one large file, whereas .txt saves to multiple named files." % DEFAULT_EXT)
-    parser.add_argument('-o','--output',help="Base string for data to output.  If extension is '.hdf5', data is saved to [output].hdf5; if extension is '.txt.', data is saved to multiple files whose names begin with [output], e.g. [output]_z.txt or [output]_fxnerrs.txt .") 
-#    parser.add_argument('-v','--verbose',typestr,help="Path to meta file containing paths to observable information.")
+    parser.add_argument('-o','--output',help="Base string for data to output.  Data is saved to [output].hdf5.  Default is the name of the meta file.") 
     args = parser.parse_args()
     newargs = {}
     ### Process the arguments
@@ -119,10 +120,7 @@ def _parse_args():
     n_dim = args.n_dim
     newargs['n_iter'] = args.n_iter
     newargs['error'] = args.error
-    newargs['ext'] = args.ext
     newargs['sigma'] = args.sigma
-    if (newargs['ext'] == 'txt') and (n_dim > 2):
-        raise ValueError('Cannot save to text if more than 3 dimensions exist.')
     newargs['output'] = args.output
     if newargs['output'] is None:
         newargs['output'] = os.path.splitext(newargs['meta_file'])[0]

@@ -23,7 +23,7 @@ psis, cv_trajs, neighbors = uu.data_from_meta(meta_file,dim,T=T,k_B=k_B,period=p
 z, F = emus.calculate_zs(psis,neighbors=neighbors) 
 
 # Calculate error in each z value from the first iteration.
-zerr, zcontribs, ztaus  = avar.partition_functions(psis,z,F,iat_method='acor')
+zerr, zcontribs, ztaus  = avar.calc_partition_functions(psis,z,F,iat_method='acor')
 
 # Calculate the PMF from EMUS
 domain = ((-180.0,180.))            # Range of dihedral angle values
@@ -40,13 +40,13 @@ iterpmf,edges = emus.calculate_pmf(cv_trajs,psis,domain,nbins=nbins,z=z_iter_1k,
 # Estimate probability of being in C7 ax basin
 fdata =  [((traj>25) & (traj<100)).flatten() for traj in cv_trajs]
 # Calculate the probability and perform error analysis.
-iat, probC7ax, probC7ax_contribs = avar.average_ratio(psis,z,F,fdata,iat_method='acor')
+iat, probC7ax, probC7ax_contribs = avar.calc_avg_ratio(psis,z,F,fdata,iat_method='acor')
 probC7ax_std = np.sqrt(np.sum(probC7ax_contribs))
 # This command just calculates the probability, without error analysis.
-#prob_C7ax = emus.calculate_obs(psis,z,fdata) # Just calculate the probability
+prob_C7ax_iter = emus.calculate_obs(psis,z_iter_1k,fdata,use_iter=True) # Just calculate the probability
 
 # Get the asymptotic error of each histogram bin.
-pmf_av_mns, pmf_avars = avar.pmf(cv_trajs,psis,domain,z,F,nbins=nbins,kT=kT,iat_method=np.average(ztaus,axis=0))
+pmf_av_mns, pmf_avars = avar.calc_pmf(cv_trajs,psis,domain,z,F,nbins=nbins,kT=kT,iat_method=np.average(ztaus,axis=0))
 
 ### Data Output Section ###
 
@@ -73,9 +73,8 @@ plt.show()
 
 # Print the C7 ax basin probability
 print "EMUS Probability of C7ax basin is %f +/- %f"% (probC7ax,probC7ax_std)
-print "Iter Probability of C7ax basin is %f +/- %f"% (probC7ax,probC7ax_std)
+print "Iterative EMUS Probability of C7ax basin is %f"% (prob_C7ax_iter)
 
-# err, taus = avar_zfe(psis,z,F,5,16)
 print "Asymptotic coefficient of variation for each partition function:"
 print np.sqrt(zerr)/z
 

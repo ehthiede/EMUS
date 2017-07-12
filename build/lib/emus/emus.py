@@ -101,13 +101,11 @@ def calculate_avg_on_pmf(cv_trajs,psis,domain,z,g1data,g2data=None,neighbors=Non
 #        xtraj_i = (xtraj_i - domain[:,0])%domainwdth + domain[:,0]
         g1_data_i = g1data[i]
         g2_data_i = g2data[i]
-        print i
         if use_iter:
             L = len(psis) # Number of windows
             nbrs_i = neighbors[i]
             z_nbr = z[nbrs_i]
             weights = 1./(z[i]*np.dot(psis[i],1./z_nbr))
-            print np.shape(weights), np.shape(g1_data_i)
             hist_g1_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=weights*g1_data_i)
             hist_g2_i,edges = np.histogramdd(xtraj_i,nbins,domain,normed=False,weights=weights*g2_data_i)
         else:
@@ -179,7 +177,6 @@ def calculate_pmf(cv_trajs, psis, domain, z,neighbors=None, nbins = 100,kT=DEFAU
         hist+=hist_i/len(xtraj_i)*z[i]
     # Calculate area of each histogram bin
     dA =  np.prod([(edg_i[1]-edg_i[0]) for edg_i in edges])
-    print dA
     pmf =-kT* np.log(hist/(dA*np.sum(hist)))
 #    pmf -= min(pmf.flatten())
 

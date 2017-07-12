@@ -1,4 +1,5 @@
 README.txt
+setup.cfg
 setup.py
 emus/__init__.py
 emus/_defaults.py
@@ -10,7 +11,6 @@ emus/usutils.py
 emus.egg-info/PKG-INFO
 emus.egg-info/SOURCES.txt
 emus.egg-info/dependency_links.txt
-emus.egg-info/pbr.json
 emus.egg-info/requires.txt
 emus.egg-info/top_level.txt
 scripts/wemus.py
