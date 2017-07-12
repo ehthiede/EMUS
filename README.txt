@@ -23,6 +23,6 @@ Copyright (c) 2017 Erik Henning Thiede, Brian Van Koten, Jonathan Weare, Aaron R
 Installation
 ------------
 
-To install, use the command setup.py `python setup.py install`
+To install, use the command `python setup.py install` or `pip install emus`
 
 
