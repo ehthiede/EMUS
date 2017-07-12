@@ -4,18 +4,17 @@ from setuptools import setup,find_packages
 
 setup(name='emus',
     version='0.9.2b1',
-    description="Tools and Methods associated with the Eigenvector Method "
-        "Umbrella Sampling (EMUS)",
+    description="Tools and Methods associated with the Eigenvector Method for Umbrella Sampling (EMUS)",
     license='GPL',
     classifiers=[
         'Development Status :: 4 - Beta',
-        'Topic :: Scientific/Engineering'
+        'Topic :: Scientific/Engineering',
+        'Programming Language :: Python :: 2.7',
         ],
-#    packages=find_packages(),
-#    package_dir=['emus'],
     packages=['emus'],
     scripts=['scripts/wemus.py'],
     install_requires=['numpy','scipy','h5py','acor'],
-#    install_requires=['numpy','scipy'],
+    url='https://github.com/ehthiede/EMUS',
+    author='Erik Henning Thiede'
 
     )
