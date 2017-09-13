@@ -13,7 +13,7 @@ import h5py
 def main():
     a = _parse_args() # Get Dictionary of Arguments
     kT = a['k_B'] * a['T']
-    
+    domain = np.reshape(a['domain'],(-1,2))
     # Load data
     psis, cv_trajs, neighbors = uu.data_from_meta(a['meta_file'],a['n_dim'],T=a['T'], k_B=a['k_B'],period=a['period'],nsig=a['sigma'])
     if a['fxn_file'] is not None:
@@ -24,7 +24,7 @@ def main():
     # Calculate the partition function for each window
     z, F= emus.calculate_zs(psis,neighbors=neighbors,n_iter=a['n_iter'])
     # Calculate the PMF
-    pmf,edges = emus.calculate_pmf(cv_trajs,psis,a['domain'],z,neighbors=neighbors,nbins=a['nbins'],kT=kT)   
+    pmf,edges = emus.calculate_pmf(cv_trajs,psis,domain,z,neighbors=neighbors,nbins=a['nbins'],kT=kT)   
 
     # Calculate any averages of functions.
     if fdata is not None:
@@ -37,7 +37,7 @@ def main():
         zEMUS, FEMUS= emus.calculate_zs(psis,neighbors=neighbors,n_iter=0)
         zvars, z_contribs, z_iats = avar.calc_partition_functions(psis,zEMUS,FEMUS,neighbors=neighbors,iat_method=a['error'])
         z_avg_taus = np.average(z_iats,axis=0)
-        pmf_EMUS, pmf_EMUS_avar = avar.calc_pmf(cv_trajs,psis,a['domain'],zEMUS,FEMUS,neighbors=neighbors,nbins=a['nbins'],kT=kT,iat_method=z_avg_taus)
+        pmf_EMUS, pmf_EMUS_avar = avar.calc_pmf(cv_trajs,psis,domain,zEMUS,FEMUS,neighbors=neighbors,nbins=a['nbins'],kT=kT,iat_method=z_avg_taus)
         # Perform analysis on any provided functions.
         if fdata is not None:
             favgs_EM = []
@@ -57,9 +57,9 @@ def main():
     # Save PMF
     pmf_grp = f.create_group("PMF")
     pmf_dset = pmf_grp.create_dataset("pmf",pmf.shape,dtype='f')
-    dmn_dset = pmf_grp.create_dataset("domain",np.array(a['domain']).shape,dtype='f')
+    dmn_dset = pmf_grp.create_dataset("domain",np.array(domain).shape,dtype='f')
     pmf_dset[...] = pmf
-    dmn_dset[...] = np.array(a['domain'])
+    dmn_dset[...] = np.array(domain)
     for ie,edg in enumerate(edges):
         edg_dset = pmf_grp.create_dataset("edge_%d"%ie,edg.shape,dtype='f')
         edg_dset[...] = edg
