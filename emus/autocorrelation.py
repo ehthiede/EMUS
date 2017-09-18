@@ -26,7 +26,7 @@ def autocorrfxn(timeseries,lagmax):
     ts -= np.average(ts) # Set to mean 0
     N = len(timeseries)
     corrfxn = np.zeros(lagmax)
-    for dt in xrange(lagmax):
+    for dt in range(lagmax):
         corrfxn[dt] = (np.dot(timeseries[0:N-dt],timeseries[dt:N])) # sum of ts[t+dt]*ts[t]
     corrfxn /= corrfxn[0] # Normalize
     return corrfxn

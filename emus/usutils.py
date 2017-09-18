@@ -115,7 +115,7 @@ def calc_harmonic_psis(cv_traj, centers, fks, kTs, period = None):
         fks = fks*np.ones(np.shape(centers))
 
     psis = np.zeros((len(cv_traj),L))
-    for j in xrange(L):
+    for j in range(L):
         psis[:,j] = _calc_harmonic_psi_ij(cv_traj,centers[j],fks[j],kTs[j],period=period)
     return psis
 
@@ -191,10 +191,10 @@ def fxn_data_from_meta(filepath):
         if i == 0:
             nfxns = int(len(data_i[0])-1)
             print nfxns
-            for n in xrange(nfxns):
+            for n in range(nfxns):
                 fxndata.append([data_i[:,(n+1)]])
         else:
-            for n in xrange(nfxns):
+            for n in range(nfxns):
                 fxndata[n].append(data_i[:,(n+1)])
 
     return fxndata
@@ -348,7 +348,7 @@ def _minimage_traj(rv,period):
     elif len(np.shape(rv)) == 2: # 2D trajectory array provided
         ndim = len(rv[0])
         if period is not None:
-            for d in xrange(ndim):
+            for d in range(ndim):
                 p = period[d]
                 if (p is not None) and (p != 0):
                     rvmin[:,d]-= p*np.rint(rvmin[:,d]/p)

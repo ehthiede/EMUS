@@ -312,11 +312,11 @@ def calc_partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):
         # Normalize psi_j(x_i^t) for all j
         psi_sum = np.sum(psi_i_arr,axis=1)
         normedpsis = np.zeros(psi_i_arr.shape) # psi_j / sum_k psi_k
-        for j in xrange(Lneighb):
+        for j in range(Lneighb):
             normedpsis[:,j] = psi_i_arr[:,j]/psi_sum
 
         # Calculate contribution to as. err. for each z_k
-        for k in xrange(L):
+        for k in range(L):
             dzkdFij = dzdFij[:,:,k]
             err_t_series = np.dot(normedpsis,dzkdFij[i][neighbors[i]])
             if iat_routine is not None:

@@ -217,7 +217,7 @@ def calculate_zs(psis,neighbors=None,n_iter=0,tol=DEFAULT_ITER_TOL,use_iats=Fals
         iats = np.ones(z.shape)
 
     # we perform the self-consistent polishing iteration
-    for n in xrange(n_iter):
+    for n in range(n_iter):
         z_old = z
         Apart = Npnts/z_old
         Amat = np.outer(np.ones(L),Apart)
@@ -275,7 +275,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats = False,iat_method=D
     if neighbors is None:
         neighbors = np.outer(np.ones(L),range(L)).astype(int)
         
-    for i in xrange(L):
+    for i in range(L):
         nbrs_i = neighbors[i]
         A_nbs = Avals[i][nbrs_i]
         nbr_index = list(nbrs_i).index(i)
@@ -326,7 +326,7 @@ def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
     denom = np.dot(psi_i,Avals_i) 
     if return_trajs:
         trajs = np.zeros(psi_i.shape)
-    for j in xrange(L):
+    for j in range(L):
         Ftraj = psi_i[:,j]/denom # traj \psi_j/{\sum_k \psi_k A_k}
         Fi[j] = np.average(Ftraj)
         Fi[j] *= Avals_i[i]
