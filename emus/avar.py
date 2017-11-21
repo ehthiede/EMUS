@@ -232,6 +232,7 @@ def calc_pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat
     fes = np.zeros(nbins)
     avars = np.zeros(nbins)
     # Iterate over histogram_bins.
+    print 'starting_loop'
     for index,aval in np.ndenumerate(avars):
         # Find part of trajectory inside the histogram bin.
         g1data = []
@@ -255,6 +256,7 @@ def calc_pmf(cv_trajs,psis,domain,z,F,neighbors=None,nbins=100,kT=DEFAULT_KT,iat
         iats, variances = _calculate_acovar(psis,dBdF,(g1data,g2data),(dBdg1,dBdg2),neighbors=neighbors,iat_method=iat_method)
         avars[index] = np.sum(variances)*(kT**2)
         fes[index] = -kT*np.log(g1avg/(dA*g2avg))
+        print index, fes[index], avars[index]
     return fes,avars
 
 def calc_partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):
@@ -289,7 +291,7 @@ def calc_partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):
         iat_routine = ac._get_iat_method(iat_method)
     else: # Try to interpret iat_method as a collection of numbers
         try:
-            iats = np.array([float(v) for v in iatmethod])
+            iats = np.array([float(v) for v in iat_method])
         except (ValueError, TypeError) as err:
             err.message = "Was unable to interpret the input provided as a method to calculate the autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " + err.message
         iat_routine = None
