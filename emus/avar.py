@@ -289,7 +289,7 @@ def calc_partition_functions(psis,z,F,neighbors=None,iat_method=DEFAULT_IAT):
         iat_routine = ac._get_iat_method(iat_method)
     else: # Try to interpret iat_method as a collection of numbers
         try:
-            iats = np.array([float(v) for v in iatmethod])
+            iats = np.array([float(v) for v in iat_method])
         except (ValueError, TypeError) as err:
             err.message = "Was unable to interpret the input provided as a method to calculate the autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " + err.message
         iat_routine = None
