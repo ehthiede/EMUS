@@ -39,11 +39,16 @@ iterpmf,edges = emus.calculate_pmf(cv_trajs,psis,domain,nbins=nbins,z=z_iter_1k,
 
 # Estimate probability of being in C7 ax basin
 fdata =  [((traj>25) & (traj<100)).flatten() for traj in cv_trajs]
+print np.shape(fdata)
 # Calculate the probability and perform error analysis.
 iat, probC7ax, probC7ax_contribs = avar.calc_avg_ratio(psis,z,F,fdata,iat_method='acor')
 probC7ax_std = np.sqrt(np.sum(probC7ax_contribs))
 # This command just calculates the probability, without error analysis.
 prob_C7ax_iter = emus.calculate_obs(psis,z_iter_1k,fdata,use_iter=True) # Just calculate the probability
+avg_pmf,edges = emus.calculate_avg_on_pmf(cv_trajs,psis,(-180,180),z_iter_1k,fdata,use_iter=True) # Just calculate the probability
+plt.plot(avg_pmf)
+plt.show()
+
 
 # Get the asymptotic error of each histogram bin.
 pmf_av_mns, pmf_avars = avar.calc_pmf(cv_trajs,psis,domain,z,F,nbins=nbins,kT=kT,iat_method=np.average(ztaus,axis=0))
