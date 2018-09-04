@@ -6,7 +6,8 @@ The ipce and icce routines are implementations of the initial positive correlati
 """
 import numpy as np
 
-def autocorrfxn(timeseries,lagmax):
+
+def autocorrfxn(timeseries, lagmax):
     """ Calculates the autocorrelation function of a timeseries up to lagmax.
 
     Parameters
@@ -15,7 +16,7 @@ def autocorrfxn(timeseries,lagmax):
         The time series of which to calculate the autocorrelation function.
     lagmax : int
         The maximum change in time to which to calculate the autocorrelation function.
-    
+
     Returns
     -------
     corrfxn : ndarray
@@ -23,16 +24,18 @@ def autocorrfxn(timeseries,lagmax):
 
     """
     ts = np.asarray(timeseries)
-    ts -= np.average(ts) # Set to mean 0
+    ts -= np.average(ts)  # Set to mean 0
     N = len(timeseries)
     corrfxn = np.zeros(lagmax)
-    for dt in xrange(lagmax):
-        corrfxn[dt] = (np.dot(timeseries[0:N-dt],timeseries[dt:N])) # sum of ts[t+dt]*ts[t]
-    corrfxn /= corrfxn[0] # Normalize
+    for dt in range(lagmax):
+        # sum of ts[t+dt]*ts[t]
+        corrfxn[dt] = (np.dot(timeseries[0:N-dt], timeseries[dt:N]))
+    corrfxn /= corrfxn[0]  # Normalize
     return corrfxn
 
-def ipce(timeseries,lagmax=None):
-    """ The initial positive correlation time estimator for the autocorrelation time, as proposed by Geyer. 
+
+def ipce(timeseries, lagmax=None):
+    """ The initial positive correlation time estimator for the autocorrelation time, as proposed by Geyer.
 
     Parameters
     ----------
@@ -53,35 +56,37 @@ def ipce(timeseries,lagmax=None):
     """
     timeseries = np.copy(timeseries)
     mean = np.average(timeseries)
-    if lagmax == None:
+    if lagmax is None:
         lagmax = len(timeseries)/2
-    corrfxn = autocorrfxn(timeseries,lagmax)
+    corrfxn = autocorrfxn(timeseries, lagmax)
     i = 0
     t = 0
     while i < 0.5*lagmax:
-        gamma =  corrfxn[2*i] + corrfxn[2*i+1]
+        gamma = corrfxn[2*i] + corrfxn[2*i+1]
         if gamma < 0.0:
-#            print 'stop at ',2*i
+            #            print 'stop at ',2*i
             break
         else:
-            t += gamma 
+            t += gamma
         i += 1
     tau = 2*t - 1
     var = np.var(timeseries)
     sigma = np.sqrt(var * tau / len(timeseries))
     return tau, mean, sigma
 
-def _cte(timeseries,maxcorr):
+
+def _cte(timeseries, maxcorr):
     timeseries = np.copy(timeseries)
     mean = np.average(timeseries)
-    corrfxn = autocorrfxn(timeseries,maxcorr)
+    corrfxn = autocorrfxn(timeseries, maxcorr)
     tau = 2*np.sum(corrfxn)-1
     var = np.var(timeseries)
     sigma = np.sqrt(var * tau / len(timeseries))
     return tau, mean, sigma
-    
-def icce(timeseries,lagmax=None):
-    """The initial convex correlation time estimator for the autocorrelation time, as proposed by Geyer.  
+
+
+def icce(timeseries, lagmax=None):
+    """The initial convex correlation time estimator for the autocorrelation time, as proposed by Geyer.
 
     Parameters
     ----------
@@ -101,19 +106,19 @@ def icce(timeseries,lagmax=None):
 
     """
     timeseries = np.copy(timeseries)
-    if lagmax == None:
+    if lagmax is None:
         lagmax = len(timeseries)/2
-    corrfxn = autocorrfxn(timeseries,lagmax)
+    corrfxn = autocorrfxn(timeseries, lagmax)
     t = corrfxn[0] + corrfxn[1]
     i = 1
     gammapast = t
     gamma = corrfxn[2*i] = corrfxn[2*i+1]
     while i < 0.5*lagmax-2:
-        gammafuture =  corrfxn[2*i+2] + corrfxn[2*i+3]
-        if gamma > 0.5*(gammapast+gammafuture) :
+        gammafuture = corrfxn[2*i+2] + corrfxn[2*i+3]
+        if gamma > 0.5*(gammapast+gammafuture):
             break
         else:
-            t += gamma 
+            t += gamma
             gammapast = gamma
             gamma = gammafuture
         i += 1
@@ -123,6 +128,7 @@ def icce(timeseries,lagmax=None):
     sigma = np.sqrt(var * tau / len(timeseries))
     return tau, mean, sigma
 
+
 def _get_iat_method(iatmethod):
     """Control routine for selecting the method used to calculate integrated
     autocorrelation times (iat)
@@ -131,14 +137,14 @@ def _get_iat_method(iatmethod):
     ----------
     iat_method : string, optional
         Routine to use for calculating said iats.  Accepts 'ipce', 'acor', and 'icce'.
-    
+
     Returns
     -------
     iatroutine : function
         The function to be called to estimate the integrated autocorrelation time.
 
     """
-    if iatmethod=='acor':
+    if iatmethod == 'acor':
         from acor import acor
         iatroutine = acor
     elif iatmethod == 'ipce':
