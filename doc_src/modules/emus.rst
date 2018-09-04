@@ -1,7 +1,7 @@
 emus module
 ===========
 
-.. automodule:: emus
+.. automodule:: emus.emus
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,7 +1,7 @@
 linalg module
 =============
 
-.. automodule:: linalg
+.. automodule:: emus.linalg
     :members:
     :undoc-members:
     :show-inheritance:

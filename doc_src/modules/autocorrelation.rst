@@ -1,7 +1,7 @@
 autocorrelation module
 ======================
 
-.. automodule:: autocorrelation
+.. automodule:: emus.autocorrelation
     :members:
     :undoc-members:
     :show-inheritance:
