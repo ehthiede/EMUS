@@ -129,7 +129,7 @@ def icce(timeseries, lagmax=None):
     return tau, mean, sigma
 
 
-def _get_iat_method(iatmethod):
+def _get_iat_method(iat_method):
     """Control routine for selecting the method used to calculate integrated
     autocorrelation times (iat)
 
@@ -144,13 +144,13 @@ def _get_iat_method(iatmethod):
         The function to be called to estimate the integrated autocorrelation time.
 
     """
-    if iatmethod == 'acor':
+    if iat_method == 'acor':
         from acor import acor
         iatroutine = acor
-    elif iatmethod == 'ipce':
+    elif iat_method == 'ipce':
         from autocorrelation import ipce
         iatroutine = ipce
-    elif iatmethod == 'icce':
+    elif iat_method == 'icce':
         from autocorrelation import icce
         iatroutine = icce
     else:
