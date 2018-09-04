@@ -2,15 +2,12 @@
 Eigenvector Method of Umbrella Sampling (EMUS).
 
 """
+from __future__ import absolute_import
+
+# Set explicit packages
+from . import autocorrelation, avar, emus, linalg, usutils
 
 __author__ = "Erik Henning Thiede"
-__license__ = "GPL"
+__license__ = "LGPL"
 __maintainer__ = "Erik Henning Thiede"
 __email__ = "thiede@uchicago.edu"
-
-import autocorrelation
-import avar
-import emus
-import linalg
-import usutils
-
