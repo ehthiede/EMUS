@@ -54,7 +54,7 @@ avg_pmf, edges = emus.calculate_avg_on_pmf(
     cv_trajs, psis, (-180, 180), z_iter_1k, fdata, use_iter=True, nbins=nbins)  # Just calculate the probability
 plt.plot(avg_pmf)
 plt.xlabel('Dihedral Angle')
-plt.ylabel('State Probability')
+plt.ylabel('Avg of Indicator on PMF')
 plt.show()
 
 
@@ -67,7 +67,6 @@ pmf_av_mns, pmf_avars = avar.calc_pmf(
 # Plot the EMUS, Iterative EMUS pmfs.
 pmf_centers = (edges[0][1:]+edges[0][:-1])/2.
 plt.figure()
-print(pmf_avars.shape, pmf_av_mns.shape, pmf_centers.shape)
 plt.errorbar(pmf_centers, pmf_av_mns, yerr=np.sqrt(
     pmf_avars), label='EMUS PMF w. AVAR')
 plt.plot(pmf_centers, iterpmf, label='Iter EMUS PMF')
