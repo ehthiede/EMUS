@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
+from glob import glob
+from os.path import basename, splitext
 
 setup(name='emus',
       version='0.9.3b',
@@ -10,8 +12,12 @@ setup(name='emus',
           'Development Status :: 4 - Beta',
           'Topic :: Scientific/Engineering',
           'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3.6',
       ],
-      packages=['emus'],
+      # packages=['emus'],
+      packages=find_packages('src'),
+      package_dir={'': 'src'},
+      py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
       scripts=['scripts/wemus.py'],
       install_requires=['numpy', 'scipy', 'h5py', 'acor'],
       url='https://github.com/ehthiede/EMUS',
