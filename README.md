@@ -14,8 +14,14 @@ We are currently working on hosting the documentation online; this README
 will be updated with a link once that is accomplished.
 
 If you are using this code, please also cite the EMUS paper, which can be
-found on [arxiv](http://arxiv.org/abs/1603.04505/) or the [Journal of Chemical
+found at [Journal of Chemical
 Physics](http://aip.scitation.org/doi/abs/10.1063/1.4960649?journalCode=jcp).
+
+The code is released under the LGPL license.  
+If this poses a problem for your use, please contact the developer.
+The package also makes use of some code from the emcee python package, 
+which was released under the MIT license.  
+This license is therefore included as well.
 
 Copyright (c) 2017 Erik Henning Thiede, Brian Van Koten, Jonathan Weare, Aaron R. Dinner.
 
