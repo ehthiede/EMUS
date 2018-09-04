@@ -23,6 +23,6 @@ Copyright (c) 2017 Erik Henning Thiede, Brian Van Koten, Jonathan Weare, Aaron R
 Installation
 ------------
 
-To install from the code, use the command `python setup.py install` or `pip install -e .`.  You can also install from thp python repository `pip install emus`, however that repository is not quite current as of now.
+To install from the code, use the command `python setup.py install` or `pip install -e .`.  You can also install from the python repository `pip install emus`.
 
 
