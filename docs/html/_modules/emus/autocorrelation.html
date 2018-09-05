@@ -1,0 +1,445 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>emus.autocorrelation &mdash; emus  documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="emus  documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> emus</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#calculating-averages">Calculating Averages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../datastructures.html#common-data-structures">Common data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">EMUS Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/autocorrelation.html">autocorrelation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/avar.html">avar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/emus.html">emus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/linalg.html">linalg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/usutils.html">usutils module</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">emus</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>emus.autocorrelation</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <h1>Source code for emus.autocorrelation</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot; Tools for analyzing the autocorrelation time of a time series.</span>
+
+<span class="sd">The ipce and icce routines are implementations of the initial positive correlation time estimator, and the initial convex correlation estimator proposed by Geyer [1]_.</span>
+<span class="sd">The acor algorithm was proposed by Sokal [2]_.  The associated code, as well as the code for constructiing autocorrelation functions is taken from the emcee package [3]_.</span>
+
+<span class="sd">.. [1] C.J. Geyer. Statistical Science (1992): 473-483.</span>
+<span class="sd">.. [2] A. Sokal, Functional Integration. Spring, Boston, MA, 1997. 131-192.</span>
+<span class="sd">.. [3] D. Foreman-Mackey, D.W. Hogg, D. Lang, and J. Goodman. Publications of the Astronomical Society of the Pacific 125.925 (2013): 306.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+
+<span class="k">def</span> <span class="nf">_next_pow_two</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the next power of two greater than or equal to `n`&quot;&quot;&quot;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">i</span>
+
+
+<span class="k">def</span> <span class="nf">_auto_window</span><span class="p">(</span><span class="n">taus</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">taus</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">c</span> <span class="o">*</span> <span class="n">taus</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">taus</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+
+<div class="viewcode-block" id="autocorrfxn"><a class="viewcode-back" href="../../modules/autocorrelation.html#emus.autocorrelation.autocorrfxn">[docs]</a><span class="k">def</span> <span class="nf">autocorrfxn</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Estimate the normalized autocorrelation function of a 1-D series</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        The time series of which to calculate the autocorrelation function.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    acfxn : ndarray</span>
+<span class="sd">        The autocorrelation as a function of lag time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;invalid dimensions for 1D autocorrelation function&quot;</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">_next_pow_two</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+    <span class="c1"># Compute the FFT and then (from that) the auto-correlation function</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">acf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">f</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">f</span><span class="p">))[:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">acf</span> <span class="o">/=</span> <span class="n">acf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">acf</span></div>
+
+
+<div class="viewcode-block" id="ipce"><a class="viewcode-back" href="../../modules/autocorrelation.html#emus.autocorrelation.ipce">[docs]</a><span class="k">def</span> <span class="nf">ipce</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The initial positive correlation time estimator for the autocorrelation time, as proposed by Geyer.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        The time series of which to calculate the autocorrelation function.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tau : float</span>
+<span class="sd">        Estimate of the autocorrelation time.</span>
+<span class="sd">    mean : float</span>
+<span class="sd">        Average value of x</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        Estimate of the square root of the autocovariance of x</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">corrfxn</span> <span class="o">=</span> <span class="n">autocorrfxn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">lagmax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">lagmax</span><span class="p">:</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="n">corrfxn</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">corrfxn</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">gamma</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="c1">#            print &#39;stop at &#39;,2*i</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">+=</span> <span class="n">gamma</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span> <span class="o">*</span> <span class="n">tau</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">tau</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">sigma</span></div>
+
+
+<div class="viewcode-block" id="integrated_time"><a class="viewcode-back" href="../../modules/autocorrelation.html#emus.autocorrelation.integrated_time">[docs]</a><span class="k">def</span> <span class="nf">integrated_time</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Estimate the integrated autocorrelation time of a time series.</span>
+<span class="sd">    This estimate uses the iterative procedure described on page 16 of</span>
+<span class="sd">    `Sokal&#39;s notes &lt;http://www.stat.unc.edu/faculty/cji/Sokal.pdf&gt;`_ to</span>
+<span class="sd">    determine a reasonable window size.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        The time series of which to calculate the autocorrelation function.</span>
+<span class="sd">    c : float</span>
+<span class="sd">        The step size for the window search. Default is 5.</span>
+<span class="sd">    tol : int</span>
+<span class="sd">        The minimum number of autocorrelation times needed to trust the estimate. Default is 50.</span>
+<span class="sd">    quiet : bool, optional</span>
+<span class="sd">        This argument controls the behavior when the chain is too short. If True, gives a warning instead of raising an error.  Default is True</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tau : float</span>
+<span class="sd">        Estimate of the autocorrelation time.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">        ValueError: If the autocorrelation time can&#39;t be reliably estimated</span>
+<span class="sd">            from the chain and ``quiet`` is ``False``. This normally means</span>
+<span class="sd">            that the chain is too short.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;invalid dimensions&quot;</span><span class="p">)</span>
+
+    <span class="n">n_t</span><span class="p">,</span> <span class="n">n_w</span><span class="p">,</span> <span class="n">n_d</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">tau_est</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_d</span><span class="p">)</span>
+    <span class="n">windows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_d</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="c1"># Loop over parameters</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_d</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_t</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_w</span><span class="p">):</span>
+            <span class="n">f</span> <span class="o">+=</span> <span class="n">autocorrfxn</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
+        <span class="n">f</span> <span class="o">/=</span> <span class="n">n_w</span>
+        <span class="n">taus</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">-</span><span class="mf">1.0</span>
+        <span class="n">windows</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">_auto_window</span><span class="p">(</span><span class="n">taus</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="n">tau_est</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">taus</span><span class="p">[</span><span class="n">windows</span><span class="p">[</span><span class="n">d</span><span class="p">]]</span>
+
+    <span class="c1"># Check convergence</span>
+    <span class="n">flag</span> <span class="o">=</span> <span class="n">tol</span> <span class="o">*</span> <span class="n">tau_est</span> <span class="o">&gt;</span> <span class="n">n_t</span>
+
+    <span class="c1"># Warn or raise in the case of non-convergence</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">flag</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;The chain is shorter than </span><span class="si">{0}</span><span class="s2"> times the integrated &quot;</span>
+            <span class="s2">&quot;autocorrelation time for </span><span class="si">{1}</span><span class="s2"> parameter(s). Use this estimate &quot;</span>
+            <span class="s2">&quot;with caution and run a longer chain!</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tol</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">flag</span><span class="p">))</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;N/</span><span class="si">{0}</span><span class="s2"> = </span><span class="si">{1:.0f}</span><span class="s2">;</span><span class="se">\n</span><span class="s2">tau: </span><span class="si">{2}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tol</span><span class="p">,</span> <span class="n">n_t</span><span class="o">/</span><span class="n">tol</span><span class="p">,</span> <span class="n">tau_est</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tau_est</span></div>
+
+
+<div class="viewcode-block" id="acor"><a class="viewcode-back" href="../../modules/autocorrelation.html#emus.autocorrelation.acor">[docs]</a><span class="k">def</span> <span class="nf">acor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Acor algorithm, as proposed by Sokal and implemented in EMCEE.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        The time series of which to calculate the autocorrelation function.</span>
+<span class="sd">    tol : int, optional</span>
+<span class="sd">        The minimum number of autocorrelation times needed to trust the estimate.  Default is 10.</span>
+<span class="sd">    quiet : bool, optional</span>
+<span class="sd">        This argument controls the behavior when the chain is too short. If True, gives a warning instead of raising an error.  Default is True</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tau : float</span>
+<span class="sd">        Estimate of the autocorrelation time.</span>
+<span class="sd">    mean : float</span>
+<span class="sd">        Average value of x</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        Estimate of the square root of the autocovariance of x</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">integrated_time</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">quiet</span><span class="p">)</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span> <span class="o">*</span> <span class="n">tau</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">tau</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">sigma</span></div>
+
+
+<div class="viewcode-block" id="icce"><a class="viewcode-back" href="../../modules/autocorrelation.html#emus.autocorrelation.icce">[docs]</a><span class="k">def</span> <span class="nf">icce</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The initial convex correlation time estimator for the autocorrelation time, as proposed by Geyer.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        The time series of which to calculate the autocorrelation function.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tau : float</span>
+<span class="sd">        Estimate of the autocorrelation time.</span>
+<span class="sd">    mean : float</span>
+<span class="sd">        Average value of x</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        Estimate of the square root of the autocovariance of x</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">lagmax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">corrfxn</span> <span class="o">=</span> <span class="n">autocorrfxn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">corrfxn</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">corrfxn</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">gammapast</span> <span class="o">=</span> <span class="n">t</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">corrfxn</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">corrfxn</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">lagmax</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">gammafuture</span> <span class="o">=</span> <span class="n">corrfxn</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">corrfxn</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">gamma</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">gammapast</span><span class="o">+</span><span class="n">gammafuture</span><span class="p">):</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">+=</span> <span class="n">gamma</span>
+            <span class="n">gammapast</span> <span class="o">=</span> <span class="n">gamma</span>
+            <span class="n">gamma</span> <span class="o">=</span> <span class="n">gammafuture</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span> <span class="o">*</span> <span class="n">tau</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">tau</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">sigma</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_iat_method</span><span class="p">(</span><span class="n">iat_method</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Control routine for selecting the method used to calculate integrated</span>
+<span class="sd">    autocorrelation times (iat)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    iat_method : string, optional</span>
+<span class="sd">        Routine to use for calculating said iats.  Accepts &#39;ipce&#39;, &#39;acor&#39;, and &#39;icce&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    iatroutine : function</span>
+<span class="sd">        The function to be called to estimate the integrated autocorrelation time.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">iat_method</span> <span class="o">==</span> <span class="s1">&#39;acor&#39;</span><span class="p">:</span>
+        <span class="c1"># from autocorrelation import acor</span>
+        <span class="n">iatroutine</span> <span class="o">=</span> <span class="n">acor</span>
+    <span class="k">elif</span> <span class="n">iat_method</span> <span class="o">==</span> <span class="s1">&#39;ipce&#39;</span><span class="p">:</span>
+        <span class="c1"># from autocorrelation import ipce</span>
+        <span class="n">iatroutine</span> <span class="o">=</span> <span class="n">ipce</span>
+    <span class="k">elif</span> <span class="n">iat_method</span> <span class="o">==</span> <span class="s1">&#39;icce&#39;</span><span class="p">:</span>
+        <span class="c1"># from autocorrelation import icce</span>
+        <span class="n">iatroutine</span> <span class="o">=</span> <span class="n">icce</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Method for calculation iat not recognized.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">iatroutine</span>
+</pre></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Erik H Thiede.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

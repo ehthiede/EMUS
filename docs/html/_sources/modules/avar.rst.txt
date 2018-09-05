@@ -1,7 +1,7 @@
 avar module
 ===========
 
-.. automodule:: avar
+.. automodule:: emus.avar
     :members:
     :undoc-members:
     :show-inheritance:

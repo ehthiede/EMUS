@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Tools for analyzing the autocorrelation time of a time series.
 
-The ipce and icce routines are implementations of the initial positive correlation time estimator, and the initial convex correlation estimator proposed by Geyer[1]_.
-The acor algorithm was proposed by Sokal[2]_.  The associated code, as well as the code for constructiing autocorrelation functions is taken from the emcee package[3]_.
+The ipce and icce routines are implementations of the initial positive correlation time estimator, and the initial convex correlation estimator proposed by Geyer [1]_.
+The acor algorithm was proposed by Sokal [2]_.  The associated code, as well as the code for constructiing autocorrelation functions is taken from the emcee package [3]_.
 
 .. [1] C.J. Geyer. Statistical Science (1992): 473-483.
 .. [2] A. Sokal, Functional Integration. Spring, Boston, MA, 1997. 131-192.

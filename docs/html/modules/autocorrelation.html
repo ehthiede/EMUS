@@ -5,7 +5,6 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>autocorrelation module &mdash; emus  documentation</title>
@@ -15,6 +14,7 @@
   
 
   
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -30,13 +30,16 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="emus  documentation" href="../index.html"/>
         <link rel="up" title="EMUS Modules" href="index.html"/>
         <link rel="next" title="avar module" href="avar.html"/>
         <link rel="prev" title="EMUS Modules" href="index.html"/> 
 
   
-  <script src="../_static/js/modernizr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 
 </head>
 
@@ -46,23 +49,11 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
-            <a href="../index.html" class="icon icon-home"> emus
-          
-
-          
-          </a>
-
-          
-            
-            
-          
-
-          
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> emus</a>
+        
+        
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -70,20 +61,32 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
+      </div>
 
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
           
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-            
-            
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-averages">Calculating Averages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">EMUS Modules</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">autocorrelation module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">autocorrelation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="avar.html">avar module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="emus.html">emus module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linalg.html">linalg module</a></li>
@@ -92,10 +95,10 @@
 </li>
 </ul>
 
-            
           
-        </div>
+        
       </div>
+      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -110,13 +113,7 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
@@ -125,43 +122,75 @@
     <li>autocorrelation module</li>
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/modules/autocorrelation.txt" rel="nofollow"> View page source</a>
-          
+          <a href="../_sources/modules/autocorrelation.rst.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+          <div role="main" class="document">
             
-  <div class="section" id="module-autocorrelation">
-<span id="autocorrelation-module"></span><h1>autocorrelation module<a class="headerlink" href="#module-autocorrelation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-emus.autocorrelation">
+<span id="autocorrelation-module"></span><h1>autocorrelation module<a class="headerlink" href="#module-emus.autocorrelation" title="Permalink to this headline">¶</a></h1>
 <p>Tools for analyzing the autocorrelation time of a time series.</p>
-<p>The ipce and icce routines are implementations of the initial positive correlation time estimator, and the initial convex correlation estimator proposed by Geyer (see Geyer, Statist. Sci., <strong>7</strong> 4, (1992), p. 473).</p>
+<p>The ipce and icce routines are implementations of the initial positive correlation time estimator, and the initial convex correlation estimator proposed by Geyer <a class="reference internal" href="#r4205500c583b-1" id="id1">[R4205500c583b-1]</a>.
+The acor algorithm was proposed by Sokal <a class="reference internal" href="#r4205500c583b-2" id="id2">[R4205500c583b-2]</a>.  The associated code, as well as the code for constructiing autocorrelation functions is taken from the emcee package <a class="reference internal" href="#r4205500c583b-3" id="id3">[R4205500c583b-3]</a>.</p>
+<table class="docutils citation" frame="void" id="r4205500c583b-1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[R4205500c583b-1]</a></td><td>C.J. Geyer. Statistical Science (1992): 473-483.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="r4205500c583b-2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[R4205500c583b-2]</a></td><td><ol class="first last upperalpha simple">
+<li>Sokal, Functional Integration. Spring, Boston, MA, 1997. 131-192.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="r4205500c583b-3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[R4205500c583b-3]</a></td><td><ol class="first last upperalpha simple" start="4">
+<li>Foreman-Mackey, D.W. Hogg, D. Lang, and J. Goodman. Publications of the Astronomical Society of the Pacific 125.925 (2013): 306.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
 <dl class="function">
-<dt id="autocorrelation.autocorrfxn">
-<code class="descclassname">autocorrelation.</code><code class="descname">autocorrfxn</code><span class="sig-paren">(</span><em>timeseries</em>, <em>lagmax</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autocorrelation.html#autocorrfxn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#autocorrelation.autocorrfxn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the autocorrelation function of a timeseries up to lagmax.</p>
+<dt id="emus.autocorrelation.acor">
+<code class="descclassname">emus.autocorrelation.</code><code class="descname">acor</code><span class="sig-paren">(</span><em>x</em>, <em>tol=10</em>, <em>quiet=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/autocorrelation.html#acor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.autocorrelation.acor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acor algorithm, as proposed by Sokal and implemented in EMCEE.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>timeseries</strong> : ndarray</p>
-<blockquote>
-<div><p>The time series of which to calculate the autocorrelation function.</p>
-</div></blockquote>
-<p><strong>lagmax</strong> : int</p>
-<blockquote>
-<div><p>The maximum change in time to which to calculate the autocorrelation function.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>x</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd><p class="first last">The time series of which to calculate the autocorrelation function.</p>
+</dd>
+<dt><strong>tol</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
+<dd><p class="first last">The minimum number of autocorrelation times needed to trust the estimate.  Default is 10.</p>
+</dd>
+<dt><strong>quiet</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">This argument controls the behavior when the chain is too short. If True, gives a warning instead of raising an error.  Default is True</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>corrfxn</strong> : ndarray</p>
-<blockquote class="last">
-<div><p>The value of the autocorrelation function for each value of the change in time.</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>tau</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Estimate of the autocorrelation time.</p>
+</dd>
+<dt><strong>mean</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Average value of x</p>
+</dd>
+<dt><strong>sigma</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Estimate of the square root of the autocovariance of x</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -169,35 +198,57 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="autocorrelation.icce">
-<code class="descclassname">autocorrelation.</code><code class="descname">icce</code><span class="sig-paren">(</span><em>timeseries</em>, <em>lagmax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autocorrelation.html#icce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#autocorrelation.icce" title="Permalink to this definition">¶</a></dt>
+<dt id="emus.autocorrelation.autocorrfxn">
+<code class="descclassname">emus.autocorrelation.</code><code class="descname">autocorrfxn</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/autocorrelation.html#autocorrfxn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.autocorrelation.autocorrfxn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate the normalized autocorrelation function of a 1-D series</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>x</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd><p class="first last">The time series of which to calculate the autocorrelation function.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>acfxn</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd><p class="first last">The autocorrelation as a function of lag time.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.autocorrelation.icce">
+<code class="descclassname">emus.autocorrelation.</code><code class="descname">icce</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/autocorrelation.html#icce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.autocorrelation.icce" title="Permalink to this definition">¶</a></dt>
 <dd><p>The initial convex correlation time estimator for the autocorrelation time, as proposed by Geyer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>timeseries</strong> : ndarray</p>
-<blockquote>
-<div><p>The time series of which to calculate the autocorrelation function.</p>
-</div></blockquote>
-<p><strong>lagmax</strong> : int</p>
-<blockquote>
-<div><p>The maximum change in time to which to calculate the autocorrelation function.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>x</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd><p class="first last">The time series of which to calculate the autocorrelation function.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>tau</strong> : float</p>
-<blockquote>
-<div><p>Estimate of the autocorrelation time.</p>
-</div></blockquote>
-<p><strong>mean</strong> : float</p>
-<blockquote>
-<div><p>Average value of the timeseries</p>
-</div></blockquote>
-<p><strong>sigma</strong> : float</p>
-<blockquote class="last">
-<div><p>Estimate of the square root of the autocovariance of the timeseries</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>tau</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Estimate of the autocorrelation time.</p>
+</dd>
+<dt><strong>mean</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Average value of x</p>
+</dd>
+<dt><strong>sigma</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Estimate of the square root of the autocovariance of x</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -205,35 +256,77 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="autocorrelation.ipce">
-<code class="descclassname">autocorrelation.</code><code class="descname">ipce</code><span class="sig-paren">(</span><em>timeseries</em>, <em>lagmax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/autocorrelation.html#ipce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#autocorrelation.ipce" title="Permalink to this definition">¶</a></dt>
+<dt id="emus.autocorrelation.integrated_time">
+<code class="descclassname">emus.autocorrelation.</code><code class="descname">integrated_time</code><span class="sig-paren">(</span><em>x</em>, <em>c=5</em>, <em>tol=50</em>, <em>quiet=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/autocorrelation.html#integrated_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.autocorrelation.integrated_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate the integrated autocorrelation time of a time series.
+This estimate uses the iterative procedure described on page 16 of
+<a class="reference external" href="http://www.stat.unc.edu/faculty/cji/Sokal.pdf">Sokal’s notes</a> to
+determine a reasonable window size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>x</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd><p class="first last">The time series of which to calculate the autocorrelation function.</p>
+</dd>
+<dt><strong>c</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">The step size for the window search. Default is 5.</p>
+</dd>
+<dt><strong>tol</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">The minimum number of autocorrelation times needed to trust the estimate. Default is 50.</p>
+</dd>
+<dt><strong>quiet</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">This argument controls the behavior when the chain is too short. If True, gives a warning instead of raising an error.  Default is True</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>tau</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Estimate of the autocorrelation time.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>ValueError: If the autocorrelation time can’t be reliably estimated</strong></dt>
+<dd><p class="first last">from the chain and <code class="docutils literal notranslate"><span class="pre">quiet</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>. This normally means
+that the chain is too short.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.autocorrelation.ipce">
+<code class="descclassname">emus.autocorrelation.</code><code class="descname">ipce</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/autocorrelation.html#ipce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.autocorrelation.ipce" title="Permalink to this definition">¶</a></dt>
 <dd><p>The initial positive correlation time estimator for the autocorrelation time, as proposed by Geyer.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>timeseries</strong> : ndarray</p>
-<blockquote>
-<div><p>The time series of which to calculate the autocorrelation function.</p>
-</div></blockquote>
-<p><strong>lagmax</strong> : int</p>
-<blockquote>
-<div><p>The maximum change in time to which to calculate the autocorrelation function.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>x</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd><p class="first last">The time series of which to calculate the autocorrelation function.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>tau</strong> : float</p>
-<blockquote>
-<div><p>Estimate of the autocorrelation time.</p>
-</div></blockquote>
-<p><strong>mean</strong> : float</p>
-<blockquote>
-<div><p>Average value of the timeseries</p>
-</div></blockquote>
-<p><strong>sigma</strong> : float</p>
-<blockquote class="last">
-<div><p>Estimate of the square root of the autocovariance of the timeseries</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>tau</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Estimate of the autocorrelation time.</p>
+</dd>
+<dt><strong>mean</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Average value of x</p>
+</dd>
+<dt><strong>sigma</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Estimate of the square root of the autocovariance of x</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -243,16 +336,15 @@
 </div>
 
 
-           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="avar.html" class="btn btn-neutral float-right" title="avar module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="avar.html" class="btn btn-neutral float-right" title="avar module">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="EMUS Modules" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral" title="EMUS Modules"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -262,13 +354,12 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Erik H Thiede.
-
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
-
         </div>
       </div>
 
@@ -292,7 +383,7 @@
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

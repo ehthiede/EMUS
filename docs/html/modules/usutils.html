@@ -5,7 +5,6 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>usutils module &mdash; emus  documentation</title>
@@ -15,6 +14,7 @@
   
 
   
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -30,12 +30,15 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="emus  documentation" href="../index.html"/>
         <link rel="up" title="EMUS Modules" href="index.html"/>
         <link rel="prev" title="linalg module" href="linalg.html"/> 
 
   
-  <script src="../_static/js/modernizr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 
 </head>
 
@@ -45,23 +48,11 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
-            <a href="../index.html" class="icon icon-home"> emus
-          
-
-          
-          </a>
-
-          
-            
-            
-          
-
-          
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> emus</a>
+        
+        
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -69,32 +60,44 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
+      </div>
 
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
           
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-            
-            
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-averages">Calculating Averages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">EMUS Modules</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="autocorrelation.html">autocorrelation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="avar.html">avar module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="emus.html">emus module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linalg.html">linalg module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">usutils module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">usutils module</a></li>
 </ul>
 </li>
 </ul>
 
-            
           
-        </div>
+        
       </div>
+      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -109,13 +112,7 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
@@ -124,55 +121,50 @@
     <li>usutils module</li>
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/modules/usutils.txt" rel="nofollow"> View page source</a>
-          
+          <a href="../_sources/modules/usutils.rst.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+          <div role="main" class="document">
             
-  <div class="section" id="module-usutils">
-<span id="usutils-module"></span><h1>usutils module<a class="headerlink" href="#module-usutils" title="Permalink to this headline">¶</a></h1>
-<p>Module containing methods useful for analyzing umbrella sampling 
+  <div class="section" id="module-emus.usutils">
+<span id="usutils-module"></span><h1>usutils module<a class="headerlink" href="#module-emus.usutils" title="Permalink to this headline">¶</a></h1>
+<p>Module containing methods useful for analyzing umbrella sampling
 calculations that do not rely directly on the EMUS estimator.</p>
 <dl class="function">
-<dt id="usutils.calc_harmonic_psis">
-<code class="descclassname">usutils.</code><code class="descname">calc_harmonic_psis</code><span class="sig-paren">(</span><em>cv_traj</em>, <em>centers</em>, <em>fks</em>, <em>kTs</em>, <em>period=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#calc_harmonic_psis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.calc_harmonic_psis" title="Permalink to this definition">¶</a></dt>
+<dt id="emus.usutils.calc_harmonic_psis">
+<code class="descclassname">emus.usutils.</code><code class="descname">calc_harmonic_psis</code><span class="sig-paren">(</span><em>cv_traj</em>, <em>centers</em>, <em>fks</em>, <em>kTs</em>, <em>period=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/usutils.html#calc_harmonic_psis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.usutils.calc_harmonic_psis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the values of each bias function from a trajectory of points in a single window.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cv_traj</strong> : array-like</p>
-<blockquote>
-<div><p>Trajectory in collective variable space.  Can be 1-dimensional (one cv) or 2-dimensional (many cvs).  The first dimension is the time index, and (optional) second corresponds to the collective variable.</p>
-</div></blockquote>
-<p><strong>centers</strong> : array-like</p>
-<blockquote>
-<div><p>The locations of the centers of each window.  The first dimension is the window index, and the (optional) second is the collective variable index.</p>
-</div></blockquote>
-<p><strong>fks</strong> : 2D array-like or scalar</p>
-<blockquote>
-<div><p>If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.</p>
-</div></blockquote>
-<p><strong>kTs</strong> : 2D array-like or scalar</p>
-<blockquote>
-<div><p>1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.</p>
-</div></blockquote>
-<p><strong>period</strong> : 1D array-like or float, optional</p>
-<blockquote>
-<div><p>Period of the collective variable e.g. 360 for an angle. If None, all collective variables are taken to be aperiodic.  If scalar, assumed to be period of each collective variable. If 1D iterable with each value a scalar or None, each cv has periodicity of that size.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>cv_traj</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like</span></dt>
+<dd><p class="first last">Trajectory in collective variable space.  Can be 1-dimensional (one cv) or 2-dimensional (many cvs).  The first dimension is the time index, and (optional) second corresponds to the collective variable.</p>
+</dd>
+<dt><strong>centers</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like</span></dt>
+<dd><p class="first last">The locations of the centers of each window.  The first dimension is the window index, and the (optional) second is the collective variable index.</p>
+</dd>
+<dt><strong>fks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array-like or scalar</span></dt>
+<dd><p class="first last">If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.</p>
+</dd>
+<dt><strong>kTs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array-like or scalar</span></dt>
+<dd><p class="first last">1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.</p>
+</dd>
+<dt><strong>period</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array-like or float, optional</span></dt>
+<dd><p class="first last">Period of the collective variable e.g. 360 for an angle. If None, all collective variables are taken to be aperiodic.  If scalar, assumed to be period of each collective variable. If 1D iterable with each value a scalar or None, each cv has periodicity of that size.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>psis</strong> : 2D array</p>
-<blockquote class="last">
-<div><p>The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>psis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array</span></dt>
+<dd><p class="first last">The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -180,43 +172,40 @@ calculations that do not rely directly on the EMUS estimator.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="usutils.data_from_meta">
-<code class="descclassname">usutils.</code><code class="descname">data_from_meta</code><span class="sig-paren">(</span><em>filepath</em>, <em>dim</em>, <em>T=1.0</em>, <em>k_B=1.0</em>, <em>nsig=None</em>, <em>period=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#data_from_meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.data_from_meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads collective variable data from as tabulated by a meta file of the same format used in Grossfield&#8217;s implementation of the WHAM algorithm, and calculates the value of the biasing functions.</p>
+<dt id="emus.usutils.data_from_meta">
+<code class="descclassname">emus.usutils.</code><code class="descname">data_from_meta</code><span class="sig-paren">(</span><em>filepath</em>, <em>dim</em>, <em>T=1.0</em>, <em>k_B=1.0</em>, <em>nsig=None</em>, <em>period=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/usutils.html#data_from_meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.usutils.data_from_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads collective variable data from as tabulated by a meta file of the same format used in Grossfield’s implementation of the WHAM algorithm, and calculates the value of the biasing functions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filepath</strong> : string</p>
-<blockquote>
-<div><p>The path to the meta file.</p>
-</div></blockquote>
-<p><strong>dim</strong> : int</p>
-<blockquote>
-<div><p>The number of dimensions of the cv space.</p>
-</div></blockquote>
-<p><strong>T</strong> : scalar, optional</p>
-<blockquote>
-<div><p>Temperature of the system if not provided in the meta file.</p>
-</div></blockquote>
-<p><strong>k_B</strong> : scalar, optional</p>
-<blockquote>
-<div><p>Boltzmann Constant for the system. Default is in natural units (1.0)</p>
-</div></blockquote>
-<p><strong>nsig</strong> : scalar or None, optional</p>
-<blockquote>
-<div><p>Number of standard deviations of the gaussians to include in the neighborlist.If None, does not use neighbor lists.</p>
-</div></blockquote>
-<p><strong>period</strong> : 1D array-like or float, optional</p>
-<blockquote>
-<div><p>Variable with the periodicity information of the system.  See the Data Structures section of the documentation for a detailed explanation.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>filepath</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The path to the meta file.</p>
+</dd>
+<dt><strong>dim</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">The number of dimensions of the cv space.</p>
+</dd>
+<dt><strong>T</strong> <span class="classifier-delimiter">:</span> <span class="classifier">scalar, optional</span></dt>
+<dd><p class="first last">Temperature of the system if not provided in the meta file.</p>
+</dd>
+<dt><strong>k_B</strong> <span class="classifier-delimiter">:</span> <span class="classifier">scalar, optional</span></dt>
+<dd><p class="first last">Boltzmann Constant for the system. Default is in natural units (1.0)</p>
+</dd>
+<dt><strong>nsig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">scalar or None, optional</span></dt>
+<dd><p class="first last">Number of standard deviations of the gaussians to include in the neighborlist.If None, does not use neighbor lists.</p>
+</dd>
+<dt><strong>period</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array-like or float, optional</span></dt>
+<dd><p class="first last">Variable with the periodicity information of the system.  See the Data Structures section of the documentation for a detailed explanation.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>psis</strong> : List of 2D arrays</p>
-<blockquote class="last">
-<div><p>The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>psis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">List of 2D arrays</span></dt>
+<dd><p class="first last">The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -224,23 +213,25 @@ calculations that do not rely directly on the EMUS estimator.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="usutils.fxn_data_from_meta">
-<code class="descclassname">usutils.</code><code class="descname">fxn_data_from_meta</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#fxn_data_from_meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.fxn_data_from_meta" title="Permalink to this definition">¶</a></dt>
+<dt id="emus.usutils.fxn_data_from_meta">
+<code class="descclassname">emus.usutils.</code><code class="descname">fxn_data_from_meta</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/usutils.html#fxn_data_from_meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.usutils.fxn_data_from_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses the meta file associated with observable data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filepath</strong> : string</p>
-<blockquote>
-<div><p>The path to the meta file containing the paths of the observable data.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>filepath</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The path to the meta file containing the paths of the observable data.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>fxndata</strong> : List of 2D arrays</p>
-<blockquote class="last">
-<div><p>Three dimensional data structure containing observable information.  The first index corresponds to the observable being calculated, the second to the window index, and the third to the time point in the window.</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>fxndata</strong> <span class="classifier-delimiter">:</span> <span class="classifier">List of 2D arrays</span></dt>
+<dd><p class="first last">Three dimensional data structure containing observable information.  The first index corresponds to the observable being calculated, the second to the window index, and the third to the time point in the window.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -248,41 +239,39 @@ calculations that do not rely directly on the EMUS estimator.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="usutils.neighbors_harmonic">
-<code class="descclassname">usutils.</code><code class="descname">neighbors_harmonic</code><span class="sig-paren">(</span><em>centers</em>, <em>fks</em>, <em>kTs=1.0</em>, <em>period=None</em>, <em>nsig=6</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#neighbors_harmonic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.neighbors_harmonic" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates neighborlist for harmonic windows.  Neighbors are chosen 
+<dt id="emus.usutils.neighbors_harmonic">
+<code class="descclassname">emus.usutils.</code><code class="descname">neighbors_harmonic</code><span class="sig-paren">(</span><em>centers</em>, <em>fks</em>, <em>kTs=1.0</em>, <em>period=None</em>, <em>nsig=6</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/usutils.html#neighbors_harmonic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.usutils.neighbors_harmonic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates neighborlist for harmonic windows.  Neighbors are chosen
 such that neighboring umbrellas are no more than nsig standard
 deviations away on a flat potential.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>centers</strong> : 2D array-like</p>
-<blockquote>
-<div><p>The locations of the centers of each window.  The first dimension is the window index, and the second is the collective variable index.</p>
-</div></blockquote>
-<p><strong>fks</strong> : 2D array-like or scalar</p>
-<blockquote>
-<div><p>If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.</p>
-</div></blockquote>
-<p><strong>kTs</strong> : 2D array-like or scalar</p>
-<blockquote>
-<div><p>1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.</p>
-</div></blockquote>
-<p><strong>period</strong> : 1D array-like or float</p>
-<blockquote>
-<div><p>Period of the collective variable e.g. 360 for an angle. If None, all collective variables are taken to be aperiodic.  If scalar, assumed to be period of each collective variable. If 1D iterable with each value a scalar or None, each cv has periodicity of that size.</p>
-</div></blockquote>
-<p><strong>nsig</strong> : scalar</p>
-<blockquote>
-<div><p>Number of standard deviations of the gaussians to include in the neighborlist.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>centers</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array-like</span></dt>
+<dd><p class="first last">The locations of the centers of each window.  The first dimension is the window index, and the second is the collective variable index.</p>
+</dd>
+<dt><strong>fks</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array-like or scalar</span></dt>
+<dd><p class="first last">If array or list, data structure where the first dimension corresponds to the window index and the second corresponds to the collective variable.  If scalar, windows are assumed to have that force constant in every dimension.</p>
+</dd>
+<dt><strong>kTs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array-like or scalar</span></dt>
+<dd><p class="first last">1D array with the Boltzmann factor or a single value which will be used in all windows.  Default value is the scalar 1.</p>
+</dd>
+<dt><strong>period</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array-like or float</span></dt>
+<dd><p class="first last">Period of the collective variable e.g. 360 for an angle. If None, all collective variables are taken to be aperiodic.  If scalar, assumed to be period of each collective variable. If 1D iterable with each value a scalar or None, each cv has periodicity of that size.</p>
+</dd>
+<dt><strong>nsig</strong> <span class="classifier-delimiter">:</span> <span class="classifier">scalar</span></dt>
+<dd><p class="first last">Number of standard deviations of the gaussians to include in the neighborlist.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>nbrs</strong> : 2D list</p>
-<blockquote class="last">
-<div><p>List where element i is a list with the indices of all windows neighboring window i.</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>nbrs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D list</span></dt>
+<dd><p class="first last">List where element i is a list with the indices of all windows neighboring window i.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -290,31 +279,31 @@ deviations away on a flat potential.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="usutils.unpack_nbrs">
-<code class="descclassname">usutils.</code><code class="descname">unpack_nbrs</code><span class="sig-paren">(</span><em>compd_array</em>, <em>neighbors</em>, <em>L</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/usutils.html#unpack_nbrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usutils.unpack_nbrs" title="Permalink to this definition">¶</a></dt>
+<dt id="emus.usutils.unpack_nbrs">
+<code class="descclassname">emus.usutils.</code><code class="descname">unpack_nbrs</code><span class="sig-paren">(</span><em>compd_array</em>, <em>neighbors</em>, <em>L</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/usutils.html#unpack_nbrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.usutils.unpack_nbrs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unpacks an array of neighborlisted data.  Currently, assumes axis 0 is the compressed axis.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>compd_array</strong> : array-like</p>
-<blockquote>
-<div><p>The compressed array, calculated using neighborlists</p>
-</div></blockquote>
-<p><strong>neighbors</strong> : array-like</p>
-<blockquote>
-<div><p>The list or array of ints, containing the indices of the neighboring windows</p>
-</div></blockquote>
-<p><strong>L</strong> : int</p>
-<blockquote>
-<div><p>The total number of windows.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>compd_array</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like</span></dt>
+<dd><p class="first last">The compressed array, calculated using neighborlists</p>
+</dd>
+<dt><strong>neighbors</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like</span></dt>
+<dd><p class="first last">The list or array of ints, containing the indices of the neighboring windows</p>
+</dd>
+<dt><strong>L</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">The total number of windows.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>expd_array</strong> : array-like</p>
-<blockquote class="last">
-<div><p>The expanded array of data</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>expd_array</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like</span></dt>
+<dd><p class="first last">The expanded array of data</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -324,14 +313,13 @@ deviations away on a flat potential.</p>
 </div>
 
 
-           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="linalg.html" class="btn btn-neutral" title="linalg module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="linalg.html" class="btn btn-neutral" title="linalg module"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -341,13 +329,12 @@ deviations away on a flat potential.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Erik H Thiede.
-
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
-
         </div>
       </div>
 
@@ -371,7 +358,7 @@ deviations away on a flat potential.</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
