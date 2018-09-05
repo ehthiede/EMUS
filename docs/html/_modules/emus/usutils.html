@@ -5,16 +5,16 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>usutils &mdash; emus  documentation</title>
+  <title>emus.usutils &mdash; emus  documentation</title>
   
 
   
   
 
   
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -24,17 +24,20 @@
 
   
   
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   
 
   
 
   
-    <link rel="top" title="emus  documentation" href="../index.html"/>
-        <link rel="up" title="Module code" href="index.html"/> 
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="emus  documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
 
   
-  <script src="../_static/js/modernizr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 
 </head>
 
@@ -44,49 +47,56 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
-            <a href="../index.html" class="icon icon-home"> emus
-          
-
-          
-          </a>
-
-          
-            
-            
-          
-
-          
+      <div class="wy-side-nav-search">
+        
+          <a href="../../index.html" class="fa fa-home"> emus</a>
+        
+        
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
+      </div>
 
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
           
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-            
-            
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/index.html">EMUS Modules</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quickstart.html#calculating-averages">Calculating Averages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../datastructures.html#common-data-structures">Common data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">EMUS Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/autocorrelation.html">autocorrelation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/avar.html">avar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/emus.html">emus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/linalg.html">linalg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/usutils.html">usutils module</a></li>
+</ul>
+</li>
 </ul>
 
-            
           
-        </div>
+        
       </div>
+      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -94,50 +104,43 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">emus</a>
+        <a href="../../index.html">emus</a>
       </nav>
 
 
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
       
-          <li><a href="index.html">Module code</a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
       
-    <li>usutils</li>
+    <li>emus.usutils</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+          <div role="main" class="document">
             
-  <h1>Source code for usutils</h1><div class="highlight"><pre>
+  <h1>Source code for emus.usutils</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;Module containing methods useful for analyzing umbrella sampling </span>
+<span class="sd">&quot;&quot;&quot;Module containing methods useful for analyzing umbrella sampling</span>
 <span class="sd">calculations that do not rely directly on the EMUS estimator.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">_defaults</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">._defaults</span> <span class="k">import</span> <span class="n">DEFAULT_KT</span><span class="p">,</span> <span class="n">DEFAULT_T</span><span class="p">,</span> <span class="n">DEFAULT_K_B</span>
 <span class="kn">import</span> <span class="nn">numbers</span>
 
 
-<div class="viewcode-block" id="neighbors_harmonic"><a class="viewcode-back" href="../modules/usutils.html#usutils.neighbors_harmonic">[docs]</a><span class="k">def</span> <span class="nf">neighbors_harmonic</span><span class="p">(</span><span class="n">centers</span><span class="p">,</span><span class="n">fks</span><span class="p">,</span><span class="n">kTs</span><span class="o">=</span><span class="n">DEFAULT_KT</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">nsig</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Calculates neighborlist for harmonic windows.  Neighbors are chosen </span>
+<div class="viewcode-block" id="neighbors_harmonic"><a class="viewcode-back" href="../../modules/usutils.html#emus.usutils.neighbors_harmonic">[docs]</a><span class="k">def</span> <span class="nf">neighbors_harmonic</span><span class="p">(</span><span class="n">centers</span><span class="p">,</span> <span class="n">fks</span><span class="p">,</span> <span class="n">kTs</span><span class="o">=</span><span class="n">DEFAULT_KT</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nsig</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates neighborlist for harmonic windows.  Neighbors are chosen</span>
 <span class="sd">    such that neighboring umbrellas are no more than nsig standard</span>
 <span class="sd">    deviations away on a flat potential.</span>
 
@@ -158,37 +161,38 @@
 <span class="sd">    -------</span>
 <span class="sd">    nbrs : 2D list</span>
 <span class="sd">        List where element i is a list with the indices of all windows neighboring window i.</span>
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span> <span class="c1"># Number of Windows</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span>  <span class="c1"># Number of Windows</span>
 
     <span class="c1"># Enforce Typing</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kTs</span><span class="p">,</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kTs</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
         <span class="n">kTs</span> <span class="o">=</span> <span class="n">kTs</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fks</span><span class="p">,</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fks</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
         <span class="n">fks</span> <span class="o">=</span> <span class="n">fks</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">centers</span><span class="p">))</span>
-    <span class="n">kTs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">kTs</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">fks</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
-    <span class="n">rad</span> <span class="o">=</span> <span class="n">nsig</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">kTs</span><span class="o">/</span><span class="n">fks</span><span class="p">)</span> 
-    <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span> 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">period</span><span class="p">,</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span> <span class="c1"># Check if period is scalar</span>
+    <span class="n">kTs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">kTs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">fks</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+    <span class="n">rad</span> <span class="o">=</span> <span class="n">nsig</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">kTs</span><span class="o">/</span><span class="n">fks</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>  <span class="c1"># Check if period is scalar</span>
             <span class="n">period</span> <span class="o">=</span> <span class="p">[</span><span class="n">period</span><span class="p">]</span>
-    
+
     <span class="c1"># Iterate through window centers and find neighboring umbrellas.</span>
     <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">cntr_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">centers</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cntr_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">centers</span><span class="p">):</span>
         <span class="n">rad_i</span> <span class="o">=</span> <span class="n">rad</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">nbrs_i</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">rv</span> <span class="o">=</span> <span class="n">centers</span> <span class="o">-</span> <span class="n">cntr_i</span>
-        <span class="n">rvmin</span> <span class="o">=</span> <span class="n">_minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span><span class="n">period</span><span class="p">)</span> 
+        <span class="n">rvmin</span> <span class="o">=</span> <span class="n">_minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">period</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">rv</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rvmin</span><span class="p">):</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">rad_i</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
                 <span class="n">nbrs_i</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
         <span class="n">nbrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbrs_i</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">nbrs</span></div>
 
-<div class="viewcode-block" id="unpack_nbrs"><a class="viewcode-back" href="../modules/usutils.html#usutils.unpack_nbrs">[docs]</a><span class="k">def</span> <span class="nf">unpack_nbrs</span><span class="p">(</span><span class="n">compd_array</span><span class="p">,</span><span class="n">neighbors</span><span class="p">,</span><span class="n">L</span><span class="p">):</span>
+
+<div class="viewcode-block" id="unpack_nbrs"><a class="viewcode-back" href="../../modules/usutils.html#emus.usutils.unpack_nbrs">[docs]</a><span class="k">def</span> <span class="nf">unpack_nbrs</span><span class="p">(</span><span class="n">compd_array</span><span class="p">,</span> <span class="n">neighbors</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Unpacks an array of neighborlisted data.  Currently, assumes axis 0 is the compressed axis.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    compd_array : array-like</span>
@@ -204,7 +208,7 @@
 <span class="sd">        The expanded array of data</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">expd_shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">compd_array</span><span class="p">))</span>
     <span class="n">expd_shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span>
     <span class="n">expd_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">expd_shape</span><span class="p">)</span>
@@ -213,14 +217,13 @@
     <span class="k">return</span> <span class="n">expd_array</span></div>
 
 
-    
-<div class="viewcode-block" id="calc_harmonic_psis"><a class="viewcode-back" href="../modules/usutils.html#usutils.calc_harmonic_psis">[docs]</a><span class="k">def</span> <span class="nf">calc_harmonic_psis</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">fks</span><span class="p">,</span> <span class="n">kTs</span><span class="p">,</span> <span class="n">period</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="calc_harmonic_psis"><a class="viewcode-back" href="../../modules/usutils.html#emus.usutils.calc_harmonic_psis">[docs]</a><span class="k">def</span> <span class="nf">calc_harmonic_psis</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">fks</span><span class="p">,</span> <span class="n">kTs</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the values of each bias function from a trajectory of points in a single window.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cv_traj : array-like</span>
-<span class="sd">        Trajectory in collective variable space.  Can be 1-dimensional (one cv) or 2-dimensional (many cvs).  The first dimension is the time index, and (optional) second corresponds to the collective variable. </span>
+<span class="sd">        Trajectory in collective variable space.  Can be 1-dimensional (one cv) or 2-dimensional (many cvs).  The first dimension is the time index, and (optional) second corresponds to the collective variable.</span>
 <span class="sd">    centers : array-like</span>
 <span class="sd">        The locations of the centers of each window.  The first dimension is the window index, and the (optional) second is the collective variable index.</span>
 <span class="sd">    fks : 2D array-like or scalar</span>
@@ -234,33 +237,35 @@
 <span class="sd">    -------</span>
 <span class="sd">    psis : 2D array</span>
 <span class="sd">        The values of the bias functions evaluated each window and timepoint.  See `datastructures &lt;../datastructures.html#data-from-sampling&gt;`__ for more information.</span>
-<span class="sd">            </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span> <span class="c1"># Number of windows</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kTs</span><span class="p">,</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span>  <span class="c1"># Number of windows</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kTs</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
         <span class="n">kTs</span> <span class="o">=</span> <span class="n">kTs</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fks</span><span class="p">,</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fks</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">):</span>
         <span class="n">fks</span> <span class="o">=</span> <span class="n">fks</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">centers</span><span class="p">))</span>
 
-    <span class="n">psis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">),</span><span class="n">L</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
-        <span class="n">psis</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">_calc_harmonic_psi_ij</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">,</span><span class="n">centers</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">fks</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">kTs</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
+    <span class="n">psis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">),</span> <span class="n">L</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+        <span class="n">psis</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">_calc_harmonic_psi_ij</span><span class="p">(</span>
+            <span class="n">cv_traj</span><span class="p">,</span> <span class="n">centers</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">fks</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">kTs</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">psis</span></div>
 
-<span class="k">def</span> <span class="nf">_calc_harmonic_psi_ij</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">,</span><span class="n">win_center</span><span class="p">,</span><span class="n">win_fk</span><span class="p">,</span><span class="n">kT</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_calc_harmonic_psi_ij</span><span class="p">(</span><span class="n">cv_traj</span><span class="p">,</span> <span class="n">win_center</span><span class="p">,</span> <span class="n">win_fk</span><span class="p">,</span> <span class="n">kT</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Helper routine for calc_harm_psis.  Evaluates the value of the bias</span>
 <span class="sd">    function for a single harmonic window over a trajectory.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cv_traj : array-like</span>
-<span class="sd">        Trajectory in collective variable space.  Can be 1-dimensional (one cv) or 2-dimensional (many cvs).  The first dimension is the time index, and (optional) second corresponds to the collective variable. </span>
+<span class="sd">        Trajectory in collective variable space.  Can be 1-dimensional (one cv) or 2-dimensional (many cvs).  The first dimension is the time index, and (optional) second corresponds to the collective variable.</span>
 <span class="sd">        trajectory</span>
 <span class="sd">    win_center : array-like or scalar</span>
 <span class="sd">        Array of the centers of the window.</span>
-<span class="sd">    win_fk : array-like or scalar </span>
+<span class="sd">    win_fk : array-like or scalar</span>
 <span class="sd">        Force constants for the windows divided by -kT.</span>
-<span class="sd">    period : 1D array-like or float, optional </span>
+<span class="sd">    period : 1D array-like or float, optional</span>
 <span class="sd">        Period of the collective variables.  See documentation for calc_harmonic_psis.</span>
 
 <span class="sd">    Returns</span>
@@ -273,22 +278,23 @@
         <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">win_center</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
         <span class="n">ndim</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">period</span><span class="p">,</span><span class="s1">&#39;__getitem__&#39;</span><span class="p">):</span> <span class="c1"># Check if period is a scalar</span>
+    <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="s1">&#39;__getitem__&#39;</span><span class="p">):</span>  <span class="c1"># Check if period is a scalar</span>
             <span class="n">period</span> <span class="o">=</span> <span class="p">[</span><span class="n">period</span><span class="p">]</span><span class="o">*</span><span class="n">ndim</span>
     <span class="n">rv</span> <span class="o">=</span> <span class="n">cv_traj</span> <span class="o">-</span> <span class="n">win_center</span>
     <span class="c1"># Enforce Minimum Image Convention.</span>
-    <span class="n">rvmin</span> <span class="o">=</span> <span class="n">_minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span><span class="n">period</span><span class="p">)</span>
+    <span class="n">rvmin</span> <span class="o">=</span> <span class="n">_minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">period</span><span class="p">)</span>
 
     <span class="c1"># Calculate psi_ij</span>
     <span class="n">U</span> <span class="o">=</span> <span class="n">rvmin</span><span class="o">*</span><span class="n">rvmin</span><span class="o">*</span><span class="n">win_fk</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">U</span><span class="p">))</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">U</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">U</span><span class="o">/=</span><span class="mf">2.</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">U</span> <span class="o">/=</span> <span class="mf">2.</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">U</span><span class="o">/</span><span class="n">kT</span><span class="p">)</span>
 
-<div class="viewcode-block" id="fxn_data_from_meta"><a class="viewcode-back" href="../modules/usutils.html#usutils.fxn_data_from_meta">[docs]</a><span class="k">def</span> <span class="nf">fxn_data_from_meta</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+
+<div class="viewcode-block" id="fxn_data_from_meta"><a class="viewcode-back" href="../../modules/usutils.html#emus.usutils.fxn_data_from_meta">[docs]</a><span class="k">def</span> <span class="nf">fxn_data_from_meta</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parses the meta file associated with observable data</span>
 
 <span class="sd">    Parameters</span>
@@ -303,7 +309,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fxn_paths</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">full_line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">line</span> <span class="o">=</span> <span class="n">full_line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
@@ -313,22 +319,21 @@
             <span class="n">fxn_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
     <span class="n">fxndata</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">nfxns</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1"># Placeholder value</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fxn_paths</span><span class="p">):</span>
+    <span class="n">nfxns</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Placeholder value</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fxn_paths</span><span class="p">):</span>
         <span class="n">data_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">nfxns</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data_i</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">nfxns</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">print</span> <span class="n">nfxns</span>
-            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">nfxns</span><span class="p">):</span>
-                <span class="n">fxndata</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">data_i</span><span class="p">[:,(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)]])</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nfxns</span><span class="p">):</span>
+                <span class="n">fxndata</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">data_i</span><span class="p">[:,</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)]])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">nfxns</span><span class="p">):</span>
-                <span class="n">fxndata</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_i</span><span class="p">[:,(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nfxns</span><span class="p">):</span>
+                <span class="n">fxndata</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_i</span><span class="p">[:,</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
 
     <span class="k">return</span> <span class="n">fxndata</span></div>
 
-<div class="viewcode-block" id="data_from_meta"><a class="viewcode-back" href="../modules/usutils.html#usutils.data_from_meta">[docs]</a><span class="k">def</span> <span class="nf">data_from_meta</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">DEFAULT_T</span><span class="p">,</span><span class="n">k_B</span><span class="o">=</span><span class="n">DEFAULT_K_B</span><span class="p">,</span><span class="n">nsig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="data_from_meta"><a class="viewcode-back" href="../../modules/usutils.html#emus.usutils.data_from_meta">[docs]</a><span class="k">def</span> <span class="nf">data_from_meta</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">DEFAULT_T</span><span class="p">,</span> <span class="n">k_B</span><span class="o">=</span><span class="n">DEFAULT_K_B</span><span class="p">,</span> <span class="n">nsig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Reads collective variable data from as tabulated by a meta file of the same format used in Grossfield&#39;s implementation of the WHAM algorithm, and calculates the value of the biasing functions.</span>
 
 <span class="sd">    Parameters</span>
@@ -353,35 +358,38 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Parse Meta file.</span>
-    <span class="n">trajlocs</span><span class="p">,</span> <span class="n">cntrs</span><span class="p">,</span> <span class="n">fks</span><span class="p">,</span> <span class="n">iats</span><span class="p">,</span> <span class="n">temps</span>  <span class="o">=</span> <span class="n">_parse_metafile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">)</span>
+    <span class="n">trajlocs</span><span class="p">,</span> <span class="n">cntrs</span><span class="p">,</span> <span class="n">fks</span><span class="p">,</span> <span class="n">iats</span><span class="p">,</span> <span class="n">temps</span> <span class="o">=</span> <span class="n">_parse_metafile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
     <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cntrs</span><span class="p">)</span>
     <span class="c1"># Calculate kT for each window.  Involves some type management...</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">temps</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">temps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">L</span><span class="p">)</span><span class="o">*</span><span class="n">T</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;No Temperatures were found in the meta file, and no valid Temperature was provided as input.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;No Temperatures were found in the meta file, and no valid Temperature was provided as input.&#39;</span><span class="p">)</span>
     <span class="n">kT</span> <span class="o">=</span> <span class="n">k_B</span> <span class="o">*</span> <span class="n">temps</span>
-    <span class="k">if</span> <span class="n">nsig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">neighbors</span> <span class="o">=</span> <span class="n">neighbors_harmonic</span><span class="p">(</span><span class="n">cntrs</span><span class="p">,</span><span class="n">fks</span><span class="p">,</span><span class="n">kTs</span><span class="o">=</span><span class="n">kT</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">,</span><span class="n">nsig</span><span class="o">=</span><span class="n">nsig</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nsig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="n">neighbors_harmonic</span><span class="p">(</span>
+            <span class="n">cntrs</span><span class="p">,</span> <span class="n">fks</span><span class="p">,</span> <span class="n">kTs</span><span class="o">=</span><span class="n">kT</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">,</span> <span class="n">nsig</span><span class="o">=</span><span class="n">nsig</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">L</span><span class="p">),</span><span class="nb">range</span><span class="p">(</span><span class="n">L</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">L</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">L</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="c1"># Load in the trajectories into the cv space</span>
     <span class="n">trajs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">trajloc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">trajlocs</span><span class="p">):</span>
-        <span class="n">trajs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">trajloc</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">trajs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">trajloc</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">:])</span>
 
     <span class="c1"># Calculate psi values</span>
     <span class="n">psis</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">traj</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">trajs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">traj</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">trajs</span><span class="p">):</span>
         <span class="n">nbrs_i</span> <span class="o">=</span> <span class="n">neighbors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">psi_i</span> <span class="o">=</span> <span class="n">calc_harmonic_psis</span><span class="p">(</span><span class="n">traj</span><span class="p">,</span><span class="n">cntrs</span><span class="p">[</span><span class="n">nbrs_i</span><span class="p">],</span><span class="n">fks</span><span class="p">,</span><span class="n">kT</span><span class="p">,</span><span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
+        <span class="n">psi_i</span> <span class="o">=</span> <span class="n">calc_harmonic_psis</span><span class="p">(</span><span class="n">traj</span><span class="p">,</span> <span class="n">cntrs</span><span class="p">[</span><span class="n">nbrs_i</span><span class="p">],</span> <span class="n">fks</span><span class="p">,</span> <span class="n">kT</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">)</span>
         <span class="n">psis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">psi_i</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">psis</span><span class="p">,</span> <span class="n">trajs</span><span class="p">,</span> <span class="n">neighbors</span></div>
 
-<span class="k">def</span> <span class="nf">_parse_metafile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="n">dim</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_parse_metafile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">dim</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parses the meta file located at filepath. Assumes Wham-like Syntax.</span>
 
@@ -401,9 +409,9 @@
 <span class="sd">    fks : 2D array of floats</span>
 <span class="sd">        Array with the force constants for each harmonic window. See calc_harm_psis for syntax.</span>
 <span class="sd">    iats : 1D array of floats or None</span>
-<span class="sd">        Array with the integrated autocorrelation times of each window.  None if not given in </span>
+<span class="sd">        Array with the integrated autocorrelation times of each window.  None if not given in</span>
 <span class="sd">        the meta file</span>
-<span class="sd">    temps : 1D array of floats or None </span>
+<span class="sd">    temps : 1D array of floats or None</span>
 <span class="sd">        Array with the temperature of each window in the umbrella sampling calculation.  If not given in the meta file, this will just be None.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -412,7 +420,7 @@
     <span class="n">centers</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">iats</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">temps</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">full_line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">line</span> <span class="o">=</span> <span class="n">full_line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
@@ -423,18 +431,19 @@
             <span class="n">traj_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">centers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="o">+</span><span class="n">dim</span><span class="p">])</span>
             <span class="n">fks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">dim</span><span class="p">:</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">])</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">windowparams</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">:</span> <span class="c1"># If Correlation Time provided</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">windowparams</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">:</span>  <span class="c1"># If Correlation Time provided</span>
                 <span class="n">iats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">])</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">windowparams</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">:</span> <span class="c1"># If Temperature is provided</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">windowparams</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">:</span>  <span class="c1"># If Temperature is provided</span>
                 <span class="n">temps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windowparams</span><span class="p">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">dim</span><span class="p">])</span>
     <span class="c1"># Move to numpy arrays, convert to appropriate data types</span>
     <span class="n">fks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
     <span class="n">centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
     <span class="n">iats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iats</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
     <span class="n">temps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">temps</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">traj_paths</span><span class="p">,</span><span class="n">centers</span><span class="p">,</span><span class="n">fks</span><span class="p">,</span><span class="n">iats</span><span class="p">,</span><span class="n">temps</span>
+    <span class="k">return</span> <span class="n">traj_paths</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">fks</span><span class="p">,</span> <span class="n">iats</span><span class="p">,</span> <span class="n">temps</span>
 
-<span class="k">def</span> <span class="nf">_minimage</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span><span class="n">period</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_minimage</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">period</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the minimum vector.</span>
 
 <span class="sd">    Parameters</span>
@@ -452,12 +461,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">rv</span> <span class="o">-</span> <span class="n">period</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">rv</span><span class="o">/</span><span class="n">period</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">_minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span><span class="n">period</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_minimage_traj</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">period</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the minimum trajectory</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    rv : 1 or 2D array-like </span>
+<span class="sd">    rv : 1 or 2D array-like</span>
 <span class="sd">        Minimum image trajectory</span>
 <span class="sd">    period : array-like or scalar</span>
 <span class="sd">        Periodicity in each dimension.</span>
@@ -468,27 +478,25 @@
 <span class="sd">        minimum image trajectory</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rvmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">rv</span><span class="p">))</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">rv</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># 1D trajectory array provided</span>
-        <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">rv</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># 1D trajectory array provided</span>
+        <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">p</span> <span class="o">=</span> <span class="n">period</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
                 <span class="n">rvmin</span> <span class="o">-=</span> <span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">rvmin</span><span class="o">/</span><span class="n">p</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">rv</span><span class="p">))</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span> <span class="c1"># 2D trajectory array provided</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">rv</span><span class="p">))</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># 2D trajectory array provided</span>
         <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">ndim</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="p">):</span>
                 <span class="n">p</span> <span class="o">=</span> <span class="n">period</span><span class="p">[</span><span class="n">d</span><span class="p">]</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
-                    <span class="n">rvmin</span><span class="p">[:,</span><span class="n">d</span><span class="p">]</span><span class="o">-=</span> <span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">rvmin</span><span class="p">[:,</span><span class="n">d</span><span class="p">]</span><span class="o">/</span><span class="n">p</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span> <span class="c1"># User provided something weird...</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Trajectory provided has wrong dimensionality </span><span class="si">%d</span><span class="s2">, &quot;</span><span class="o">+</span> \
-            <span class="s2">&quot;dimension should be 1 or 2.&quot;</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">rv</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+                    <span class="n">rvmin</span><span class="p">[:,</span> <span class="n">d</span><span class="p">]</span> <span class="o">-=</span> <span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">rvmin</span><span class="p">[:,</span> <span class="n">d</span><span class="p">]</span><span class="o">/</span><span class="n">p</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># User provided something weird...</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Trajectory provided has wrong dimensionality </span><span class="si">%d</span><span class="s2">, &quot;</span> <span class="o">+</span>
+                         <span class="s2">&quot;dimension should be 1 or 2.&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">rv</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">rvmin</span>
-    
 </pre></div>
 
-           </div>
           </div>
           <footer>
   
@@ -498,13 +506,12 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Erik H Thiede.
-
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
-
         </div>
       </div>
 
@@ -518,23 +525,23 @@
 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
+            URL_ROOT:'../../',
             VERSION:'',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
   
   
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
   
 
   

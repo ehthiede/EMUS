@@ -5,7 +5,6 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>emus module &mdash; emus  documentation</title>
@@ -15,6 +14,7 @@
   
 
   
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -30,13 +30,16 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="emus  documentation" href="../index.html"/>
         <link rel="up" title="EMUS Modules" href="index.html"/>
         <link rel="next" title="linalg module" href="linalg.html"/>
         <link rel="prev" title="avar module" href="avar.html"/> 
 
   
-  <script src="../_static/js/modernizr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 
 </head>
 
@@ -46,23 +49,11 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
-            <a href="../index.html" class="icon icon-home"> emus
-          
-
-          
-          </a>
-
-          
-            
-            
-          
-
-          
+      <div class="wy-side-nav-search">
+        
+          <a href="../index.html" class="fa fa-home"> emus</a>
+        
+        
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -70,32 +61,44 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
+      </div>
 
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
           
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-            
-            
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../theory.html#emus">EMUS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#calculating-averages">Calculating Averages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#common-data-structures">Common data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">EMUS Modules</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="autocorrelation.html">autocorrelation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="avar.html">avar module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">emus module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">emus module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linalg.html">linalg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usutils.html">usutils module</a></li>
 </ul>
 </li>
 </ul>
 
-            
           
-        </div>
+        
       </div>
+      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -110,13 +113,7 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
@@ -125,34 +122,302 @@
     <li>emus module</li>
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/modules/emus.txt" rel="nofollow"> View page source</a>
-          
+          <a href="../_sources/modules/emus.rst.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+          <div role="main" class="document">
             
-  <div class="section" id="module-emus">
-<span id="emus-module"></span><h1>emus module<a class="headerlink" href="#module-emus" title="Permalink to this headline">¶</a></h1>
-<p>The EMUS package is a collection of scripts and tools based on the
-Eigenvector Method of Umbrella Sampling (EMUS).</p>
+  <div class="section" id="module-emus.emus">
+<span id="emus-module"></span><h1>emus module<a class="headerlink" href="#module-emus.emus" title="Permalink to this headline">¶</a></h1>
+<p>Container for the primary EMUS routines.</p>
+<dl class="function">
+<dt id="emus.emus.calculate_Fi">
+<code class="descclassname">emus.emus.</code><code class="descname">calculate_Fi</code><span class="sig-paren">(</span><em>psi_i</em>, <em>i</em>, <em>Avals_i=None</em>, <em>return_trajs=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/emus.html#calculate_Fi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.emus.calculate_Fi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the values of a single row in the F matrix.  If neighborlists are being used, psi_i, and Avals_i should be the neighborlisted data structure, and the row will be need to be unpacked using the neighborlist.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>psi_i</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array-like</span></dt>
+<dd><p class="first last">Values of <span class="math notranslate nohighlight">\(\psi\)</span> collected in window i.  The j’th column corresponds to the j’th neighboring window.</p>
+</dd>
+<dt><strong>i</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Index of the window where the data was collected.</p>
+</dd>
+<dt><strong>Avals_i</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array-like</span></dt>
+<dd><p class="first last">Weights in front of <span class="math notranslate nohighlight">\(\psi_{ij}\)</span> in the overlap matrix.</p>
+</dd>
+<dt><strong>return_trajs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">Whether or not to return the trajectories that are averaged to calculate the values of F.  These can be useful for estimating autocorrelation times and performing error analysis.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>Fi</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array</span></dt>
+<dd><p class="first last">The (neighborlisted) row in the F matrix</p>
+</dd>
+<dt><strong>trajs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array, optional</span></dt>
+<dd><p class="first last">If return_trajs is True, returns the trajectories used in calculating the values of F</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.emus.calculate_avg">
+<code class="descclassname">emus.emus.</code><code class="descname">calculate_avg</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>g1data</em>, <em>g2data=None</em>, <em>neighbors=None</em>, <em>use_iter=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/emus.html#calculate_avg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.emus.calculate_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimates the value of an observable or ratio of observables.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>psis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">3D data structure</span></dt>
+<dd><p class="first last">The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
+</dd>
+<dt><strong>z</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array</span></dt>
+<dd><p class="first last">Array containing the normalization constants</p>
+</dd>
+<dt><strong>g1data</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D data structure</span></dt>
+<dd><p class="first last">Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.</p>
+</dd>
+<dt><strong>g2data</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D data structure, optional</span></dt>
+<dd><p class="first last">Trajectory of observable in the denominator.</p>
+</dd>
+<dt><strong>neighbors</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array-like, optional</span></dt>
+<dd><p class="first last">List showing which windows neighbor which.  See neighbors_harmonic in usutils.</p>
+</dd>
+<dt><strong>use_iter</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">Use the iterative EMUS estimator for the average of f.  If true (default), uses the estimator <span class="math notranslate nohighlight">\(\sum_i &lt; g / (\sum_j \psi_j/z_j) &gt;_i\)</span>.  Otherwise, uses the iteration EMUS estimator, <span class="math notranslate nohighlight">\(\sum_i &lt;g / \sum_j \psi_j &gt;_i z_i\)</span>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>avg</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">The estimate of <span class="math notranslate nohighlight">\(&lt;g_1&gt;/&lt;g_2&gt;\)</span>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.emus.calculate_avg_on_pmf">
+<code class="descclassname">emus.emus.</code><code class="descname">calculate_avg_on_pmf</code><span class="sig-paren">(</span><em>cv_trajs</em>, <em>psis</em>, <em>domain</em>, <em>z</em>, <em>g1data</em>, <em>g2data=None</em>, <em>neighbors=None</em>, <em>nbins=100</em>, <em>use_iter=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/emus.html#calculate_avg_on_pmf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.emus.calculate_avg_on_pmf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the average of a function in each histogram bin on a potential of mean force.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>cv_trajs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D data structure</span></dt>
+<dd><p class="first last">Data structure containing trajectories in the collective variable space.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
+</dd>
+<dt><strong>psis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">3D data structure</span></dt>
+<dd><p class="first last">The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
+</dd>
+<dt><strong>domain</strong> <span class="classifier-delimiter">:</span> <span class="classifier">tuple</span></dt>
+<dd><p class="first last">Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window</p>
+</dd>
+<dt><strong>z</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array</span></dt>
+<dd><p class="first last">Array containing the normalization constants</p>
+</dd>
+<dt><strong>g1data</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D data structure</span></dt>
+<dd><p class="first last">Trajectory of observable in the numerator.  First dimension corresponds to the window index and the second to the point in the trajectory.</p>
+</dd>
+<dt><strong>g2data</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D data structure, optional</span></dt>
+<dd><p class="first last">Trajectory of observable in the denominator.</p>
+</dd>
+<dt><strong>neighbors</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array-like, optional</span></dt>
+<dd><p class="first last">List showing which windows neighbor which.  See neighbors_harmonic in usutils.</p>
+</dd>
+<dt><strong>nbins</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int or tuple, optional</span></dt>
+<dd><p class="first last">Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.</p>
+</dd>
+<dt><strong>use_iter</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">Use the iterative EMUS estimator for the average of f.  If true (default), uses the estimator <span class="math notranslate nohighlight">\(\sum_i &lt; g / (\sum_j \psi_j/z_j) &gt;_i\)</span>.  Otherwise, uses the first iteration EMUS estimator, <span class="math notranslate nohighlight">\(\sum_i &lt;g / \sum_j \psi_j &gt;_i z_i\)</span>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>pmf_avgs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd><p class="first last">Returns the average of g1/g2 in each histogram bin, same format as for calculating the pmf</p>
+</dd>
+<dt><strong>edges</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd><p class="first last">Edges of the histogram bins, in the syntax and order used by numpy’s histogramdd method.  Element d is the edges of the histograms in dimension d.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.emus.calculate_obs">
+<code class="descclassname">emus.emus.</code><code class="descname">calculate_obs</code><span class="sig-paren">(</span><em>psis</em>, <em>z</em>, <em>g1data</em>, <em>g2data=None</em>, <em>neighbors=None</em>, <em>use_iter=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/emus.html#calculate_obs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.emus.calculate_obs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Old call for calculate_avg for backwards compatibility. Inputs and outputs are the same.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.emus.calculate_pmf">
+<code class="descclassname">emus.emus.</code><code class="descname">calculate_pmf</code><span class="sig-paren">(</span><em>cv_trajs</em>, <em>psis</em>, <em>domain</em>, <em>z</em>, <em>neighbors=None</em>, <em>nbins=100</em>, <em>kT=1.0</em>, <em>use_iter=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/emus.html#calculate_pmf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.emus.calculate_pmf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the free energy surface along a coordinate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>cv_trajs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D data structure</span></dt>
+<dd><p class="first last">Data structure containing trajectories in the collective variable space.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
+</dd>
+<dt><strong>psis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">3D data structure</span></dt>
+<dd><p class="first last">The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
+</dd>
+<dt><strong>domain</strong> <span class="classifier-delimiter">:</span> <span class="classifier">tuple</span></dt>
+<dd><p class="first last">Tuple containing the dimensions of the space over which to construct the pmf, e.g. (-180,180) or ((0,1),(-3.14,3.14)) z (1D array or list): Normalization constants for each window</p>
+</dd>
+<dt><strong>z</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array</span></dt>
+<dd><p class="first last">Array containing the normalization constants</p>
+</dd>
+<dt><strong>neighbors</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array-like, optional</span></dt>
+<dd><p class="first last">List showing which windows neighbor which.  See neighbors_harmonic in usutils.</p>
+</dd>
+<dt><strong>nbins</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int or tuple, optional</span></dt>
+<dd><p class="first last">Number of bins to use.  If int, uses that many bins in each dimension.  If tuple, e.g. (100,20), uses 100 bins in the first dimension and 20 in the second.</p>
+</dd>
+<dt><strong>kT</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd><p class="first last">Value of kT to scale the PMF by.  If not provided, set to the Default value.</p>
+</dd>
+<dt><strong>use_iter</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">Use the iterative EMUS estimator for the average of f.  If true (default), uses the estimator <span class="math notranslate nohighlight">\(\sum_i &lt; g / (\sum_j \psi_j/z_j) &gt;_i\)</span>.  Otherwise, uses the first iteration EMUS estimator, <span class="math notranslate nohighlight">\(\sum_i &lt;g / \sum_j \psi_j &gt;_i z_i\)</span>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>pmf</strong> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd><p class="first last">Returns the potential of mean force as a d dimensional array, where d is the number of collective variables.</p>
+</dd>
+<dt><strong>edges</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd><p class="first last">Edges of the histogram bins, in the syntax and order used by numpy’s histogramdd method.  Element d is the edges of the histograms in dimension d.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.emus.calculate_zs">
+<code class="descclassname">emus.emus.</code><code class="descname">calculate_zs</code><span class="sig-paren">(</span><em>psis</em>, <em>neighbors=None</em>, <em>n_iter=0</em>, <em>tol=1e-08</em>, <em>use_iats=False</em>, <em>iat_method='ipce'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/emus.html#calculate_zs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.emus.calculate_zs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the normalization constants for the windows.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>n_iter</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int, optional (default 0)</span></dt>
+<dd><p class="first last">Maximum number of iterative EMUS iterations to perform.</p>
+</dd>
+<dt><strong>tol</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional (see _defaults.py for default)</span></dt>
+<dd><p class="first last">If the relative residual falls beneath the tolerance, the iterative EMUS iteration is truncated.</p>
+</dd>
+<dt><strong>use_iats</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">If true, estimate integrated autocorrelation time in each iterative EMUS iteration.  Likely unnecessary unless dynamics are expected to be drastically different in each window. If iats is provided, the iteration will use those rather than estimating them in each step.</p>
+</dd>
+<dt><strong>iat_method</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string, optional</span></dt>
+<dd><p class="first last">Routine to use for calculating integrated autocorrelation times.  Currently accepts DEFAULT_IAT, ‘acor’, and ‘icce’.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>z</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array</span></dt>
+<dd><p class="first last">Values for the Normalization constant in each window.</p>
+</dd>
+<dt><strong>F</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array</span></dt>
+<dd><p class="first last">Matrix to take the eigenvalue of for iterative EMUS.</p>
+</dd>
+<dt><strong>iats</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array</span></dt>
+<dd><p class="first last">Estimated values of the autocorrelation time.  Only returned if use_iats is true.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="emus.emus.emus_iter">
+<code class="descclassname">emus.emus.</code><code class="descname">emus_iter</code><span class="sig-paren">(</span><em>psis</em>, <em>Avals=None</em>, <em>neighbors=None</em>, <em>return_iats=False</em>, <em>iat_method='ipce'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/emus/emus.html#emus_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#emus.emus.emus_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs one step of the the EMUS iteration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>psis</strong> <span class="classifier-delimiter">:</span> <span class="classifier">3D data structure</span></dt>
+<dd><p class="first last">The values of the bias functions evaluated each window and timepoint.  See <a class="reference external" href="../datastructures.html#data-from-sampling">datastructures</a> for more information.</p>
+</dd>
+<dt><strong>Avals</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array-like, optional</span></dt>
+<dd><p class="first last">Weights in front of <span class="math notranslate nohighlight">\(\psi\)</span> in the overlap matrix.</p>
+</dd>
+<dt><strong>neighbors</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array-like, optional</span></dt>
+<dd><p class="first last">List showing which windows neighbor which.  See neighbors_harmonic in usutils.</p>
+</dd>
+<dt><strong>return_iats</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">Whether or not to calculate integrated autocorrelation times of <span class="math notranslate nohighlight">\(\psi_ii^*\)</span> for each window.</p>
+</dd>
+<dt><strong>iat_method</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string, optional</span></dt>
+<dd><p class="first last">Routine to use for calculating said iats.  Accepts ‘ipce’, ‘acor’, and ‘icce’.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>z</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array</span></dt>
+<dd><p class="first last">Normalization constants for each window</p>
+</dd>
+<dt><strong>F</strong> <span class="classifier-delimiter">:</span> <span class="classifier">2D array</span></dt>
+<dd><p class="first last">The overlap matrix constructed for the eigenproblem.</p>
+</dd>
+<dt><strong>iats</strong> <span class="classifier-delimiter">:</span> <span class="classifier">1D array</span></dt>
+<dd><p class="first last">If return_iats chosen, returns the iats that have been estimated.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
-           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="linalg.html" class="btn btn-neutral float-right" title="linalg module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="linalg.html" class="btn btn-neutral float-right" title="linalg module">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="avar.html" class="btn btn-neutral" title="avar module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="avar.html" class="btn btn-neutral" title="avar module"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -162,13 +427,12 @@ Eigenvector Method of Umbrella Sampling (EMUS).</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Erik H Thiede.
-
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
-
         </div>
       </div>
 
@@ -192,7 +456,7 @@ Eigenvector Method of Umbrella Sampling (EMUS).</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

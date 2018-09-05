@@ -1,7 +1,7 @@
 usutils module
 ==============
 
-.. automodule:: usutils
+.. automodule:: emus.usutils
     :members:
     :undoc-members:
     :show-inheritance:

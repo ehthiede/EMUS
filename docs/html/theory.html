@@ -5,7 +5,6 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Background &mdash; emus  documentation</title>
@@ -15,6 +14,7 @@
   
 
   
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -30,12 +30,15 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="emus  documentation" href="index.html"/>
         <link rel="next" title="Quickstart" href="quickstart.html"/>
         <link rel="prev" title="What is emus.py?" href="index.html"/> 
 
   
-  <script src="_static/js/modernizr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 
 </head>
 
@@ -45,23 +48,11 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
-            <a href="index.html" class="icon icon-home"> emus
-          
-
-          
-          </a>
-
-          
-            
-            
-          
-
-          
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> emus</a>
+        
+        
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -69,29 +60,44 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
+      </div>
 
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
           
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-            
-            
-                <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="">Background</a><ul>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Background</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#basics-of-equilibrium-umbrella-sampling">Basics of Equilibrium Umbrella Sampling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#emus">EMUS</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/index.html">EMUS Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#loading-from-wham-like-formats">Loading from WHAM-like Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#calculating-the-pmf">Calculating the PMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#estimating-window-partition-functions">Estimating Window Partition Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#calculating-averages">Calculating Averages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="datastructures.html#common-data-structures">Common data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datastructures.html#parameters-for-harmonic-windows">Parameters for Harmonic windows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">EMUS Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/autocorrelation.html">autocorrelation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/avar.html">avar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/emus.html">emus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/linalg.html">linalg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/usutils.html">usutils module</a></li>
+</ul>
+</li>
 </ul>
 
-            
           
-        </div>
+        
       </div>
+      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -106,104 +112,94 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
     <li>Background</li>
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/theory.txt" rel="nofollow"> View page source</a>
-          
+          <a href="_sources/theory.rst.txt" rel="nofollow"> View page source</a>
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+          <div role="main" class="document">
             
   <div class="section" id="background">
 <h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
 <p>Here, we give a quick overview of the theory behind the EMUS package.  For an in-depth analysis, please refer to the [EMUS paper](<a class="reference external" href="http://scitation.aip.org/content/aip/journal/jcp/145/8/10.1063/1.4960649">http://scitation.aip.org/content/aip/journal/jcp/145/8/10.1063/1.4960649</a>).</p>
 <div class="section" id="basics-of-equilibrium-umbrella-sampling">
 <h2>Basics of Equilibrium Umbrella Sampling<a class="headerlink" href="#basics-of-equilibrium-umbrella-sampling" title="Permalink to this headline">¶</a></h2>
-<p>In umbrella sampling, we are interested in computing averages of a function <span class="math">\(g\)</span> over a probability distribution <span class="math">\(\pi\)</span>.  We will use angle brackets to denote the the value of these averages (also known as expectations).</p>
-<div class="math">
+<p>In umbrella sampling, we are interested in computing averages of a function <span class="math notranslate nohighlight">\(g\)</span> over a probability distribution <span class="math notranslate nohighlight">\(\pi\)</span>.  We will use angle brackets to denote the the value of these averages (also known as expectations).</p>
+<div class="math notranslate nohighlight">
 \[\left \langle g \right \rangle = \int g(x) \pi(x) dx.\]</div>
-<p>For instance, <span class="math">\(\pi\)</span> might be the Boltzmann distribution,</p>
-<div class="math">
+<p>For instance, <span class="math notranslate nohighlight">\(\pi\)</span> might be the Boltzmann distribution,</p>
+<div class="math notranslate nohighlight">
 \[\pi(x) = \frac{\exp \left(- H_0(x) / k_B T \right)}{\int \exp \left(- H_0(x)/ k_B T \right) dx}\]</div>
-<p>where <span class="math">\(H_0\)</span> is the system Hamiltonian,  <span class="math">\(k_B\)</span> is Boltzmann&#8217;s constant, <span class="math">\(T\)</span> is the temperature.  In particular, we can express the free energy difference between two states <span class="math">\(S_1\)</span> and <span class="math">\(S_2\)</span> as</p>
-<div class="math">
+<p>where <span class="math notranslate nohighlight">\(H_0\)</span> is the system Hamiltonian,  <span class="math notranslate nohighlight">\(k_B\)</span> is Boltzmann’s constant, <span class="math notranslate nohighlight">\(T\)</span> is the temperature.  In particular, we can express the free energy difference between two states <span class="math notranslate nohighlight">\(S_1\)</span> and <span class="math notranslate nohighlight">\(S_2\)</span> as</p>
+<div class="math notranslate nohighlight">
 \[\Delta G = -k_B T \ln \left( \frac{\left \langle \iota_{S1} \right \rangle}{ \left \langle \iota_{S2} \right \rangle}\right),\]</div>
-<p>where  <span class="math">\(\iota\)</span> is the indicator function</p>
-<div class="math">
+<p>where  <span class="math notranslate nohighlight">\(\iota\)</span> is the indicator function</p>
+<div class="math notranslate nohighlight">
 \[\begin{split}\iota_S(x) =
         \begin{cases}
 1 &amp; \text{if }x \in S, \text{ and } \\
 0 &amp; \text{otherwise}.
         \end{cases}\end{split}\]</div>
-<p>For complex systems, these integrals must often be performed using <em>Monte Carlo</em> or related methods.  Here, we create a chain of <span class="math">\(N\)</span> configurations, <span class="math">\(X_t\)</span>, and calculate the <em>sample mean</em>,  <a class="footnote-reference" href="#f1" id="id1">[1]</a></p>
-<div class="math">
+<p>For complex systems, these integrals must often be performed using <em>Monte Carlo</em> or related methods.  Here, we create a chain of <span class="math notranslate nohighlight">\(N\)</span> configurations, <span class="math notranslate nohighlight">\(X_t\)</span>, and calculate the <em>sample mean</em>,  <a class="footnote-reference" href="#f1" id="id1">[1]</a></p>
+<div class="math notranslate nohighlight">
 \[\bar{g} = \frac{1}{N} \sum_{t=0}^{N-1}g(X_t).\]</div>
-<p>As <span class="math">\(N\)</span> approaches infinity, the sample mean converges to <span class="math">\(\left \langle g \right \rangle\)</span>.</p>
+<p>As <span class="math notranslate nohighlight">\(N\)</span> approaches infinity, the sample mean converges to <span class="math notranslate nohighlight">\(\left \langle g \right \rangle\)</span>.</p>
 <p>However, for complicated probability densities, this convergence can be particularly slow.  Umbrella sampling overcomes this by instead sampling from multiple biased probability densities,</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\pi_i(x) = \frac{ \psi_i(x) \pi(x)}{\int  \psi_i(x) \pi(x)dx}.\]</div>
-<p>Here <span class="math">\(\psi_i\)</span> is a collection of <span class="math">\(L\)</span> nonnegative functions, which we refer to as &#8220;bias functions&#8221;.  In molecular dynamics, gaussian bias functions are commonly used,</p>
-<div class="math">
+<p>Here <span class="math notranslate nohighlight">\(\psi_i\)</span> is a collection of <span class="math notranslate nohighlight">\(L\)</span> nonnegative functions, which we refer to as “bias functions”.  In molecular dynamics, gaussian bias functions are commonly used,</p>
+<div class="math notranslate nohighlight">
 \[\psi_i(x) = \exp \left( -\frac{1}{2}k_i \left(q(x)-q^0_i\right)^2/k_B T\right),\]</div>
-<p>where <span class="math">\(q\)</span> is a collective variable, a function of the coordinates that encodes the large-scale structure of the system and regulates its dynamics.  This choice gives the following biased density.</p>
-<div class="math">
+<p>where <span class="math notranslate nohighlight">\(q\)</span> is a collective variable, a function of the coordinates that encodes the large-scale structure of the system and regulates its dynamics.  This choice gives the following biased density.</p>
+<div class="math notranslate nohighlight">
 \[\pi_i (x) \propto \exp \left[- \left( H_0(x)+\frac{1}{2} k_i \left(q(x)-q^0_i\right)^2\right) / k_B T \right].\]</div>
-<p>This corresponds to adding a harmonic potential centered at <span class="math">\(q_i^0\)</span> with spring constant <span class="math">\(k_i\)</span> to the system Hamiltonian.  The simulation corresponding to the <span class="math">\(i\)</span>&#8216;th biasing function is referred to as the simulation &#8220;in the <span class="math">\(i'th\)</span> window.&#8221;  We then collect a dataseries sampling each biased density, <span class="math">\(X_t^i\)</span>.  If the bias functions are chosen intelligently, sample means converge much more quickly in the biased densities than in the unbiased probability density.  However, this leaves the task of recombining the data across multiple biased distributions.  <strong>EMUS</strong> is algorithm for performing this task.</p>
+<p>This corresponds to adding a harmonic potential centered at <span class="math notranslate nohighlight">\(q_i^0\)</span> with spring constant <span class="math notranslate nohighlight">\(k_i\)</span> to the system Hamiltonian.  The simulation corresponding to the <span class="math notranslate nohighlight">\(i\)</span>‘th biasing function is referred to as the simulation “in the <span class="math notranslate nohighlight">\(i'th\)</span> window.”  We then collect a dataseries sampling each biased density, <span class="math notranslate nohighlight">\(X_t^i\)</span>.  If the bias functions are chosen intelligently, sample means converge much more quickly in the biased densities than in the unbiased probability density.  However, this leaves the task of recombining the data across multiple biased distributions.  <strong>EMUS</strong> is algorithm for performing this task.</p>
 </div>
 <div class="section" id="emus">
 <h2>EMUS<a class="headerlink" href="#emus" title="Permalink to this headline">¶</a></h2>
 <p>The EMUS algorithm relies on the identity</p>
-<div class="math" id="equation-eq_core_emus">
-<span class="eqno">(1)</span>\[\left \langle g \right \rangle =   \frac{\sum_{i=1}^L z_i \left \langle g^\ast\right \rangle_i}{\sum_{i=1}^L z_i \left \langle 1^\ast\right \rangle_i}\]</div>
+<div class="math notranslate nohighlight" id="equation-eq-core-emus">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eq-core-emus" title="Permalink to this equation">¶</a></span>\[\left \langle g \right \rangle =   \frac{\sum_{i=1}^L z_i \left \langle g^\ast\right \rangle_i}{\sum_{i=1}^L z_i \left \langle 1^\ast\right \rangle_i}\]</div>
 <p>where we have defined</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\begin{split}g^\ast (x) &amp;= \frac{g(x)}{\sum_{k=1}^L \psi_k (x)} \\
 \left \langle g \right \rangle_i &amp;= \int g(x) \pi_i(x) dx .\end{split}\]</div>
-<p>The weights <span class="math">\(z_i\)</span> are proportional to the normalization constants of <span class="math">\(pi_i\)</span>, and solve the equation</p>
-<div class="math" id="equation-eq_evec">
-<span class="eqno">(2)</span>\[z_j = \sum_{i=1}^L z_i F_{ij} \text{, where } F_{ij} = \left \langle \psi_j^\ast \right \rangle_i.\]</div>
-<p>Consequently, the EMUS algorithm works as follows.  For every <span class="math">\(i\)</span> and each datapoint <span class="math">\(X_t^i\)</span>, we calculate the estimates</p>
-<div class="math">
+<p>The weights <span class="math notranslate nohighlight">\(z_i\)</span> are proportional to the normalization constants of <span class="math notranslate nohighlight">\(pi_i\)</span>, and solve the equation</p>
+<div class="math notranslate nohighlight" id="equation-eq-evec">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-evec" title="Permalink to this equation">¶</a></span>\[z_j = \sum_{i=1}^L z_i F_{ij} \text{, where } F_{ij} = \left \langle \psi_j^\ast \right \rangle_i.\]</div>
+<p>Consequently, the EMUS algorithm works as follows.  For every <span class="math notranslate nohighlight">\(i\)</span> and each datapoint <span class="math notranslate nohighlight">\(X_t^i\)</span>, we calculate the estimates</p>
+<div class="math notranslate nohighlight">
 \[\begin{split}\bar{g}^*_i &amp;= \frac{1}{N_i}\sum_{t=0}^{N_i-1} \frac{g(X_t^i)}{\sum_k \psi_k (X_t^i)}, \\
 \bar{1}^*_i &amp;= \frac{1}{N_i}\sum_{t=0}^{N_i-1} \frac{1}{\sum_k \psi_k (X_t^i)}, \text{ and } \\
 \bar{F}_{ij} &amp;= \frac{1}{N_i}\sum_{t=0}^{N_i-1} \frac{\psi_j(X_t^i)}{\sum_k \psi_k (X_t^i)}.\end{split}\]</div>
-<p>We then solve our approximation to the eigenvector problem in <a href="#equation-eq_evec">(2)</a> using the matrix of <span class="math">\(F_{ij}\)</span> values, and compute estimates of <span class="math">\(\left \langle g \right \rangle\)</span> by using substituting our estimates into <a href="#equation-eq_core_emus">(1)</a>.</p>
+<p>We then solve our approximation to the eigenvector problem in <a class="reference internal" href="#equation-eq-evec">(2)</a> using the matrix of <span class="math notranslate nohighlight">\(F_{ij}\)</span> values, and compute estimates of <span class="math notranslate nohighlight">\(\left \langle g \right \rangle\)</span> by using substituting our estimates into <a class="reference internal" href="#equation-eq-core-emus">(1)</a>.</p>
 <table class="docutils footnote" frame="void" id="f1" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Note that for many common sampling schemes, the variable <span class="math">\(t\)</span> corresponds to a system &#8220;time&#8221;.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Note that for many common sampling schemes, the variable <span class="math notranslate nohighlight">\(t\)</span> corresponds to a system “time”.</td></tr>
 </tbody>
 </table>
 </div>
 </div>
 
 
-           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quickstart" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quickstart">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="What is emus.py?" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral" title="What is emus.py?"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -213,13 +209,12 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2016, Erik H Thiede.
-
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
-
         </div>
       </div>
 
@@ -243,7 +238,7 @@
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
