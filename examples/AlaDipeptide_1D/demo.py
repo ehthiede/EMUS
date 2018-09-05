@@ -40,6 +40,7 @@ z_iter_1, F_iter_1 = emus.calculate_zs(psis, n_iter=1)
 z_iter_2, F_iter_2 = emus.calculate_zs(psis, n_iter=2)
 z_iter_5, F_iter_5 = emus.calculate_zs(psis, n_iter=5)
 z_iter_1k, F_iter_1k = emus.calculate_zs(psis, n_iter=1000)
+
 # Calculate new PMF
 iterpmf, edges = emus.calculate_pmf(
     cv_trajs, psis, domain, nbins=nbins, z=z_iter_1k, kT=kT)

@@ -37,17 +37,17 @@ Calculating the PMF
 We now import the emus code, and calculate the normalization constants. 
 
 >>> from emus import emus
->>> z, F = emus.calculate_zs(psis,neighbors=neighbors) 
+>>> z, F = emus.calculate_zs(psis, neighbors=neighbors) 
 
 To calculate the potential of mean force, we provide the number of histogram bins and the range of the collective variable, and call the appropriate method of the EMUS object.
 
->>> domain = ((-180.0,180.))            # Range of dihedral angle values
->>> pmf,edges = emus.calculate_pmf(cv_trajs,psis,domain,z,nbins=60,kT=kT)   # Calculate the pmf
+>>> domain = ((-180.0, 180.))            # Range of dihedral angle values
+>>> pmf,edges = emus.calculate_pmf(cv_trajs, psis, domain, z, nbins=60, kT=kT)   # Calculate the pmf
 
 We can now plot the potential of mean force using pyplot or other tools.
 
->>> centers =(edges[0][1:]+edges[0][:-1])/2.  # Center of each histogram bins
->>> plt.plot(centers,pmf)
+>>> centers =(edges[0][1:] + edges[0][:-1]) / 2.  # Center of each histogram bins
+>>> plt.plot(centers, pmf)
 >>> plt.show()
 
 Estimating Window Partition Functions
@@ -55,23 +55,23 @@ Estimating Window Partition Functions
 
 The EMUS package also has the ability to calculate the relative partition functions using the iterative EMUS estimator.  This requires solving a self-consistent iteration.  The niter parameter specifies the maximum number of iterations.  Note that truncating early still provides a consistent estimator, and introduces no asymptotic bias.
 
->>> z_iter_1, F_iter_1 = emus.calculate_zs(psis,n_iter=1)
->>> z_iter_2, F_iter_2 = emus.calculate_zs(psis,n_iter=2)
->>> z_iter_5, F_iter_5 = emus.calculate_zs(psis,n_iter=5)
->>> z_iter_1k, F_iter_1k = emus.calculate_zs(psis,n_iter=1000)
+>>> z_iter_1, F_iter_1 = emus.calculate_zs(psis, n_iter=1)
+>>> z_iter_2, F_iter_2 = emus.calculate_zs(psis, n_iter=2)
+>>> z_iter_5, F_iter_5 = emus.calculate_zs(psis, n_iter=5)
+>>> z_iter_1k, F_iter_1k = emus.calculate_zs(psis, n_iter=1000)
 
 We can plot the unitless window free energies for each max iteration number to see how our estimates converge.
 
->>> plt.plot(-np.log(z),label="Iteration 0")
->>> plt.plot(-np.log(z_iter_1),label="Iteration 1")
->>> plt.plot(-np.log(z_iter_2),label="Iteration 2")
->>> plt.plot(-np.log(z_iter_5),label="Iteration 5")
->>> plt.plot(-np.log(z_iter_1k),label="Iteration 1k")
+>>> plt.plot(-np.log(z), label="Iteration 0")
+>>> plt.plot(-np.log(z_iter_1), label="Iteration 1")
+>>> plt.plot(-np.log(z_iter_2), label="Iteration 2")
+>>> plt.plot(-np.log(z_iter_5), label="Iteration 5")
+>>> plt.plot(-np.log(z_iter_1k), label="Iteration 1k")
 >>> plt.show()
 
 The pmf can be constructed using these values for the relative partition functions. 
 
->>> pmf = emus.calculate_pmf(cv_trajs,psis,domain,nbins=60,z=z_iter_1k,kT=kT)
+>>> pmf = emus.calculate_pmf(cv_trajs, psis, domain, nbins=60, z=z_iter_1k, kT=kT)
 
 Calculating Averages
 --------------------
@@ -81,7 +81,7 @@ It is possible to use the EMUS package to calculate the averages of functions.  
 
 We can now calculate the probability of being in this state. 
 
->>> prob_C7ax = EM.calculate_obs(psis,z,fdata)
+>>> prob_C7ax = emus.calculate_obs(psis, z_iter_1k, fdata, use_iter=True)
 >>> print prob_C7ax
 
 The EMUS package also introduces a new meta file for functions of configuration space.  The format is a simple text file, where the i'th line is the path to the function data collected in window i.
