@@ -19,7 +19,7 @@ setup(name='emus',
       package_dir={'': 'src'},
       py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
       scripts=['scripts/wemus.py'],
-      install_requires=['numpy', 'scipy', 'h5py', 'acor'],
+      install_requires=['numpy', 'scipy', 'h5py'],
       url='https://github.com/ehthiede/EMUS',
       author='Erik Henning Thiede'
 
