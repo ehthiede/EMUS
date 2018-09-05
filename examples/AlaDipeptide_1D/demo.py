@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Example script with basic usage of the EMUS package.  The script follows the quickstart guide closely, with slight adjustments (for simplicity we have moved all plotting commands to the bottom of the script).
+Example script with basic usage of the EMUS package.  
+The script follows the quickstart guide closely, with slight adjustments (for simplicity we have moved all plotting commands to the bottom of the script).
+Please note that the demo requires matplotlib.  
+This is not a dependency in the emus package to keep things lightweight. 
 """
 import numpy as np
 from emus import usutils as uu

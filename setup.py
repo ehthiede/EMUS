@@ -5,7 +5,7 @@ from glob import glob
 from os.path import basename, splitext
 
 setup(name='emus',
-      version='0.9.3b',
+      version='0.9.4',
       description="Tools and Methods associated with the Eigenvector Method for Umbrella Sampling (EMUS)",
       license='LGPL',
       classifiers=[
