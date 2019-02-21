@@ -398,17 +398,14 @@ def _calculate_acovar(psis, dBdF, gdata=None, dBdg=None, neighbors=None, iat_met
     sigmas = np.zeros(L)
     for i, psi_i in enumerate(psis):
         nbrs_i = neighbors[i]
-        denom_i = 1. / np.sum(psi_i, axis=1)
-        err_t_series = psi_i * np.transpose([denom_i])
-        Fi = np.average(err_t_series, axis=0)
-        err_t_series = np.dot(
-            (psi_i * np.transpose([denom_i]) - Fi), dBdF[i, nbrs_i])
+        dBdF_ij = dBdF[i, nbrs_i]
         if gdata is not None:
-            for n, g_n in enumerate(gdata):
-                g_ni = g_n[i]
-                dBdg_n = dBdg[n]
-                g_ni_wtd = g_ni * denom_i
-                err_t_series += dBdg_n[i] * (g_ni_wtd - np.average(g_ni_wtd))
+            gdata_i = [g_n[i] for g_n in gdata]
+            dBdg_i = [dBdg_n[i] for dBdg_n in dBdg]
+        else:
+            gdata_i = None
+            dBdg_i = None
+        err_t_series = _build_err_t_series(psi_i, dBdF_ij, gdata_i, dBdg_i)
         if iat_routine is not None:
             iat, mn, sigma = iat_routine(err_t_series)
             iats[i] = iat
@@ -417,6 +414,22 @@ def _calculate_acovar(psis, dBdF, gdata=None, dBdg=None, neighbors=None, iat_met
             sigma = np.std(err_t_series) * np.sqrt(iat / len(err_t_series))
         sigmas[i] = sigma
     return iats, sigmas**2
+
+
+def _build_err_t_series(psi_i, dBdF_ij, gdata_i=None, dBdg_i=None):
+    # Include contribution from psis
+    denom_i = 1. / np.sum(psi_i, axis=1)
+    err_t_series = psi_i * np.transpose([denom_i])
+    Fi = np.average(err_t_series, axis=0)
+    err_t_series = np.dot(
+        (psi_i * np.transpose([denom_i]) - Fi), dBdF_ij)
+
+    # Include contribution from observables.
+    for n, g_ni in enumerate(gdata_i):
+        dBdg_ni = dBdg_i[n]
+        g_ni_wtd = g_ni * denom_i
+        err_t_series += dBdg_ni * (g_ni_wtd - np.average(g_ni_wtd))
+    return err_t_series
 
 
 def getAllocations(importances, N_is, newWork):
