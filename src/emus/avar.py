@@ -12,7 +12,7 @@ from ._defaults import DEFAULT_IAT, DEFAULT_KT
 import warnings
 
 
-def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT):
+def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False):
     """Estimates the asymptotic variance in the estimate of :math:`<g_1>/<g_2>`. If :math:`g_2` is not given, it just calculates the asymptotic variance associated with the average of :math:`g_1`.
 
     Parameters
@@ -64,12 +64,16 @@ def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=D
     dBdF = np.outer(z, np.dot(gI, g1star - g1avg / g2avg * g2star)) / g2avg
     dBdg1 = z / g2avg
     dBdg2 = -(g1avg / g2avg) * z / g2avg
-    iats, variances = _calculate_acovar(
-        psis, dBdF, (g1data, g2data), (dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
+    if repexchange:
+        iats, variances = _calculate_acovar_repexchange(
+            psis, dBdF, (g1data, g2data), (dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
+    else:
+        iats, variances = _calculate_acovar(
+            psis, dBdF, (g1data, g2data), (dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
     return iats, g1avg / g2avg, variances
 
 
-def calc_log_avg(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT):
+def calc_log_avg(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False):
     """Estimates the asymptotic variance in the EMUS estimate of :math:`-log <g_1>/<g_2>`.  If :math:`g_2` data is not provided, it estimates the asymptotic variance in the estimate of :math:`-log <g_1>/<g_2>`.  Input and output is as in average_ratio.  Note that if this is used for free energy differences, the result does not use the Boltzmann factor (i.e. :math:`k_B T=1`).  In that case, resulting variances should be scaled by the Boltzmann factor *squared*.
 
     """
@@ -94,12 +98,16 @@ def calc_log_avg(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEF
     dBdF = np.outer(z, np.dot(gI, g1star / g1avg - g2star / g2avg))
     dBdg1 = z / g1avg
     dBdg2 = -z / g2avg
-    iats, variances = _calculate_acovar(
-        psis, dBdF, (g1data, g2data), (dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
+    if repexchange:
+        iats, variances = _calculate_acovar_repexchange(
+            psis, dBdF, (g1data, g2data), (dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
+    else:
+        iats, variances = _calculate_acovar(
+            psis, dBdF, (g1data, g2data), (dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
     return iats, -np.log(g1avg / g2avg), variances
 
 
-def calc_avg_on_pmf(cv_trajs, psis, domain, z, F, g1data, g2data=None, neighbors=None, nbins=100, iat_method=None):
+def calc_avg_on_pmf(cv_trajs, psis, domain, z, F, g1data, g2data=None, neighbors=None, nbins=100, iat_method=DEFAULT_IAT, repexchange=False):
     """Estimates the asymptotic variance of an average on a pmf.
 
     Parameters
@@ -181,14 +189,18 @@ def calc_avg_on_pmf(cv_trajs, psis, domain, z, F, g1data, g2data=None, neighbors
         dBdF = np.outer(z, np.dot(gI, g1star - g1avg / g2avg * g2star)) / g2avg
         dBdg1 = z / g2avg
         dBdg2 = -(g1avg / g2avg) * z / g2avg
-        iats, variances = _calculate_acovar(psis, dBdF, (g1data_hist, g2data_hist), (
-            dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
+        if repexchange:
+            iats, variances = _calculate_acovar_repexchange(
+                psis, dBdF, (g1data, g2data), (dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
+        else:
+            iats, variances = _calculate_acovar(
+                psis, dBdF, (g1data, g2data), (dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
         avars[index] = np.sum(variances)
         means[index] = g1avg / g2avg
     return means, avars
 
 
-def calc_pmf(cv_trajs, psis, domain, z, F, g2data=None, neighbors=None, nbins=100, kT=DEFAULT_KT, iat_method=None):
+def calc_pmf(cv_trajs, psis, domain, z, F, g2data=None, neighbors=None, nbins=100, kT=DEFAULT_KT, iat_method=DEFAULT_IAT, repexchange=False):
     """Estimates the asymptotic variance of a free energy surface.
 
     Parameters
@@ -269,14 +281,18 @@ def calc_pmf(cv_trajs, psis, domain, z, F, g2data=None, neighbors=None, nbins=10
         dBdF = np.outer(z, np.dot(gI, g1star / g1avg - g2star / g2avg))
         dBdg1 = z / g1avg
         dBdg2 = -z / g2avg
-        iats, variances = _calculate_acovar(
-            psis, dBdF, (g1data, g2data), (dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
+        if repexchange:
+            iats, variances = _calculate_acovar_repexchange(
+                psis, dBdF, (g1data, g2data), (dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
+        else:
+            iats, variances = _calculate_acovar(
+                psis, dBdF, (g1data, g2data), (dBdg1, dBdg2), neighbors=neighbors, iat_method=iat_method)
         avars[index] = np.sum(variances) * (kT**2)
         fes[index] = -kT * np.log(g1avg / (dA * g2avg))
     return fes, avars
 
 
-def calc_partition_functions(psis, z, F, neighbors=None, iat_method=DEFAULT_IAT):
+def calc_partition_functions(psis, z, F, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False):
     """Estimates the asymptotic variance of the partition function (normalization constant) for each window.  To get an estimate of the autocovariance of the free energy for each window, multiply the autocovariance of window :math:`i` by :math:` (k_B T / z_i)^2`.
 
     Parameters
@@ -323,20 +339,20 @@ def calc_partition_functions(psis, z, F, neighbors=None, iat_method=DEFAULT_IAT)
     dzdFij = np.outer(z, groupInv).reshape((L, L, L))
 
     # Iterate over windows, getting err contribution from sampling in each
-    for i, psi_i in enumerate(psis):
-        # Data cleaning
-        psi_i_arr = np.array(psi_i)
-        Lneighb = len(neighbors[i])  # Number of neighbors
+    for k in range(L):
+        dzkdFij = dzdFij[:, :, k]
+        for i, psi_i in enumerate(psis):
+            # Data cleaning
+            psi_i_arr = np.array(psi_i)
+            Lneighb = len(neighbors[i])  # Number of neighbors
 
-        # Normalize psi_j(x_i^t) for all j
-        psi_sum = np.sum(psi_i_arr, axis=1)
-        normedpsis = np.zeros(psi_i_arr.shape)  # psi_j / sum_k psi_k
-        for j in range(Lneighb):
-            normedpsis[:, j] = psi_i_arr[:, j] / psi_sum
+            # Normalize psi_j(x_i^t) for all j
+            psi_sum = np.sum(psi_i_arr, axis=1)
+            normedpsis = np.zeros(psi_i_arr.shape)  # psi_j / sum_k psi_k
+            for j in range(Lneighb):
+                normedpsis[:, j] = psi_i_arr[:, j] / psi_sum
 
-        # Calculate contribution to as. err. for each z_k
-        for k in range(L):
-            dzkdFij = dzdFij[:, :, k]
+            # Calculate contribution to as. err. for each z_k
             err_t_series = np.dot(normedpsis, dzkdFij[i][neighbors[i]])
             if iat_routine is not None:
                 iat, mn, sigma = iat_routine(err_t_series)
@@ -382,6 +398,101 @@ def _calculate_acovar(psis, dBdF, gdata=None, dBdg=None, neighbors=None, iat_met
     if neighbors is None:
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
     dBdF = np.array(dBdF)
+    iat_routine, iats = _parse_iat_routine(iat_method, L)
+
+    sigmas = np.zeros(L)
+    for i, psi_i in enumerate(psis):
+        # Extract info for that window.
+        nbrs_i = neighbors[i]
+        dBdF_ij = dBdF[i, nbrs_i]
+        if gdata is not None:
+            gdata_i = [g_n[i] for g_n in gdata]
+            dBdg_i = [dBdg_n[i] for dBdg_n in dBdg]
+        else:
+            gdata_i = None
+            dBdg_i = None
+
+        # Build time series, calculate error.
+        err_t_series = _build_err_t_series(psi_i, dBdF_ij, gdata_i, dBdg_i)
+        if iat_routine is not None:
+            iat, mn, sigma = iat_routine(err_t_series)
+            iats[i] = iat
+        else:
+            iat = iats[i]
+            sigma = np.std(err_t_series) * np.sqrt(iat / len(err_t_series))
+        sigmas[i] = sigma
+    return iats, sigmas**2
+
+
+def _calculate_acovar_repexchange(psis, dBdF, gdata=None, dBdg=None, neighbors=None, iat_method=DEFAULT_IAT):
+    """
+    Estimates the autocovariance and autocorrelation times for each window's contribution to the autocovariance of some observable B.
+
+    Parameters
+    ----------
+    psis : 3D data structure
+        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+    dBdF : array-like
+        Two dimensional array, where element :math:`i,j` is the derivative of the estimate of B with respect to :math:`F_{ij}`
+    gdata : array-like, optional
+        Three dimensional data structure containing data from various observables.  The first index n
+    dBdg : array-like, optional
+        Two dimensional array, where element :math:`n,j` is the derivative of the estimate of B with respect to :math:`gn_j^*`.
+
+
+    Returns
+    -------
+    iats : 1d array
+        The value of the autocorrelation time for each trajectory.
+    avars : 1d array
+        Each window's contribution to the asymptotic variance.  Summing over windows gives the asymptotic variance of the system.
+
+    """
+    L = len(psis)
+    if gdata is not None:
+        if len(gdata) != len(dBdg):
+            raise ValueError('Function data provided is mismatched with derivatives: respective sizes are ',
+                             np.shape(gdata), ' and ', np.shape(dBdg))
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L), range(L)).astype(int)
+    dBdF = np.array(dBdF)
+
+    if isinstance(iat_method, str):
+        iat_routine = ac._get_iat_method(iat_method)
+    else:
+        try:  # Try to interpret iat_method as a single number.
+            iat = float(iat_method)
+        except (ValueError, TypeError) as err:
+            print(err)
+            print("--")
+            print(iat_method)
+            print("--")
+            err.message = "Was unable to interpret the input provided as a method to calculate the autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " + err.message
+            raise err
+        iat_routine = None
+
+    err_t_series = np.zeros(psis[0].shape[0])
+    for i, psi_i in enumerate(psis):
+        # Extract info for that window.
+        nbrs_i = neighbors[i]
+        dBdF_ij = dBdF[i, nbrs_i]
+        if gdata is not None:
+            gdata_i = [g_n[i] for g_n in gdata]
+            dBdg_i = [dBdg_n[i] for dBdg_n in dBdg]
+        else:
+            gdata_i = None
+            dBdg_i = None
+
+        # Build time series, calculate error.
+        err_t_series += _build_err_t_series(psi_i, dBdF_ij, gdata_i, dBdg_i)
+    if iat_routine is not None:
+        iat, mn, sigma = iat_routine(err_t_series)
+    else:
+        sigma = np.std(err_t_series) * np.sqrt(iat / len(err_t_series))
+    return iat, sigma**2
+
+
+def _parse_iat_routine(iat_method, L):
     if isinstance(iat_method, str):
         iat_routine = ac._get_iat_method(iat_method)
         iats = np.zeros(L)
@@ -394,26 +505,7 @@ def _calculate_acovar(psis, dBdF, gdata=None, dBdg=None, neighbors=None, iat_met
         iat_routine = None
         if len(iats) != L:
             raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).' % (len(iats), L))
-
-    sigmas = np.zeros(L)
-    for i, psi_i in enumerate(psis):
-        nbrs_i = neighbors[i]
-        dBdF_ij = dBdF[i, nbrs_i]
-        if gdata is not None:
-            gdata_i = [g_n[i] for g_n in gdata]
-            dBdg_i = [dBdg_n[i] for dBdg_n in dBdg]
-        else:
-            gdata_i = None
-            dBdg_i = None
-        err_t_series = _build_err_t_series(psi_i, dBdF_ij, gdata_i, dBdg_i)
-        if iat_routine is not None:
-            iat, mn, sigma = iat_routine(err_t_series)
-            iats[i] = iat
-        else:
-            iat = iats[i]
-            sigma = np.std(err_t_series) * np.sqrt(iat / len(err_t_series))
-        sigmas[i] = sigma
-    return iats, sigmas**2
+    return iat_routine, iats
 
 
 def _build_err_t_series(psi_i, dBdF_ij, gdata_i=None, dBdg_i=None):
@@ -425,10 +517,11 @@ def _build_err_t_series(psi_i, dBdF_ij, gdata_i=None, dBdg_i=None):
         (psi_i * np.transpose([denom_i]) - Fi), dBdF_ij)
 
     # Include contribution from observables.
-    for n, g_ni in enumerate(gdata_i):
-        dBdg_ni = dBdg_i[n]
-        g_ni_wtd = g_ni * denom_i
-        err_t_series += dBdg_ni * (g_ni_wtd - np.average(g_ni_wtd))
+    if gdata_i is not None:
+        for n, g_ni in enumerate(gdata_i):
+            dBdg_ni = dBdg_i[n]
+            g_ni_wtd = g_ni * denom_i
+            err_t_series += dBdg_ni * (g_ni_wtd - np.average(g_ni_wtd))
     return err_t_series
 
 
