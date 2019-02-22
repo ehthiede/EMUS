@@ -154,7 +154,7 @@ def calc_avg_on_pmf(cv_trajs, psis, domain, z, F, g1data, g2data=None, neighbors
 
     # Warn user if they want to calculate each autocorrelation by hand.
     if isinstance(iat_method, str):
-        warnings.warn("Programs is set to compute the iat for every observable.  Since for a potential of mean force each point is an observable, this is going to be REALLY SLOW.  It is strongly suggested that you compute representative autocorrelation times for each window, and use those instead.")
+        warnings.warn("Program is set to compute the iat for every observable.  Since for a potential of mean force each histogram bin is an observable, this may be slow.  It may be better to compute a representative autocorrelation time for each window, and use those instead.")
 
     # Get the edges for each histogram bin
     edges = [np.linspace(domain[i, 0], domain[i, 1], nb + 1)
@@ -245,7 +245,7 @@ def calc_pmf(cv_trajs, psis, domain, z, F, g2data=None, neighbors=None, nbins=10
     if g2data is None:
         g2data = [np.ones(len(traj)) for traj in cv_trajs]
     if isinstance(iat_method, str):
-        warnings.warn("Programs is set to compute the iat for every observable.  Since for a potential of mean force each point is an observable, this is going to be REALLY SLOW.  It is strongly suggested that you compute representative autocorrelation times for each window, and use those instead.")
+        warnings.warn("Program is set to compute the iat for every observable.  Since for a potential of mean force each histogram bin is an observable, this may be slow.  It may be better to compute a representative autocorrelation time for each window, and use those instead.")
 
     # Get the edges for each histogram bin
     edges = [np.linspace(domain[i, 0], domain[i, 1], nb + 1)
@@ -318,18 +318,8 @@ def calc_partition_functions(psis, z, F, neighbors=None, iat_method=DEFAULT_IAT,
         Two dimensional array, where element i,j corresponds to the autocorrelation time associated with window j's contribution to the autocovariance of window i.
     """
     L = len(z)
-    z_var_contribs = np.zeros((L, L))
-    z_var_iats = np.zeros((L, L))
-    if isinstance(iat_method, str):
-        iat_routine = ac._get_iat_method(iat_method)
-    else:  # Try to interpret iat_method as a collection of numbers
-        try:
-            iats = np.array([float(v) for v in iat_method])
-        except (ValueError, TypeError) as err:
-            err.message = "Was unable to interpret the input provided as a method to calculate the autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " + err.message
-        iat_routine = None
-        if len(iats) != L:
-            raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).' % (len(iats), L))
+    z_var_contribs = []
+    z_var_iats = []
     if neighbors is None:  # If no neighborlist, assume all windows neighbor
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
 
@@ -341,28 +331,24 @@ def calc_partition_functions(psis, z, F, neighbors=None, iat_method=DEFAULT_IAT,
     # Iterate over windows, getting err contribution from sampling in each
     for k in range(L):
         dzkdFij = dzdFij[:, :, k]
-        for i, psi_i in enumerate(psis):
-            # Data cleaning
-            psi_i_arr = np.array(psi_i)
-            Lneighb = len(neighbors[i])  # Number of neighbors
 
-            # Normalize psi_j(x_i^t) for all j
-            psi_sum = np.sum(psi_i_arr, axis=1)
-            normedpsis = np.zeros(psi_i_arr.shape)  # psi_j / sum_k psi_k
-            for j in range(Lneighb):
-                normedpsis[:, j] = psi_i_arr[:, j] / psi_sum
-
-            # Calculate contribution to as. err. for each z_k
-            err_t_series = np.dot(normedpsis, dzkdFij[i][neighbors[i]])
-            if iat_routine is not None:
-                iat, mn, sigma = iat_routine(err_t_series)
-                z_var_contribs[k, i] = sigma * sigma
-            else:
-                iat = iats[i]
-                z_var_contribs[k, i] = np.var(
-                    err_t_series) * (iat / len(err_t_series))
-            z_var_iats[k, i] = iat
-    autocovars = np.sum(z_var_contribs, axis=1)
+        if repexchange:
+            iats, variances = _calculate_acovar_repexchange(
+                psis, dzkdFij, neighbors=neighbors, iat_method=iat_method)
+        else:
+            iats, variances = _calculate_acovar(
+                psis, dzkdFij, neighbors=neighbors, iat_method=iat_method)
+        z_var_contribs.append(variances)
+        z_var_iats.append(iats)
+    z_var_contribs = np.array(z_var_contribs)
+    z_var_iats = np.array(z_var_iats)
+    autocovars = np.copy(z_var_contribs)
+    if not repexchange:
+        autocovars = np.sum(z_var_contribs, axis=1)
+    else:
+        autocovars = autocovars.ravel()
+        z_var_contribs = z_var_contribs.ravel()
+        z_var_iats = z_var_iats.ravel()
     return autocovars, z_var_contribs, z_var_iats
 
 

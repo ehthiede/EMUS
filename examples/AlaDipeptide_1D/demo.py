@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Example script with basic usage of the EMUS package.  
+Example script with basic usage of the EMUS package.
 The script follows the quickstart guide closely, with slight adjustments (for simplicity we have moved all plotting commands to the bottom of the script).
-Please note that the demo requires matplotlib.  
-This is not a dependency in the emus package to keep things lightweight. 
+Please note that the demo requires matplotlib, which is not a dependency in the emus package to keep things lightweight.
 """
 import numpy as np
 from emus import usutils as uu
@@ -56,17 +55,18 @@ prob_C7ax_iter = emus.calculate_obs(
     psis, z_iter_1k, fdata, use_iter=True)  # Just calculate the probability
 avg_pmf, edges = emus.calculate_avg_on_pmf(
     cv_trajs, psis, (-180, 180), z_iter_1k, fdata, use_iter=True, nbins=nbins)  # Just calculate the probability
-plt.plot(avg_pmf)
-plt.xlabel('Dihedral Angle')
-plt.ylabel('Avg of Indicator on PMF')
-plt.show()
+# plt.plot(avg_pmf)
+# plt.xlabel('Dihedral Angle')
+# plt.ylabel('Avg of Indicator on PMF')
+# plt.show()
 
 
 # Get the asymptotic error of each histogram bin.
 pmf_av_mns, pmf_avars = avar.calc_pmf(
     cv_trajs, psis, domain, z, F, nbins=nbins, kT=kT, iat_method=np.average(ztaus, axis=0))
 
-### Data Output Section ###
+
+# ~~~ Data Output Section ~~~ #
 
 # Plot the EMUS, Iterative EMUS pmfs.
 pmf_centers = (edges[0][1:]+edges[0][:-1])/2.
@@ -74,7 +74,7 @@ plt.figure()
 plt.errorbar(pmf_centers, pmf_av_mns, yerr=np.sqrt(
     pmf_avars), label='EMUS PMF w. AVAR')
 plt.plot(pmf_centers, iterpmf, label='Iter EMUS PMF')
-plt.xlabel('$\psi$ dihedral angle')
+plt.xlabel(r'$\psi$ dihedral angle')
 plt.ylabel('Unitless FE')
 plt.legend()
 plt.title('EMUS and Iterative EMUS potentials of Mean Force')
