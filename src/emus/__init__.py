@@ -8,6 +8,6 @@ from __future__ import absolute_import
 from . import avar, emus, linalg, usutils
 
 __author__ = "Erik Henning Thiede"
-__license__ = "LGPL"
+__license__ = "MIT"
 __maintainer__ = "Erik Henning Thiede"
 __email__ = "thiede@uchicago.edu"
