@@ -449,10 +449,6 @@ def _calculate_acovar_repexchange(psis, dBdF, gdata=None, dBdg=None, neighbors=N
         try:  # Try to interpret iat_method as a single number.
             iat = float(iat_method)
         except (ValueError, TypeError) as err:
-            print(err)
-            print("--")
-            print(iat_method)
-            print("--")
             err.message = "Was unable to interpret the input provided as a method to calculate the autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " + err.message
             raise err
         iat_routine = None
