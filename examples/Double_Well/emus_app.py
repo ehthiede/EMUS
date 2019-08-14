@@ -1,8 +1,7 @@
 import numpy as np
 import scipy
-from scipy import integrate
 import emus
-from emus import emus, avar, iter_avar_2,linalg
+from emus import emus, avar, iter_avar_2, linalg
 import matplotlib.pyplot as plt
 
 # Define Simulation Parameters
@@ -34,8 +33,8 @@ def bias_potential(i, x, L):
 
 kT = 1
 L = 60
-I = np.arange(L)
-neighbors = [I.astype('int') for i in I]
+interval = np.arange(L)
+neighbors = [interval.astype('int') for i in interval]
 
 
 def simulate_walker():
@@ -126,14 +125,13 @@ def z_sim_noniter(cv_trajs):
             psi[t] = np.exp(-ut / kT)
         psis.append(psi)
     z, F = emus.calculate_zs(psis, n_iter=0)
-    return z,F
+    return z, F
 
 
 def F(x, i, l, m):
     '''Returns the function \psi_l*\psi_m/ \sum_k(\psi_k/z_k)^2
     '''
-    return get_psi(x, l) * get_psi(x, m) * pi_i(x, i) / sum(f(x)
-                   for f in [lambda x, k=k:get_psi(x, k) / z[k] for k in range(L)])**2
+    return get_psi(x, l) * get_psi(x, m) * pi_i(x, i) / sum(f(x) for f in [lambda x, k=k:get_psi(x, k) / z[k] for k in range(L)])**2
 
 
 def pi_i(x, i):
@@ -148,11 +146,9 @@ def B_calc():
     B = np.zeros((L, L))
     for l in range(L):
         for m in range(L):
-            #print([scipy.integrate.quad(F(i,l,m),0,1)[0] for i in range(L)])
-            #print(np.array([scipy.integrate.quad(F1(i),0,1)[0] for i in range(L)]))
-            B[l,m] = -np.sum(np.array([scipy.integrate.quad(F,0,1,args=(i,l,
-               m))[0] / scipy.integrate.quad(pi_i,0,1,
-                args=(i))[0]/ (z[l]**2) for i in range(L)]))
+            # print([scipy.integrate.quad(F(i,l,m),0,1)[0] for i in range(L)])
+            # print(np.array([scipy.integrate.quad(F1(i),0,1)[0] for i in range(L)]))
+            B[l, m] = -np.sum(np.array([scipy.integrate.quad(F, 0, 1, args=(i, l, m))[0] / scipy.integrate.quad(pi_i, 0, 1, args=(i))[0] / (z[l]**2) for i in range(L)]))
             if l == m:
                 B[l, m] += 1
     return B
@@ -166,16 +162,10 @@ def B_sim():
         for m in range(L):
             for i in range(L):
                 cv_trajs_i = np.array(sorted(np.array(cv_trajs[i])))
-                fx = get_psi(cv_trajs_i,
-                             l) * get_psi(cv_trajs_i,
-                                          m) / np.sum([get_psi(cv_trajs_i,
-                                                               k) / z[k] for k in range(L)],
-                                                      axis=0)**2
+                fx = get_psi(cv_trajs_i, l) * get_psi(cv_trajs_i, m) / np.sum([get_psi(cv_trajs_i, k) / z[k] for k in range(L)], axis=0)**2
                 pix = np.exp((-unbiased_potential(cv_trajs_i) -
                               bias_potential(i, cv_trajs_i, L)) / kT)
-                B[l,m] -= scipy.integrate.trapz(np.array(fx * pix),
-                   cv_trajs_i) / (scipy.integrate.trapz(np.array(pix),
-                     cv_trajs_i) * z[m]**2)
+                B[l, m] -= scipy.integrate.trapz(np.array(fx * pix), cv_trajs_i) / (scipy.integrate.trapz(np.array(pix), cv_trajs_i) * z[m]**2)
     for r in range(L):
         B[r, r] += 1
     return(B)
@@ -195,16 +185,17 @@ def a():
     return(a)
 
 
-
 def z_error_sim_iter(z):
     zerr_iter, log_zcontribs_iter, log_ztaus_iter = iter_avar_2.calc_log_z(
         psis, z, repexchange=False)
     return(zerr_iter)
 
-def z_error_sim_noniter(z,F):
+
+def z_error_sim_noniter(z, F, psis):
     z_err, log_zcontribs, log_ztaus = avar.calc_partition_functions(
         psis, z, F, repexchange=False)
     return(z_err)
+
 
 def z_error_calc_iter(B):
     B_pseudo_inv = linalg.groupInverse(B)
@@ -228,9 +219,8 @@ def z_error_calc_iter(B):
 
 
 cv_trajs = simulate_walker()
-#cv_trajs=simulate_iid()
 z1 = z_sim_iter(cv_trajs)
-z2,F2=z_sim_noniter(cv_trajs)
+z2, F = z_sim_noniter(cv_trajs)
 psis = []
 for i in range(L):
     psi = np.zeros((len(cv_trajs[i]), L))
@@ -240,7 +230,7 @@ for i in range(L):
         psi[t] = np.exp(-ut / kT)
     psis.append(psi)
 zerr_iter_algorithm = z_error_sim_iter(z1)
-zerr_noniter=z_error_sim_noniter(z2,F2)
+zerr_noniter = z_error_sim_noniter(z2, F)
 
 '''
 z_list=[z_sim_iter(simulate_walker()) for i in range(100)]
@@ -253,25 +243,25 @@ true_error=np.array([np.var(z_list[:,i]) for i in range(L)])
 z = z_calc()
 B = B_calc()
 # B1=B_sim()
-B_ref=np.load("B_ref.npy")
+B_ref = np.load("B_ref.npy")
 a = a()
 zerr_iter = z_error_calc_iter(B)
 # zerr_iter_2=z_error_calc_iter(B1)
 
 
 print("Calculated std in iter_z: ", np.sqrt(zerr_iter / z))
-#print("Calculated using smp points:", np.sqrt(zerr_iter_2/z))
-#print("true error",np.sqrt(true_error/z))
+# print("Calculated using smp points:", np.sqrt(zerr_iter_2/z))
+# print("true error",np.sqrt(true_error/z))
 print("Numerical Result Using iter_avar", np.sqrt(zerr_iter_algorithm / z1))
 
-#print("Ref Calculated std in iter_z: ",np.sqrt(zerr_iter_1/z_iter))
+# print("Ref Calculated std in iter_z: ",np.sqrt(zerr_iter_1/z_iter))
 
 plt.plot(zerr_iter / z, label='Analytical Result for Estimated Iter_AVAR', c='b')
-#plt.plot(zerr_iter_2/z, label='Estimated AVAR using smp',c='g')
-#plt.plot(true_error/z, label='True Iter_AVAR',c='g')
+# plt.plot(zerr_iter_2/z, label='Estimated AVAR using smp',c='g')
+# plt.plot(true_error/z, label='True Iter_AVAR',c='g')
 plt.plot(zerr_iter_algorithm / z1, label='Numerical Result for Estimated Iter_AVAR', c='r')
-#plt.plot(zerr_iter_1/z_iter, label='Estimated AVAR from simulation',c='g')
-#plt.plot(zerr_noniter/z2, label='Old AVAR estimate')
+# plt.plot(zerr_iter_1/z_iter, label='Estimated AVAR from simulation',c='g')
+# plt.plot(zerr_noniter/z2, label='Old AVAR estimate')
 plt.ylabel('Variance in $z$')
 plt.xlabel('Window Index')
 plt.yscale('log')
