@@ -50,6 +50,8 @@ htmlcov
 output/*.html
 output/*/index.html
 
+*.ipynb_checkpoints/
+
 # Sphinx
 docs/_build
 
