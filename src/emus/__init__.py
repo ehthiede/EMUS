@@ -5,7 +5,7 @@ Eigenvector Method of Umbrella Sampling (EMUS).
 from __future__ import absolute_import
 
 # Set explicit packages
-from . import avar, emus, linalg, usutils, iter_avar
+from . import avar, emus, linalg, usutils, iter_avar, iter_avar_3
 
 __author__ = "Erik Henning Thiede"
 __license__ = "MIT"

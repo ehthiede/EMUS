@@ -10,25 +10,24 @@ from . import autocorrelation as ac
 from ._defaults import DEFAULT_IAT
 
 
-def calc_p_traj(psis, z):
+def calc_a(psis, z):
     """
-    Estimates the trajectories :math:`p_j(X_t^i)` described in REF.
 
     Parameters
     ----------
     psis : 3D data structure
-        The values of the bias functions evaluated each window and timepoint.
-        See `datastructures <../datastructures.html#data-from-sampling>`__ for
+        The values of the bias functions evaluated each window and timepoint.  
+        See `datastructures <../datastructures.html#data-from-sampling>`__ for 
         more information.
     z : 1D array
-        Array containing the normalization constants calculated using
+        Array containing the normalization constants calculated using 
         Iterative EMUS
 
     Returns
     ------
-    p_traj : list of 2d arrays
-        Values of the P trajectory. p_traj[i][t,j] gives the value of
-        :math:`p_j(X_t^i)`.
+    a : list of 2d arrays
+         a[i][t,j] gives the value of
+        :math:`a_ij(X_t^i)`.
 
     Variables used
     --------------
@@ -41,54 +40,45 @@ def calc_p_traj(psis, z):
     N = np.zeros(L)
     for i in range(L):
         N[i] = psis[i].shape[0]
-    Nt = np.sum(N)
-    p_traj = []
+    a = []
     for i in range(L):
-        pi = np.zeros((int(N[i]), L))
+        ai = np.zeros((int(N[i]), L))
         for t in range(int(N[i])):
             for j in range(L):
-                pi[t, j] = (N[j]/Nt*psis[i][t, j]/z[j]) / \
-                    np.dot(N/Nt, psis[i][t]/z)
-        p_traj.append(pi)
-    return p_traj
+                ai[t, j] = (psis[i][t, j]/z[i])/ np.sum(psis[i][t]/z)
+        a.append(ai)
+    return a
 
 
-def calc_B_matrix(psis, p_traj):
-    """
-    Estimates the B matrix in REF.
-
-    Parameters
-    ----------
-    p_traj : list of 2d arrays
-        Values of the P trajectory. p_traj[i][t,j] gives the value of
-        :math:`p_j(X_t^i)`.
-
-    Returns
-    -------
-    B : 2d matrix
-        B matrix in REF.
-    """
+def calc_B_matrix(psis, z):
     L = len(psis)
     N = np.zeros(L)
+    windowsum=[]
     for i in range(L):
         N[i] = psis[i].shape[0]
-    Nt = np.sum(N)
+        windowsum1=np.zeros(int(N[i]))
+        for t in range(int(N[i])):
+            s1=0
+            for k in range(L):
+                s1+=psis[i][t,k]/z[k]
+            windowsum1[t]=s1
+        windowsum.append(windowsum1)
     B = np.zeros((L, L))
     for r in range(L):
         for i in range(L):
             s1 = 0
             for t in range(int(N[i])):
-                s1 += p_traj[i][t, r]*(1-p_traj[i][t, r])
-            B[r, r] += s1
+                s1 += psis[i][t, r]*psis[i][t,r]/(windowsum[i][t])**2
+            B[r,r] -= s1/(z[r]**2*N[i])
+        B[r, r] += 1
     for r in range(L):
         for s in range(r):
             for i in range(L):
                 s1 = 0
                 for t in range(int(N[i])):
-                    s1 += p_traj[i][t, s]*p_traj[i][t, r]
-                B[r, s] -= s1
-            B[s, r] = B[r, s]
-    B = B/Nt
+                    s1 += psis[i][t, r]*psis[i][t, s]/(windowsum[i][t])**2
+                B[r,s] -= s1/(z[r]**2*N[i])
+                B[s,r]-= s1/(z[s]**2*N[i])
     return B
 
 
@@ -97,35 +87,27 @@ def calc_log_z(psis, z, repexchange=False, iat_method=DEFAULT_IAT):
     Calculates the asymptotic variance in the log partition functions.
     """
     L = len(psis)  # Number of windows
-    p_traj = calc_p_traj(psis, z)
-    B = calc_B_matrix(psis, p_traj)
-
+    a = calc_a(psis, z)
+    B = calc_B_matrix(psis, z)
     # Construct trajectories for autocovariance.
     B_pseudo_inv = np.linalg.pinv(B)
-    zeta_traj = [np.dot(p_traj_i, B_pseudo_inv.T) for p_traj_i in p_traj]
-    if repexchange:
-        zeta_sum = np.sum(zeta_traj, axis=0)
-        log_z_iats = np.zeros(L)
-        log_z_avar = np.zeros(L)
-        for k in range(L):
-            log_z_iats[k], log_z_avar[k] = _get_repexchange_avars(
-                zeta_sum[:, k], iat_method)
-        return log_z_avar, log_z_avar, log_z_iats
-    else:
-        log_z_contribs = np.zeros((L, L))
-        log_z_iats = np.zeros((L, L))
-        for k in range(L):
-            # Extract contributions to window k FE.
-            zeta_k = [zt[:, k] for zt in zeta_traj]
-            log_z_iats[k], log_z_contribs[k] = _get_iid_avars(
-                zeta_k, iat_method)
-            # print(zeta_k)
-            # print(np.shape(zeta_k))
-            # print(np.shape(zeta_traj))
-            # print(k, np.std(zeta_k, axis=1), log_z_contribs[k])
-            # raise Exception
-        log_z_avar = np.sum(log_z_contribs, axis=1)
-        return log_z_avar, log_z_contribs, log_z_iats
+    zeta_traj=[]
+    for i in range(L):
+        Ni = int(psis[i].shape[0])
+        zeta_i=np.zeros((Ni,L))
+        for t in range(int(Ni)):
+            for r in range(L):
+                zeta_i[t,r]=z[i]*np.dot(a[i][t],B_pseudo_inv.T[r])
+        zeta_traj.append(zeta_i)
+    z_contribs = np.zeros((L, L))
+    z_iats = np.zeros((L, L))
+    for k in range(L):
+        # Extract contributions to window k FE.
+        zeta_k = [zt[:, k] for zt in zeta_traj]
+        z_iats[k], z_contribs[k] = _get_iid_avars(
+            zeta_k, iat_method)
+    z_avar = np.sum(z_contribs, axis=1)
+    return z_avar, z_contribs, z_iats
 
 
 def _get_iid_avars(error_traj, iat_method):
@@ -152,7 +134,6 @@ def _get_iid_avars(error_traj, iat_method):
     """
     L = len(error_traj)  # Number of windows
     iat_routine, iats = avar._parse_iat_routine(iat_method, L)
-
     sigmas = np.zeros(L)
     for i, err_t_series in enumerate(error_traj):
         if iat_routine is not None:
@@ -165,37 +146,3 @@ def _get_iid_avars(error_traj, iat_method):
     return iats, sigmas**2
 
 
-def _get_repexchange_avars(error_traj, iat_method):
-    """
-    Get asymptotic variance for a set of trajectories that come from Replica Exchange.
-
-    Parameters
-    ----------
-    error_traj : 3D data structure
-        Collection of trajectories.  error_traj[i] is a timeseries that depends only on
-        sampling in window i.  In contrast to the IID case, as sampling is correlated
-        across windows, here each trajectory must be the same length.
-    iat_method : string or 1D array-like, optional
-        Method used to estimate autocorrelation time.  Choices are 'acor', 'ipce', and 'icce'.  Alternatively, if a scalar is provided, the value of the scalar is taken to be the autocorrelation time of the sampling process.
-
-
-    Returns
-    ------
-    iat : float
-        Value of the integrated autocorrelation time for the dataset
-    acovar : float
-        Value of the asymptotic autocovariance for the data
-
-    """
-    if isinstance(iat_method, str):
-        iat_routine = ac._get_iat_method(iat_method)
-        iat, mn, sigma = iat_routine(error_traj)
-        acovar = sigma**2
-    else:
-        try:  # Try to interpret iat_method as a single number.
-            iat = float(iat_method)
-        except (ValueError, TypeError) as err:
-            err.message = "Was unable to interpret the input provided as a method to calculate the autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " + err.message
-            raise err
-        acovar = np.var(error_traj) * iat / len(error_traj)
-    return iat, acovar

@@ -6,7 +6,7 @@ Please note that the demo requires matplotlib, which is not a dependency in the 
 """
 import numpy as np
 from emus import usutils as uu
-from emus import emus, avar, iter_avar
+from emus import emus, avar, iter_avar_2
 import matplotlib.pyplot as plt
 
 # Define Simulation Parameters
