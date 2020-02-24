@@ -6,7 +6,7 @@ Please note that the demo requires matplotlib, which is not a dependency in the 
 """
 import numpy as np
 from emus import usutils as uu
-from emus import emus, avar, iter_avar_2
+from emus import emus, avar, iter_avar
 import matplotlib.pyplot as plt
 
 # Define Simulation Parameters
@@ -21,8 +21,6 @@ nbins = 60                          # Number of Histogram Bins.
 # Load data
 psis, cv_trajs, neighbors = uu.data_from_meta(
     meta_file, dim, T=T, k_B=k_B, period=period)
-# psis = [pi[:100] for pi in psis]
-print(np.shape(psis))
 
 # Calculate the partition function for each window
 z, F = emus.calculate_zs(psis, neighbors=neighbors)
@@ -31,7 +29,7 @@ z_iter, F_iter = emus.calculate_zs(psis, neighbors=neighbors, n_iter=5)
 # Calculate error in each z value from the first iteration.
 zerr, zcontribs, ztaus = avar.calc_partition_functions(
     psis, z, F, iat_method='acor')
-    # psis, z, F, iat_method=np.ones(len(psis)))
+# psis, z, F, iat_method=np.ones(len(psis)))
 log_zerr = np.sqrt(zerr) / z
 
 # log_zerr_iter, log_zcontribs_iter, log_ztaus_iter = iter_avar.calc_log_z(

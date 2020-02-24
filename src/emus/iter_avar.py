@@ -8,8 +8,7 @@ import numpy as np
 from . import linalg as lm
 from . import emus
 from . import autocorrelation as ac
-from ._defaults import DEFAULT_IAT, DEFAULT_KT
-import warnings
+from ._defaults import DEFAULT_IAT
 
 
 def buildF(psis, v):
@@ -344,34 +343,3 @@ def _calculate_acovar(psis, dBdF, gdata=None, dBdg=None, neighbors=None, iat_met
             sigma = np.std(err_t_series) * np.sqrt(iat / len(err_t_series))
         sigmas[i] = sigma
     return iats, sigmas**2
-
-
-def getAllocations(importances, N_is, newWork):
-    """Calculates the optimal allocation of sample points
-    These are the optimal weights for
-    To deal with negative weights, it removes all the negative weights, and calculates the weights for the resulting subproblem.
-    """
-    errs = np.copy(importances)
-    ns = np.copy(N_is)
-    testWeights = _calcWeightSubproblem(errs, ns, newWork)
-    negativity = np.array([weit < 0.0 for weit in testWeights])
-    while(any(negativity)):
-        errs *= (1.0 - negativity)
-        ns *= (1.0 - negativity)
-        newWeights = _calcWeightSubproblem(errs, ns, newWork)
-        testWeights = newWeights
-        negativity = np.array([weit < 0.0 for weit in testWeights])
-    # We return the weights, rounded and then converted to integers
-    return map(int, map(round, testWeights))
-
-
-def _calcWeightSubproblem(importances, N_is, newWork):
-    """Calculates the sampling weights of each region, according to the method using Lagrange Modifiers.
-    """
-    totalWork = np.sum(N_is)
-    weights = np.zeros(importances.shape)
-    varConstants = importances * np.sqrt(N_is)
-    constSum = np.sum(varConstants)
-    for ind, val in enumerate(varConstants):
-        weights[ind] = val / constSum * (newWork + totalWork) - N_is[ind]
-    return weights

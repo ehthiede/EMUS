@@ -55,7 +55,9 @@ def neighbors_harmonic(centers, fks, kTs=DEFAULT_KT, period=None, nsig=6):
         rv = centers - cntr_i
         rvmin = _minimage_traj(rv, period)
         for j, rv in enumerate(rvmin):
-            if (np.abs(rv) < rad_i).all():
+            my_rad = (np.abs(rv) < rad_i).all()
+            j_rad = (np.abs(rv) < rad[j]).all()
+            if (my_rad or j_rad): 
                 nbrs_i.append(j)
         nbrs.append(nbrs_i)
     return nbrs
