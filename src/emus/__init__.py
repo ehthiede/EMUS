@@ -6,6 +6,8 @@ from __future__ import absolute_import
 
 # Set explicit packages
 from . import avar, emus, linalg, usutils, iter_avar
+from . import iter_avar_old
+
 
 __author__ = "Erik Henning Thiede"
 __license__ = "MIT"

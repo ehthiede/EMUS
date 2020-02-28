@@ -117,8 +117,37 @@ def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
     return autocovars, z_var_contribs, z_var_iats
 
 
-def calc_avg_avar(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, combine='ratio'):
-    """Estimates the asymptotic variance of averages of the ratio of two functions.
+def calc_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT):
+    if g2data is None:
+        g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
+    g1star = emus._calculate_win_avgs(
+        psis, z, g1data, neighbors, use_iter=True)
+    g2star = emus._calculate_win_avgs(
+        psis, z, g2data, neighbors, use_iter=True)
+    g1 = np.dot(g1star, z)
+    g2 = np.dot(g2star, z)
+    partial_1 = 1. / g2
+    partial_2 = - g1 / g2**2
+    return calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data, neighbors, iat_method)
+
+
+def calc_log_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT):
+    if g2data is None:
+        g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
+    g1star = emus._calculate_win_avgs(
+        psis, z, g1data, neighbors, use_iter=True)
+    g2star = emus._calculate_win_avgs(
+        psis, z, g2data, neighbors, use_iter=True)
+    g1 = np.dot(g1star, z)
+    g2 = np.dot(g2star, z)
+    partial_1 = 1. / g1
+    partial_2 = - 1. / g2
+    print(iat_method, 'iat_method')
+    return calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data, neighbors, iat_method)
+
+
+def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT):
+    """Estimates the asymptotic variance of a function of two averages.
     ----------
     psis : 3D data structure
         The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
@@ -140,8 +169,8 @@ def calc_avg_avar(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAU
         Two dimensional array, where element i,j corresponds to the autocorrelation time associated with window j's contribution to the autocovariance of window i.
     """
     L = len(z)
-    z_var_contribs = np.zeros((L+2, L))
-    z_var_iats = np.zeros((L+2, L))
+    z_var_iats = np.zeros(L)
+    z_var_contribs = np.zeros(L)
     if isinstance(iat_method, str):
         iat_routine = ac._get_iat_method(iat_method)
     else:  # Try to interpret iat_method as a collection of numbers
@@ -168,14 +197,25 @@ def calc_avg_avar(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAU
     gs = np.stack((np.array(g1data), np.array(g2data)), axis=-1)
     psis = [np.hstack((psi_i, g_i)) for (psi_i, g_i) in zip(psis, gs)]
     F = buildF(psis, v)
-    F = np.array(F)
-    Bmat = np.dot(np.diag(1./v), np.eye(L+2, L)-np.transpose(F))
+    F = np.transpose(np.array(F))
+    Bmat = np.dot(np.diag(1./v), np.eye(L+2, L)-F)
+    print(Bmat.shape, "Bmat shape")
     Bmat = np.hstack((Bmat, np.zeros((Bmat.shape[0], 2))))
-    # Bmat[L, L] = -1/g1
-    # Bmat[L+1, L+1] = -1/g2
+    print(Bmat.shape, "Bmat shape")
+    print("Bmat[:, -1]", Bmat[:, -1])
+    print("Bmat[-1]", Bmat[-1])
     Bmat[L, L] = 1/g1
     Bmat[L+1, L+1] = 1/g2
-    dzdFij = lm.groupInverse(Bmat)
+    print('----------------')
+    print("Bmat[:, -2]", Bmat[:, -2:])
+    print('--------')
+    print("Bmat[-2:]", Bmat[-2:])
+    print('----------------')
+    B_ginv = lm.groupInverse(Bmat)
+    # bottom_block = dzdFij[-2:]
+    total_deriv = partial_1 * B_ginv[-2] + partial_2 * B_ginv[-1]
+    # total_deriv = partial_1 * B_ginv[:, -2] + partial_2 * B_ginv[:, -1]
+
     # Iterate over windows, getting err contribution from sampling in each
     for i, psi_i in enumerate(psis):
         # Data cleaning
@@ -186,29 +226,31 @@ def calc_avg_avar(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAU
         normedpsis = np.zeros(psi_i_arr.shape)  # psi_j / sum_k psi_k
         for j in range(L+2):
             normedpsis[:, j] = psi_i_arr[:, j]/v[j] / psi_sum
+        err_t_series = np.dot(normedpsis, total_deriv)
+        if iat_routine is not None:
+            iat, mn, sigma = iat_routine(err_t_series)
+            z_var_contribs[i] = sigma * sigma
+        else:
+            iat = iats[i]
+            z_var_contribs[i] = np.var(
+                err_t_series) * (iat / len(err_t_series))
+        z_var_iats[i] = iat
+
         # Calculate contribution to as. err. for each z_k
-        for k in range(L+2):
-            err_t_series = np.dot(normedpsis, dzdFij[:, k])
-            if iat_routine is not None:
-                iat, mn, sigma = iat_routine(err_t_series)
-                z_var_contribs[k, i] = sigma * sigma
-            else:
-                iat = iats[i]
-                z_var_contribs[k, i] = np.var(
-                    err_t_series) * (iat / len(err_t_series))
-            z_var_iats[k, i] = iat
-    autocovars = np.sum(z_var_contribs, axis=1)
-    autocovar_g1 = autocovars[-2]
-    autocovar_g2 = autocovars[-1]
 
-    if combine == 'ratio':
-        output_avar = autocovar_g1 / g2 - (g1 / g2**2) * autocovar_g2
-    elif combine == 'log_ratio':
-        output_avar = autocovar_g1 / g1 - autocovar_g2 / g2
-    else:
-        raise ValueError('combination not recognized')
+        # for k in range(L+2):
+        #     err_t_series = np.dot(normedpsis, dzdFij[:, k])
+        #     if iat_routine is not None:
+        #         iat, mn, sigma = iat_routine(err_t_series)
+        #         z_var_contribs[k, i] = sigma * sigma
+        #     else:
+        #         iat = iats[i]
+        #         z_var_contribs[k, i] = np.var(
+        #             err_t_series) * (iat / len(err_t_series))
+        #     z_var_iats[k, i] = iat
+    autocovars = np.sum(z_var_contribs)
 
-    return autocovars, z_var_contribs, z_var_iats, output_avar
+    return autocovars, z_var_contribs, z_var_iats
 
 
 def calc_partition_functions_2(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
