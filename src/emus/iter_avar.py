@@ -5,7 +5,7 @@ Library with routines associated with the asymptotic variance for iterative EMUS
 
 from __future__ import absolute_import
 import numpy as np
-from . import avar,linalg
+from . import avar, linalg
 from . import autocorrelation as ac
 from ._defaults import DEFAULT_IAT
 
@@ -45,7 +45,7 @@ def calc_a(psis, z):
         ai = np.zeros((int(N[i]), L))
         for t in range(int(N[i])):
             for j in range(L):
-                ai[t, j] = (psis[i][t, j]/z[i])/ np.sum(psis[i][t]/z)
+                ai[t, j] = (psis[i][t, j]/z[i]) / np.sum(psis[i][t]/z)
         a.append(ai)
     return a
 
@@ -53,23 +53,23 @@ def calc_a(psis, z):
 def calc_B_matrix(psis, z):
     L = len(psis)
     N = np.zeros(L)
-    windowsum=[]
+    windowsum = []
     for i in range(L):
         N[i] = psis[i].shape[0]
-        windowsum1=np.zeros(int(N[i]))
+        windowsum1 = np.zeros(int(N[i]))
         for t in range(int(N[i])):
-            s1=0
+            s1 = 0
             for k in range(L):
-                s1+=psis[i][t,k]/z[k]
-            windowsum1[t]=s1
+                s1 += psis[i][t, k]/z[k]
+            windowsum1[t] = s1
         windowsum.append(windowsum1)
     B = np.zeros((L, L))
     for r in range(L):
         for i in range(L):
             s1 = 0
             for t in range(int(N[i])):
-                s1 += psis[i][t, r]*psis[i][t,r]/(windowsum[i][t])**2
-            B[r,r] -= s1/(z[r]**2*N[i])
+                s1 += psis[i][t, r]*psis[i][t, r]/(windowsum[i][t])**2
+            B[r, r] -= s1/(z[r]**2*N[i])
         B[r, r] += 1
     for r in range(L):
         for s in range(r):
@@ -77,9 +77,8 @@ def calc_B_matrix(psis, z):
                 s1 = 0
                 for t in range(int(N[i])):
                     s1 += psis[i][t, r]*psis[i][t, s]/(windowsum[i][t])**2
-                B[r,s] -= s1/(z[r]**2*N[i])
-                B[s,r]-= s1/(z[s]**2*N[i])
-    np.save("B_ref.npy",B)
+                B[r, s] -= s1/(z[r]**2*N[i])
+                B[s, r] -= s1/(z[s]**2*N[i])
     return B
 
 
@@ -92,13 +91,13 @@ def calc_log_z(psis, z, repexchange=False, iat_method=DEFAULT_IAT):
     B = calc_B_matrix(psis, z)
     # Construct trajectories for autocovariance.
     B_pseudo_inv = linalg.groupInverse(B)
-    zeta_traj=[]
+    zeta_traj = []
     for i in range(L):
         Ni = int(psis[i].shape[0])
-        zeta_i=np.zeros((Ni,L))
+        zeta_i = np.zeros((Ni, L))
         for t in range(int(Ni)):
             for r in range(L):
-                zeta_i[t,r]=z[i]*np.dot(a[i][t],B_pseudo_inv.T[r])
+                zeta_i[t, r] = z[i]*np.dot(a[i][t], B_pseudo_inv.T[r])
         zeta_traj.append(zeta_i)
     z_contribs = np.zeros((L, L))
     z_iats = np.zeros((L, L))
@@ -145,5 +144,3 @@ def _get_iid_avars(error_traj, iat_method):
             sigma = np.std(err_t_series) * np.sqrt(iat / len(err_t_series))
         sigmas[i] = sigma
     return iats, sigmas**2
-
-
