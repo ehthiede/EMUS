@@ -30,7 +30,11 @@ def build_F(psis, v,neighbors):
     F : 2d numpy array
         Matrix where element ij is <a_ij>_i as depicted in ????
     """
-
+    L = len(psis)  # Number of windows
+    F = []
+    z = v[:L]
+    for i in range(L):
+        psis_i = np.array(psis[i])
         Lneighb = len(neighbors[i])
         denom = np.sum(np.array([psis_i[:, j]/z[neighbors[i][j]] for j in range(Lneighb)]), axis=0)
         Fi = psis_i[:,:Lneighb] / z[neighbors[i]]
@@ -255,8 +259,8 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
     v = np.append(z, [g1, g2])
     gs = np.stack((np.array(g1data), np.array(g2data)), axis=-1)
     psis = [np.hstack((psi_i, g_i)) for (psi_i, g_i) in zip(psis, gs)]
-'''
-    F = buildF(psis, v)
+    '''
+    F = build_F(psis, v,neighbors)
     F = np.transpose(np.array(F))
     Bmat = np.dot(np.diag(1./v), np.eye(L+2, L)-F)
     print(Bmat.shape, "Bmat shape")
@@ -275,14 +279,12 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
     # bottom_block = dzdFij[-2:]
     total_deriv = partial_1 * B_ginv[-2] + partial_2 * B_ginv[-1]
     # total_deriv = partial_1 * B_ginv[:, -2] + partial_2 * B_ginv[:, -1]
-'''
+    '''
     F = build_F(psis, v,neighbors)
     #print(np.shape(F))
     Bmat = build_deriv_mat(F, v, g1, g2)
     B_ginv = lm.groupInverse(Bmat)
     #total_deriv = partial_1 * B_ginv[:, -2] + partial_2 * B_ginv[:, -1]
-
-
     # Iterate over windows, getting err contribution from sampling in each
     for i, psi_i in enumerate(psis):
         # Data cleaning
@@ -291,11 +293,12 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
         # Normalize psi_j(x_i^t) for all j
         psi_sum = np.sum(np.array([psi_i_arr[:, j]/z[neighbors[i][j]] for j in range(Lneighb)]), axis=0)
         normedpsis = np.zeros(psi_i_arr.shape)  # psi_j / sum_k psi_k
-
+    
         v_index=np.append(neighbors[i],[L,L+1])
         for j in range(Lneighb+2):
             normedpsis[:, j] = psi_i_arr[:, j]/v[v_index[j]] / psi_sum
         total_deriv = partial_1 * B_ginv[v_index, -2] + partial_2 * B_ginv[v_index, -1]
+        #total_deriv = partial_1 * B_ginv[-2,v_index] + partial_2 * B_ginv[-1,v_index]
         err_t_series = np.dot(normedpsis, total_deriv)
         #print(err_t_series.shape, 'err t series')
         if iat_routine is not None:
@@ -323,6 +326,12 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
 
     return autocovars, z_var_contribs, z_var_iats
 
+def build_deriv_mat(F, v, g1, g2):
+    L, num_avgs = F.shape
+    Bmat = np.eye(num_avgs)
+    Bmat[:L] -= F
+    Bmat = np.dot(np.diag(1. / v), Bmat)
+    return Bmat
 
 def calc_partition_functions_2(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
     """Estimates the asymptotic variance of the partition function (normalization constant) for each window.  To get an estimate of the autocovariance of the free energy for each window, multiply the autocovariance of window :math:`i` by :math:` (k_B T / z_i)^2`.
@@ -362,7 +371,7 @@ def calc_partition_functions_2(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
             raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).' % (len(iats), L))
     if neighbors is None:  # If no neighborlist, assume all windows neighbor
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
-    F = buildF(psis, z)
+    F = build_F(psis, z)
     F = np.array(F)
     dzdFij = np.dot(lm.groupInverse(np.eye(L)-np.transpose(F)), np.diag(z))
     for i, psi_i in enumerate(psis):
