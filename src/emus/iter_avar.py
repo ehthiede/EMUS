@@ -12,7 +12,7 @@ from ._defaults import DEFAULT_IAT
 from .usutils import unpack_nbrs
 
 
-def build_F(psis, v,neighbors):
+def build_F(psis, v, neighbors):
     """
     Builds matrix used in iteration.
 
@@ -36,16 +36,16 @@ def build_F(psis, v,neighbors):
         psis_i = np.array(psis[i])
         Lneighb = len(neighbors[i])
         denom = np.sum(np.array([psis_i[:, j]/z[neighbors[i][j]] for j in range(Lneighb)]), axis=0)
-        Fi = psis_i[:,:Lneighb] / z[neighbors[i]]
+        Fi = psis_i[:, :Lneighb] / z[neighbors[i]]
         Fi /= denom.reshape(-1, 1)
         Fi = np.mean(Fi, axis=0)
-        Fi=unpack_nbrs(Fi,neighbors[i],L)
-        Fi_additional=[]
-        if len(v)>L:
-            Fi_additional=psis_i[:,-2:]/v[-2:]
+        Fi = unpack_nbrs(Fi, neighbors[i], L)
+        Fi_additional = []
+        if len(v) > L:
+            Fi_additional = psis_i[:, -2:]/v[-2:]
             Fi_additional /= denom.reshape(-1, 1)
             Fi_additional = np.mean(Fi_additional, axis=0)
-        F.append(np.append(Fi,Fi_additional,axis=0))
+        F.append(np.append(Fi, Fi_additional, axis=0))
     return np.array(F)
 
 
@@ -87,7 +87,7 @@ def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
             raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).' % (len(iats), L))
     if neighbors is None:  # If no neighborlist, assume all windows neighbor
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
-    F = build_F(psis, z,neighbors)
+    F = build_F(psis, z, neighbors)
     F = np.array(F)
 
     # START POINT A
@@ -137,10 +137,11 @@ def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
     autocovars = np.sum(z_var_contribs, axis=1)
     return autocovars, z_var_contribs, z_var_iats
 
-def calc_fe_avar(psis, z,partial1,partial2, neighbors=None, iat_method=DEFAULT_IAT):
+
+def calc_fe_avar(psis, z, partial1, partial2, neighbors=None, iat_method=DEFAULT_IAT):
     L = len(z)
-    fe_var=np.zeros(L)
-    fe_var_iats=np.zeros(L)
+    fe_var = np.zeros(L)
+    fe_var_iats = np.zeros(L)
     if isinstance(iat_method, str):
         iat_routine = ac._get_iat_method(iat_method)
     else:  # Try to interpret iat_method as a collection of numbers
@@ -153,7 +154,7 @@ def calc_fe_avar(psis, z,partial1,partial2, neighbors=None, iat_method=DEFAULT_I
             raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).' % (len(iats), L))
     if neighbors is None:  # If no neighborlist, assume all windows neighbor
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
-    F = build_F(psis, z,neighbors)
+    F = build_F(psis, z, neighbors)
     F = np.array(F)
     Bmat = np.dot(np.diag(1./z), np.eye(L)-np.transpose(F))
     dzdFij = lm.groupInverse(Bmat)
@@ -167,7 +168,7 @@ def calc_fe_avar(psis, z,partial1,partial2, neighbors=None, iat_method=DEFAULT_I
         for j in range(Lneighb):
             normedpsis[:, j] = psi_i_arr[:, j]/z[j] / psi_sum
         # Calculate contribution to as. err. for each z_k
-        total_derivative=partial1*dzdFij[:, 0]+partial2*dzdFij[:, -1]
+        total_derivative = partial1*dzdFij[:, 0]+partial2*dzdFij[:, -1]
         err_t_series = np.dot(normedpsis, total_derivative)
         if iat_routine is not None:
             iat, mn, sigma = iat_routine(err_t_series)
@@ -179,6 +180,7 @@ def calc_fe_avar(psis, z,partial1,partial2, neighbors=None, iat_method=DEFAULT_I
         fe_var_iats[i] = iat
     autocovars = np.sum(fe_var)
     return autocovars, fe_var, fe_var_iats
+
 
 def calc_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT):
     if g2data is None:
@@ -266,7 +268,7 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
     v = np.append(z, [g1, g2])
     gs = np.stack((np.array(g1data), np.array(g2data)), axis=-1)
     psis = [np.hstack((psi_i, g_i)) for (psi_i, g_i) in zip(psis, gs)]
-    F = build_F(psis, v,neighbors)
+    F = build_F(psis, v, neighbors)
     Bmat = build_deriv_mat(F, v, g1, g2)
     B_ginv = lm.expanded_group_inv(Bmat)
     #total_deriv = partial_1 * B_ginv[:, -2] + partial_2 * B_ginv[:, -1]
@@ -278,7 +280,7 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
         # Normalize psi_j(x_i^t) for all j
         psi_sum = np.sum(np.array([psi_i_arr[:, j]/z[neighbors[i][j]] for j in range(Lneighb)]), axis=0)
         normedpsis = np.zeros(psi_i_arr.shape)  # psi_j / sum_k psi_k
-        v_index=np.append(neighbors[i],[L,L+1])
+        v_index = np.append(neighbors[i], [L, L+1])
         for j in range(Lneighb+2):
             normedpsis[:, j] = psi_i_arr[:, j]/v[v_index[j]] / psi_sum
         total_deriv = partial_1 * B_ginv[v_index, -2] + partial_2 * B_ginv[v_index, -1]
@@ -297,12 +299,14 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
 
     return autocovars, z_var_contribs, z_var_iats
 
+
 def build_deriv_mat(F, v, g1, g2):
     L, num_avgs = F.shape
     Bmat = np.eye(num_avgs)
     Bmat[:L] -= F
     Bmat = np.dot(np.diag(1. / v), Bmat)
     return Bmat
+
 
 def calc_partition_functions_2(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
     """Estimates the asymptotic variance of the partition function (normalization constant) for each window.  To get an estimate of the autocovariance of the free energy for each window, multiply the autocovariance of window :math:`i` by :math:` (k_B T / z_i)^2`.
