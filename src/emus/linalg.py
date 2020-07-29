@@ -139,3 +139,21 @@ def groupInverse(M):
     grpInvM = np.dot(specProjector, np.dot(
         grpInvM, np.dot(q.transpose(), specProjector)))
     return grpInvM
+
+
+def expanded_group_inv(B):
+    A = B[:-2, :-2]
+    v = B[:-2, -2:]
+    b = B[-2:, -2:]
+    B_inv = np.zeros(B.shape)
+
+    A_inv = groupInverse(A)
+    b_inv = inv(b)
+    B_inv[:-2, :-2] = A_inv
+    B_inv[-2:, -2:] = b_inv
+
+    # Build right column
+    h = (np.eye(len(A)) - A @ A_inv) @ v @ b_inv @ b_inv
+    right_col = - A_inv @ v @ b_inv + h
+    B_inv[:-2, -2:] = right_col
+    return B_inv
