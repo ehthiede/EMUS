@@ -4,6 +4,7 @@ Collection of linear algebra routines used in the EMUS algorithm and
 associated error analysis.
 """
 from scipy.linalg import qr
+from scipy.linalg import lu
 from scipy.linalg import inv
 from scipy.linalg import solve
 import numpy as np
@@ -157,3 +158,42 @@ def expanded_group_inv(B):
     right_col = - A_inv @ v @ b_inv + h
     B_inv[:-2, -2:] = right_col
     return B_inv
+def groupInverse_for_iteravar(M):
+    """
+    Computes the group inverse of a matrix using LU decomposition.
+
+    Parameters
+    ----------
+        M : ndarray
+            A square matrix with index 1.
+
+    Returns
+    -------
+        grpInvM : ndarray
+            The group inverse of M.
+    """
+    p,l,u=lu(M)
+    R=np.dot(p,l)
+    T=np.dot(u,R)
+    T_inv=groupInverse_partial(T)
+    R_inv=np.linalg.inv(R)
+    return np.dot(np.dot(R,T_inv),R_inv)
+
+def groupInverse_partial(T):
+    """
+    Computes the group inverse of a matrix with all zeros as the last row.
+    """
+    L=np.shape(T)[1]
+    T1=T[0:(L-1), 0:(L-1)]
+    T1_inv=inv(T1)
+    T2=T[0:(L-1),L-1]
+    T_inv=np.zeros((L,L))
+    T_inv[0:(L-1), 0:(L-1)]=T1_inv
+    T_inv[0:(L-1), L-1]=np.linalg.multi_dot([T1_inv,T1_inv,T2])
+    '''
+    print(np.linalg.norm(np.dot(T,T_inv)-np.dot(T_inv,T)))
+    print(np.linalg.norm(np.linalg.multi_dot([T,T_inv,T])-T))
+    print(np.linalg.norm(np.linalg.multi_dot([T_inv,T,T_inv])-T_inv))
+    '''
+    return T_inv
+

@@ -11,7 +11,7 @@ from .usutils import unpack_nbrs
 from ._defaults import DEFAULT_KT, DEFAULT_ITER_TOL, DEFAULT_IAT
 
 
-def calculate_avg(psis, z, g1data, g2data=None, neighbors=None, use_iter=True):
+def calculate_avg(psis, z, g1data, g2data=None, neighbors=None, use_iter=True,kappa=None):
     """Estimates the value of an observable or ratio of observables.
 
     Parameters
@@ -125,7 +125,7 @@ def calculate_avg_on_pmf(cv_trajs, psis, domain, z, g1data, g2data=None, neighbo
     return hist_g1 / hist_g2, edges
 
 
-def calculate_pmf(cv_trajs, psis, domain, z, neighbors=None, nbins=100, kT=DEFAULT_KT, use_iter=True):
+def calculate_pmf(cv_trajs, psis, domain, z, neighbors=None, nbins=100, kT=DEFAULT_KT, use_iter=True,kappa=None):
     """Calculates the free energy surface along a coordinate.
 
     Parameters
@@ -158,7 +158,8 @@ def calculate_pmf(cv_trajs, psis, domain, z, neighbors=None, nbins=100, kT=DEFAU
     L = len(z)
     if domain is None:
         raise NotImplementedError
-
+    if kappa is None:
+        kappa=np.ones(L)
     domain = np.asarray(domain)
     if len(np.shape(domain)) == 1:
         domain = np.reshape(domain, (1, len(domain)))
@@ -176,7 +177,8 @@ def calculate_pmf(cv_trajs, psis, domain, z, neighbors=None, nbins=100, kT=DEFAU
             L = len(psis)  # Number of windows
             nbrs_i = neighbors[i]
             z_nbr = z[nbrs_i]
-            weights = 1. / (z[i] * np.dot(psis[i], 1. / z_nbr))
+            win_nbr=kappa[nbrs_i]
+            weights = 1. / (z[i]*kappa[i] * np.dot(psis[i], win_nbr / z_nbr))
             hist_i, edges = np.histogramdd(
                 xtraj_i, nbins, domain, normed=False, weights=weights)
         else:
@@ -192,7 +194,7 @@ def calculate_pmf(cv_trajs, psis, domain, z, neighbors=None, nbins=100, kT=DEFAU
     return pmf, edges
 
 
-def calculate_zs(psis, neighbors=None, n_iter=0, tol=DEFAULT_ITER_TOL, use_iats=False, iat_method=DEFAULT_IAT):
+def calculate_zs(psis, neighbors=None, n_iter=0, tol=DEFAULT_ITER_TOL, use_iats=False, iat_method=DEFAULT_IAT,kappa=None):
     """Calculates the normalization constants for the windows.
 
     Parameters
@@ -236,9 +238,9 @@ def calculate_zs(psis, neighbors=None, n_iter=0, tol=DEFAULT_ITER_TOL, use_iats=
         Amat /= np.outer(np.ones(L), iats)
         if use_iats:
             z, F, iats = emus_iter(
-                psis, Amat, neighbors=neighbors, return_iats=True, iat_method=iat_method)
+                psis, Amat, neighbors=neighbors, return_iats=True, iat_method=iat_method,kappa=kappa)
         else:
-            z, F = emus_iter(psis, Amat, neighbors=neighbors)
+            z, F = emus_iter(psis, Amat, neighbors=neighbors,kappa=kappa)
         # Check if we have converged.
         if np.max(np.abs(z - z_old) / z_old) < tol:
             break
@@ -249,7 +251,7 @@ def calculate_zs(psis, neighbors=None, n_iter=0, tol=DEFAULT_ITER_TOL, use_iats=
         return z, F
 
 
-def emus_iter(psis, Avals=None, neighbors=None, return_iats=False, iat_method=DEFAULT_IAT):
+def emus_iter(psis, Avals=None, neighbors=None, return_iats=False, iat_method=DEFAULT_IAT,kappa=None):
     """Performs one step of the the EMUS iteration.
 
     Parameters
@@ -287,12 +289,14 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats=False, iat_method=DE
         Avals = np.ones((L, L))
     if neighbors is None:
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
-
+    if kappa is None:
+        kappa=np.ones(L)
     for i in range(L):
         nbrs_i = neighbors[i]
         A_nbs = Avals[i][nbrs_i]
+        kappa_nbs=kappa[nbrs_i]
         nbr_index = list(nbrs_i).index(i)
-        Fi_out = calculate_Fi(psis[i], nbr_index, A_nbs, return_iats)
+        Fi_out = calculate_Fi(psis[i], nbr_index, A_nbs, return_iats,kappa_nbs)
         if return_iats:
             Fi, trajs = Fi_out
             iats[i] = iatroutine(trajs[nbr_index])[0]
@@ -307,7 +311,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats=False, iat_method=DE
         return z, F
 
 
-def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
+def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False,kappa=None):
     """Calculates the values of a single row in the F matrix.  If neighborlists are being used, psi_i, and Avals_i should be the neighborlisted data structure, and the row will be need to be unpacked using the neighborlist.
 
     Parameters
@@ -335,13 +339,14 @@ def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
     # Take care of defaults
     if Avals_i is None:
         Avals_i = np.ones(L)
-
+    if kappa is None:
+        kappa=np.ones(L)
     psi_i = np.array(psi_i)
-    denom = np.dot(psi_i, Avals_i)
+    denom =np.dot(psi_i,Avals_i*kappa)
     if return_trajs:
         trajs = np.zeros(psi_i.shape)
     for j in range(L):
-        Ftraj = psi_i[:, j] / denom  # traj \psi_j/{\sum_k \psi_k A_k}
+        Ftraj = kappa[i]*psi_i[:, j] / denom  # traj \psi_j/{\sum_k \psi_k A_k}
         Fi[j] = np.average(Ftraj)
         Fi[j] *= Avals_i[i]
         if return_trajs:
@@ -352,7 +357,7 @@ def calculate_Fi(psi_i, i, Avals_i=None, return_trajs=False):
         return Fi
 
 
-def _calculate_win_avgs(psis, z, gdata, neighbors=None, use_iter=True):
+def _calculate_win_avgs(psis, z, gdata, neighbors=None, use_iter=True,kappa=None):
     """Helper method estimating the scaled averages in each window.
 
     Parameters
@@ -375,18 +380,24 @@ def _calculate_win_avgs(psis, z, gdata, neighbors=None, use_iter=True):
 
     """
     gstar = []
+    L = len(psis)  # Number of windows
+    if kappa is None:
+        kappa=np.ones(L)
+    if neighbors is None:
+        neighbors = np.outer(np.ones(L), range(L)).astype(int)
     if use_iter:
         # Initialize neighbors if they don't exist.
-        L = len(psis)  # Number of windows
-        if neighbors is None:
-            neighbors = np.outer(np.ones(L), range(L)).astype(int)
+
         for i, psi_i in enumerate(psis):
             nbrs_i = neighbors[i]
             z_nbr = z[nbrs_i]
-            denom_i = 1. / np.dot(psi_i, 1. / z_nbr)
-            gstar.append(np.average(gdata[i] * denom_i) / z[i])
+            kappa_nbr=kappa[nbrs_i]
+            denom_i = 1. / np.dot(psi_i, kappa_nbr*1. / z_nbr)
+            gstar.append(np.average(kappa[i]*gdata[i] * denom_i) / z[i])
     else:
         for i, psi_i in enumerate(psis):
-            denom_i = 1. / np.sum(psi_i, axis=1)
-            gstar.append(np.average(gdata[i] * denom_i))
+            nbrs_i = neighbors[i]
+            kappa_nbr=kappa[nbrs_i]
+            denom_i = 1. / np.dot(psi_i,kappa_nbr)
+            gstar.append(np.average(kappa[i]*gdata[i] * denom_i))
     return np.array(gstar)

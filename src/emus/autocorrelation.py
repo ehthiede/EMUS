@@ -10,7 +10,7 @@ The acor algorithm was proposed by Sokal [2]_.  The associated code, as well as 
 """
 import numpy as np
 import logging
-
+import math
 
 def _next_pow_two(n):
     """Returns the next power of two greater than or equal to `n`"""
@@ -51,7 +51,25 @@ def autocorrfxn(x):
     acf /= acf[0]
     return acf
 
+def bootstrap(x):
+    total_len=len(x)
+    exp=[]
+    mean=np.mean(x)
+    for trial in np.arange(50):
+        block_len=math.ceil(total_len/20)
+        starting_points=np.random.choice(np.arange(total_len-block_len),20)
+        sample_index=np.array([np.arange(i,i+block_len) for i in starting_points]).flatten()
+        sub_traj=x[sample_index]
+        sub_traj=np.array(sub_traj[-total_len:])
+        exp.append(np.mean(sub_traj))
+    var=np.var(np.array(x))
+    sigma = np.sqrt(np.var(np.array(exp)))
+    tau=sigma**2*len(x)/var
+    tau_ref,mean_ref,sigma_ref=acor(x)
+    print("tau(acor vs bootstrap):",tau_ref,tau)
+    return tau,mean,sigma
 
+    
 def ipce(x):
     """ The initial positive correlation time estimator for the autocorrelation time, as proposed by Geyer.
 
@@ -251,6 +269,8 @@ def _get_iat_method(iat_method):
     elif iat_method == 'icce':
         # from autocorrelation import icce
         iatroutine = icce
+    elif iat_method == 'bootstrap':
+        iatroutine = bootstrap
     else:
         raise ValueError('Method for calculation iat not recognized.')
     return iatroutine

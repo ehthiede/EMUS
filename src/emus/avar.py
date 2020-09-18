@@ -11,8 +11,15 @@ from . import autocorrelation as ac
 from ._defaults import DEFAULT_IAT, DEFAULT_KT
 import warnings
 
-
-def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False):
+def group_inverse(A,A0,niter):
+    #normA=np.linalg.norm(A)
+    #A0=1/normA**2*A
+    Ai=A0
+    Id=np.eye(np.shape(A)[0])
+    for i in np.arange(niter):
+        Ai=A0+np.dot((Id-np.dot(A0,A)),Ai)
+    return Ai
+def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False,kappa=None):
     """Estimates the asymptotic variance in the estimate of :math:`<g_1>/<g_2>`. If :math:`g_2` is not given, it just calculates the asymptotic variance associated with the average of :math:`g_1`.
 
     Parameters
@@ -47,6 +54,8 @@ def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=D
     L = len(psis)
     if neighbors is None:
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
+    if kappa is None:
+        kappa=np.ones(L)
     g1data = [np.array(g1i) for g1i in g1data]
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
@@ -61,6 +70,12 @@ def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=D
 
     # Compute partial derivatives
     gI = lm.groupInverse(np.eye(L) - F)
+    '''
+    D=np.diag(kappa)
+    D_inv=np.diag(1/kappa)
+    B=np.eye(L)-F
+    gI=np.linalg.multi_dot([D,lm.groupInverse(np.linalg.multi_dot([D_inv,B,D])),D_inv])
+    '''
     dBdF = np.outer(z, np.dot(gI, g1star - g1avg / g2avg * g2star)) / g2avg
     dBdg1 = z / g2avg
     dBdg2 = -(g1avg / g2avg) * z / g2avg
@@ -73,7 +88,7 @@ def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=D
     return iats, g1avg / g2avg, variances
 
 
-def calc_log_avg(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False):
+def calc_log_avg(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False,kappa=None):
     """Estimates the asymptotic variance in the EMUS estimate of :math:`-log <g_1>/<g_2>`.  If :math:`g_2` data is not provided, it estimates the asymptotic variance in the estimate of :math:`-log <g_1>/<g_2>`.  Input and output is as in average_ratio.  Note that if this is used for free energy differences, the result does not use the Boltzmann factor (i.e. :math:`k_B T=1`).  In that case, resulting variances should be scaled by the Boltzmann factor *squared*.
 
     """
@@ -81,10 +96,12 @@ def calc_log_avg(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEF
     L = len(psis)
     if neighbors is None:
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
+    if kappa is None:
+        kappa=np.ones(L)
     g1data = [np.array(g1i) for g1i in g1data]
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
-
+        
     # Compute average of functions in each window.
     g1star = emus._calculate_win_avgs(
         psis, z, g1data, neighbors, use_iter=False)
@@ -92,9 +109,13 @@ def calc_log_avg(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEF
         psis, z, g2data, neighbors, use_iter=False)
     g1avg = np.dot(g1star, z)
     g2avg = np.dot(g2star, z)
-
+    #D=np.diag(kappa)
+    #D_inv=np.diag(1/kappa)
+    B=np.eye(L)-F
+    gI=lm.groupInverse(B)
+    #gI=np.linalg.multi_dot([D,lm.groupInverse(np.linalg.multi_dot([D_inv,B,D])),D_inv])
     # Compute partial derivatives
-    gI = lm.groupInverse(np.eye(L) - F)
+    #gI = lm.groupInverse(np.eye(L) - F)
     dBdF = np.outer(z, np.dot(gI, g1star / g1avg - g2star / g2avg))
     dBdg1 = z / g1avg
     dBdg2 = -z / g2avg
@@ -292,7 +313,7 @@ def calc_pmf(cv_trajs, psis, domain, z, F, g2data=None, neighbors=None, nbins=10
     return fes, avars
 
 
-def calc_partition_functions(psis, z, F, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False):
+def calc_partition_functions(psis, z, F, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False,kappa=None):
     """Estimates the asymptotic variance of the partition function (normalization constant) for each window.  To get an estimate of the autocovariance of the free energy for each window, multiply the autocovariance of window :math:`i` by :math:` (k_B T / z_i)^2`.
 
     Parameters
@@ -322,8 +343,13 @@ def calc_partition_functions(psis, z, F, neighbors=None, iat_method=DEFAULT_IAT,
     z_var_iats = []
     if neighbors is None:  # If no neighborlist, assume all windows neighbor
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
-
-    groupInv = lm.groupInverse(np.eye(L) - F)
+    if kappa is None:
+        kappa=np.ones(L)
+    #D=np.diag(kappa)
+    #D_inv=np.diag(1/kappa)
+    B=np.eye(L)-F
+    #groupInv=np.linalg.multi_dot([D,lm.groupInverse(np.linalg.multi_dot([D_inv,B,D])),D_inv])    
+    groupInv=lm.groupInverse(B)
     # Calculate the partial derivatives of z .
     # (i,j,k)'th element is partial of z_k w.r.t. F_ij
     dzdFij = np.outer(z, groupInv).reshape((L, L, L))

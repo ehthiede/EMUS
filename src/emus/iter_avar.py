@@ -11,8 +11,16 @@ from . import autocorrelation as ac
 from ._defaults import DEFAULT_IAT
 from .usutils import unpack_nbrs
 
+def group_inverse(A,A0,niter):
+    #normA=np.linalg.norm(A)
+    #A0=1/normA**2*A
+    Ai=A0
+    Id=np.eye(np.shape(A)[0])
+    for i in np.arange(niter):
+        Ai=A0+np.dot((Id-np.dot(A0,A)),Ai)
+    return Ai
 
-def build_F(psis, v, neighbors):
+def build_F(psis, v,neighbors,kappa,g1=None,g2=None):
     """
     Builds matrix used in iteration.
 
@@ -35,21 +43,25 @@ def build_F(psis, v, neighbors):
     for i in range(L):
         psis_i = np.array(psis[i])
         Lneighb = len(neighbors[i])
-        denom = np.sum(np.array([psis_i[:, j]/z[neighbors[i][j]] for j in range(Lneighb)]), axis=0)
-        Fi = psis_i[:, :Lneighb] / z[neighbors[i]]
+        denom = np.sum(np.array([kappa[neighbors[i][j]]*psis_i[:, j]/z[neighbors[i][j]] for j in range(Lneighb)]), axis=0)
+        Fi=kappa[i]*psis_i[:,:Lneighb] / z[neighbors[i]]
         Fi /= denom.reshape(-1, 1)
         Fi = np.mean(Fi, axis=0)
-        Fi = unpack_nbrs(Fi, neighbors[i], L)
-        Fi_additional = []
-        if len(v) > L:
-            Fi_additional = psis_i[:, -2:]/v[-2:]
-            Fi_additional /= denom.reshape(-1, 1)
-            Fi_additional = np.mean(Fi_additional, axis=0)
-        F.append(np.append(Fi, Fi_additional, axis=0))
+        Fi=unpack_nbrs(Fi,neighbors[i],L)
+        if len(v)>L:
+            #Fi_additional=psis_i[:,-2:]/v[-2:]
+            Fi_additional_1=kappa[i]*g1[i]/v[-2]
+            Fi_additional_1 /= denom
+            Fi_additional_1 = float(np.mean(Fi_additional_1, axis=0))
+            Fi_additional_2=kappa[i]*g2[i]/v[-1]
+            Fi_additional_2 /= denom
+            Fi_additional_2 = float(np.mean(Fi_additional_2, axis=0))
+            Fi=np.append(np.array(Fi),np.array([Fi_additional_1,Fi_additional_2]))
+        F.append(Fi)
     return np.array(F)
 
 
-def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
+def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT,kappa=None):
     """Estimates the asymptotic variance of the partition function (normalization constant) for each window.  To get an estimate of the autocovariance of the free energy for each window, multiply the autocovariance of window :math:`i` by :math:` (k_B T / z_i)^2`.
     Parameters
     ----------
@@ -73,6 +85,8 @@ def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
         Two dimensional array, where element i,j corresponds to the autocorrelation time associated with window j's contribution to the autocovariance of window i.
     """
     L = len(z)
+    if kappa is None:
+        kappa=np.ones(L)
     z_var_contribs = np.zeros((L, L))
     z_var_iats = np.zeros((L, L))
     if isinstance(iat_method, str):
@@ -87,9 +101,9 @@ def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
             raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).' % (len(iats), L))
     if neighbors is None:  # If no neighborlist, assume all windows neighbor
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
-    F = build_F(psis, z, neighbors)
-    F = np.array(F)
 
+    F = build_F(psis, z,neighbors,kappa)
+    F = np.array(F)
     # START POINT A
     # F = F.T
     # END POINT A
@@ -102,13 +116,10 @@ def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
     # # dzdFij = np.outer(z, groupInv).reshape((L, L, L))
     # dzdFij = np.matmul(groupInv, np.diag(z))
     Bmat = np.dot(np.diag(1./z), np.eye(L)-np.transpose(F))
-    np.save('Bmat_from_zs.npy', Bmat)
     # print(np.linalg.norm(dzdFij - lm.groupInverse(Lf)))
     # print((dzdFij - lm.groupInverse(Lf)))
     # print((dzdFij - lm.groupInverse(Lf))/ lm.groupInverse(Lf))
-    dzdFij = lm.groupInverse(Bmat)
-    # dzdFij=np.dot(lm.groupInverse(np.eye(L)-np.transpose(F)),np.diag(z))
-    # dzdFij=lm.groupInverse(np.dot(np.diag(1/z),np.eye(L)-np.transpose(F)))
+    dzdFij = lm.groupInverse_for_iteravar(Bmat)
     # Iterate over windows, getting err contribution from sampling in each
     for i, psi_i in enumerate(psis):
         # Data cleaning
@@ -138,7 +149,7 @@ def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
     return autocovars, z_var_contribs, z_var_iats
 
 
-def calc_fe_avar(psis, z, partial1, partial2, neighbors=None, iat_method=DEFAULT_IAT):
+def calc_fe_avar(psis, z,partial1,partial2, win1,win2,neighbors=None, iat_method=DEFAULT_IAT):
     L = len(z)
     fe_var = np.zeros(L)
     fe_var_iats = np.zeros(L)
@@ -163,12 +174,12 @@ def calc_fe_avar(psis, z, partial1, partial2, neighbors=None, iat_method=DEFAULT
         psi_i_arr = np.array(psi_i)
         Lneighb = len(neighbors[i])  # Number of neighbors
         # Normalize psi_j(x_i^t) for all j
-        psi_sum = np.sum(np.array([psi_i_arr[:, j]/z[j] for j in range(Lneighb)]), axis=0)
+        psi_sum = np.sum(np.array([psi_i_arr[:, j]/z[neighbors[i][j]] for j in range(Lneighb)]), axis=0)
         normedpsis = np.zeros(psi_i_arr.shape)  # psi_j / sum_k psi_k
         for j in range(Lneighb):
-            normedpsis[:, j] = psi_i_arr[:, j]/z[j] / psi_sum
+            normedpsis[:, j] = psi_i_arr[:, j]/z[neighbors[i][j]] / psi_sum
         # Calculate contribution to as. err. for each z_k
-        total_derivative = partial1*dzdFij[:, 0]+partial2*dzdFij[:, -1]
+        total_derivative=partial1*dzdFij[neighbors[i], win1]+partial2*dzdFij[neighbors[i], win2]
         err_t_series = np.dot(normedpsis, total_derivative)
         if iat_routine is not None:
             iat, mn, sigma = iat_routine(err_t_series)
@@ -182,7 +193,7 @@ def calc_fe_avar(psis, z, partial1, partial2, neighbors=None, iat_method=DEFAULT
     return autocovars, fe_var, fe_var_iats
 
 
-def calc_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT):
+def calc_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT,kappa=None):
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
     g1star = emus._calculate_win_avgs(
@@ -193,21 +204,21 @@ def calc_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFA
     g2 = np.dot(g2star, z)
     partial_1 = 1. / g2
     partial_2 = - g1 / g2**2
-    return calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data, neighbors, iat_method)
+    return calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data, neighbors, iat_method,kappa=kappa)
 
 
-def calc_log_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT):
+def calc_log_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT,kappa=None):
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
     g1star = emus._calculate_win_avgs(
-        psis, z, g1data, neighbors, use_iter=True)
+        psis, z, g1data, neighbors, use_iter=True,kappa=kappa)
     g2star = emus._calculate_win_avgs(
-        psis, z, g2data, neighbors, use_iter=True)
+        psis, z, g2data, neighbors, use_iter=True,kappa=kappa)
     g1 = np.dot(g1star, z)
     g2 = np.dot(g2star, z)
     partial_1 = 1. / g1
     partial_2 = - 1. / g2
-    return calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data, neighbors, iat_method)
+    return calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data, neighbors, iat_method,kappa=kappa)
 
 
 def build_deriv_mat(F, v, g1, g2):
@@ -218,7 +229,19 @@ def build_deriv_mat(F, v, g1, g2):
     return Bmat
 
 
-def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=None, iat_method='acor'):
+def build_B_inverse(B):
+    A=B[0:-2,0:-2]
+    L=np.shape(A)[0]
+    A_inv=lm.groupInverse_for_iteravar(A)
+    print(np.linalg.norm(np.dot(A,A_inv)-np.dot(A_inv,A)))
+    print(np.linalg.norm(np.linalg.multi_dot([A,A_inv,A])-A))
+    print(np.linalg.norm(np.linalg.multi_dot([A_inv,A,A_inv])-A_inv))
+    v=B[0:-2,-2:]
+    b=B[-2:,-2:]
+    b_inv= np.linalg. inv(b) 
+    T=-np.linalg.multi_dot([A_inv,v,b_inv])+np.linalg.multi_dot([np.eye(L)-np.dot(A,A_inv),v,b_inv,b_inv])
+    return np.vstack((np.hstack((A_inv,T)),np.hstack((np.zeros((2,L)),b_inv))))
+def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT,kappa=None):
     """Estimates the asymptotic variance of a function of two averages.
     ----------
     psis : 3D data structure
@@ -241,6 +264,8 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
         Two dimensional array, where element i,j corresponds to the autocorrelation time associated with window j's contribution to the autocovariance of window i.
     """
     L = len(z)
+    if kappa is None:
+        kappa=np.ones(L)
     z_var_iats = np.zeros(L)
     z_var_contribs = np.zeros(L)
     if isinstance(iat_method, str):
@@ -257,25 +282,50 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
-
     g1star = emus._calculate_win_avgs(
-        psis, z, g1data, neighbors, use_iter=True)
+        psis, z, g1data, neighbors, use_iter=True,kappa=kappa)
     g2star = emus._calculate_win_avgs(
-        psis, z, g2data, neighbors, use_iter=True)
+        psis, z, g2data, neighbors, use_iter=True,kappa=kappa)
     g1 = np.dot(g1star, z)
     g2 = np.dot(g2star, z)
-
     v = np.append(z, [g1, g2])
-    gs = np.stack((np.array(g1data), np.array(g2data)), axis=-1)
-    psis = [np.hstack((psi_i, g_i)) for (psi_i, g_i) in zip(psis, gs)]
-    F = build_F(psis, v, neighbors)
+    #gs = np.stack((np.array(g1data), np.array(g2data)), axis=-1)
+    gs=[np.stack((np.array(g1data[i]), np.array(g2data[i])), axis=-1) for i in np.arange(L)]
+    #psis = [np.hstack((psi_i, g_i)) for (psi_i, g_i) in zip(psis, gs)]
+    '''
+    F = build_F(psis, v,neighbors)
+    F = np.transpose(np.array(F))
+    Bmat = np.dot(np.diag(1./v), np.eye(L+2, L)-F)
+    print(Bmat.shape, "Bmat shape")
+    Bmat = np.hstack((Bmat, np.zeros((Bmat.shape[0], 2))))
+    print(Bmat.shape, "Bmat shape")
+    print("Bmat[:, -1]", Bmat[:, -1])
+    print("Bmat[-1]", Bmat[-1])
+    Bmat[L, L] = 1/g1
+    Bmat[L+1, L+1] = 1/g2
+    print('----------------')
+    print("Bmat[:, -2]", Bmat[:, -2:])
+    print('--------')
+    print("Bmat[-2:]", Bmat[-2:])
+    print('----------------')
+    B_ginv = lm.groupInverse(Bmat)
+    # bottom_block = dzdFij[-2:]
+    total_deriv = partial_1 * B_ginv[-2] + partial_2 * B_ginv[-1]
+    # total_deriv = partial_1 * B_ginv[:, -2] + partial_2 * B_ginv[:, -1]
+    '''
+    F = build_F(psis, v,neighbors,kappa,g1data,g2data)
+    #np.save("F",F)
+    #print(np.shape(F))
     Bmat = build_deriv_mat(F, v, g1, g2)
-    B_ginv = lm.expanded_group_inv(Bmat)
+    #np.save('Bmat.npy',Bmat)
+    #np.save('F_and_B/w_neighbs/F_%d_windows'%L, F)
+    #np.save('F_and_B/w_neighbs/B_%d_windows'%L, Bmat)
+    #B_ginv = lm.groupInverse(Bmat)
+    B_ginv=build_B_inverse(Bmat)
     #total_deriv = partial_1 * B_ginv[:, -2] + partial_2 * B_ginv[:, -1]
     # Iterate over windows, getting err contribution from sampling in each
     for i, psi_i in enumerate(psis):
-        # Data cleaning
-        psi_i_arr = np.array(psi_i)
+        psi_i_arr = np.array(np.hstack((np.array(psi_i),gs[i])))
         Lneighb = len(neighbors[i])  # Number of neighbors
         # Normalize psi_j(x_i^t) for all j
         psi_sum = np.sum(np.array([psi_i_arr[:, j]/z[neighbors[i][j]] for j in range(Lneighb)]), axis=0)
@@ -286,6 +336,8 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
         total_deriv = partial_1 * B_ginv[v_index, -2] + partial_2 * B_ginv[v_index, -1]
         #total_deriv = partial_1 * B_ginv[-2,v_index] + partial_2 * B_ginv[-1,v_index]
         err_t_series = np.dot(normedpsis, total_deriv)
+        np.save("err_traj",err_t_series)
+
         #print(err_t_series.shape, 'err t series')
         if iat_routine is not None:
             iat, mn, sigma = iat_routine(err_t_series)
@@ -300,12 +352,6 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
     return autocovars, z_var_contribs, z_var_iats
 
 
-def build_deriv_mat(F, v, g1, g2):
-    L, num_avgs = F.shape
-    Bmat = np.eye(num_avgs)
-    Bmat[:L] -= F
-    Bmat = np.dot(np.diag(1. / v), Bmat)
-    return Bmat
 
 
 def calc_partition_functions_2(psis, z, neighbors=None, iat_method=DEFAULT_IAT):
