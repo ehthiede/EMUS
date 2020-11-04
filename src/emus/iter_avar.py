@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 """ Library with routines associated with the asymptotic variance of the first EMUS iteration.  These estimates rely on estimates of the autocorrelation time of observables.  Multiple methods for estimating autocorrelation times are supported, these include the initial positive correlation estimator ('ipce') and the initial convex correlation estimator ('icce') by Geyer, and the acor algorithm ('acor') by Jonathan Goodman.  See the documentation to the `autocorrelation module <autocorrelation.html>`__ for more details.
 """
@@ -19,6 +18,18 @@ def group_inverse(A,A0,niter):
     for i in np.arange(niter):
         Ai=A0+np.dot((Id-np.dot(A0,A)),Ai)
     return Ai
+
+
+def check_GI(mat, gi_mat):
+    test_1_p1 = np.dot(mat, gi_mat)
+    test_1_p2 = np.dot(gi_mat, mat)
+    test_1_denom = min(np.linalg.norm(test_1_p1), np.linalg.norm(test_1_p2))
+    test_1 = np.linalg.norm(np.dot(mat, gi_mat) - np.dot(gi_mat, mat))/test_1_denom
+    test_2 = np.linalg.norm(gi_mat @ mat @ gi_mat - gi_mat) / np.linalg.norm(gi_mat)
+    test_3 = np.linalg.norm(mat @ gi_mat @ mat - mat) / np.linalg.norm(mat)
+    print("(A A^# - A^# A) / min(||A^# A||, ||A A^#||) : ", test_1)
+    print("(A^# A A^# - A^#)/||A^#|| : ", test_2)
+    print("(A A^# A - A)/||A|| : ", test_3)
 
 def build_F(psis, v,neighbors,kappa,g1=None,g2=None):
     """
@@ -233,14 +244,17 @@ def build_B_inverse(B):
     A=B[0:-2,0:-2]
     L=np.shape(A)[0]
     A_inv=lm.groupInverse_for_iteravar(A)
-    print(np.linalg.norm(np.dot(A,A_inv)-np.dot(A_inv,A)))
-    print(np.linalg.norm(np.linalg.multi_dot([A,A_inv,A])-A))
-    print(np.linalg.norm(np.linalg.multi_dot([A_inv,A,A_inv])-A_inv))
+    print('Checking submat')
+    check_GI(A, A_inv)
     v=B[0:-2,-2:]
     b=B[-2:,-2:]
     b_inv= np.linalg. inv(b) 
     T=-np.linalg.multi_dot([A_inv,v,b_inv])+np.linalg.multi_dot([np.eye(L)-np.dot(A,A_inv),v,b_inv,b_inv])
-    return np.vstack((np.hstack((A_inv,T)),np.hstack((np.zeros((2,L)),b_inv))))
+    GI = np.vstack((np.hstack((A_inv,T)),np.hstack((np.zeros((2,L)),b_inv))))
+    print("CHecking Full")
+    check_GI(B, GI)
+    return GI
+
 def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT,kappa=None):
     """Estimates the asymptotic variance of a function of two averages.
     ----------
