@@ -238,9 +238,9 @@ def calculate_zs(psis, neighbors=None, n_iter=0, tol=DEFAULT_ITER_TOL, use_iats=
         Amat /= np.outer(np.ones(L), iats)
         if use_iats:
             z, F, iats = emus_iter(
-                psis, Amat, neighbors=neighbors, return_iats=True, iat_method=iat_method,kappa=kappa)
+                psis, Amat, neighbors=neighbors, return_iats=True, iat_method=iat_method)
         else:
-            z, F = emus_iter(psis, Amat, neighbors=neighbors,kappa=kappa)
+            z, F = emus_iter(psis, Amat, neighbors=neighbors)
         # Check if we have converged.
         if np.max(np.abs(z - z_old) / z_old) < tol:
             break
@@ -304,7 +304,7 @@ def emus_iter(psis, Avals=None, neighbors=None, return_iats=False, iat_method=DE
             Fi = Fi_out
         # Unpack the Neighbor list
         F[i] = unpack_nbrs(Fi, nbrs_i, L)
-    z = lm.stationary_distrib(F)
+    z = lm.stationary_distrib(F,verbose=True)
     if return_iats:
         return z, F, iats
     else:
