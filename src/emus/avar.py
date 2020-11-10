@@ -11,15 +11,8 @@ from . import autocorrelation as ac
 from ._defaults import DEFAULT_IAT, DEFAULT_KT
 import warnings
 
-def group_inverse(A,A0,niter):
-    #normA=np.linalg.norm(A)
-    #A0=1/normA**2*A
-    Ai=A0
-    Id=np.eye(np.shape(A)[0])
-    for i in np.arange(niter):
-        Ai=A0+np.dot((Id-np.dot(A0,A)),Ai)
-    return Ai
-def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False,kappa=None):
+
+def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False, kappa=None):
     """Estimates the asymptotic variance in the estimate of :math:`<g_1>/<g_2>`. If :math:`g_2` is not given, it just calculates the asymptotic variance associated with the average of :math:`g_1`.
 
     Parameters
@@ -55,7 +48,7 @@ def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=D
     if neighbors is None:
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
     if kappa is None:
-        kappa=np.ones(L)
+        kappa = np.ones(L)
     g1data = [np.array(g1i) for g1i in g1data]
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
@@ -88,7 +81,7 @@ def calc_avg_ratio(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=D
     return iats, g1avg / g2avg, variances
 
 
-def calc_log_avg(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False,kappa=None):
+def calc_log_avg(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, repexchange=False , kappa=None):
     """Estimates the asymptotic variance in the EMUS estimate of :math:`-log <g_1>/<g_2>`.  If :math:`g_2` data is not provided, it estimates the asymptotic variance in the estimate of :math:`-log <g_1>/<g_2>`.  Input and output is as in average_ratio.  Note that if this is used for free energy differences, the result does not use the Boltzmann factor (i.e. :math:`k_B T=1`).  In that case, resulting variances should be scaled by the Boltzmann factor *squared*.
 
     """
@@ -109,8 +102,6 @@ def calc_log_avg(psis, z, F, g1data, g2data=None, neighbors=None, iat_method=DEF
         psis, z, g2data, neighbors, use_iter=False)
     g1avg = np.dot(g1star, z)
     g2avg = np.dot(g2star, z)
-    #D=np.diag(kappa)
-    #D_inv=np.diag(1/kappa)
     B=np.eye(L)-F
     gI=lm.groupInverse(B)
     #gI=np.linalg.multi_dot([D,lm.groupInverse(np.linalg.multi_dot([D_inv,B,D])),D_inv])

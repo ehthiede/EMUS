@@ -6,34 +6,40 @@ from . import emus
 from . import autocorrelation as ac
 from ._defaults import DEFAULT_IAT
 from .usutils import unpack_nbrs
-def calc_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT,kappa=None):
+
+
+def calc_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
     g1star = emus._calculate_win_avgs(
-        psis, z, g1data, neighbors, use_iter=True,kappa=kappa)
+        psis, z, g1data, neighbors, use_iter=True, kappa=kappa)
     g2star = emus._calculate_win_avgs(
-        psis, z, g2data, neighbors, use_iter=True,kappa=kappa)
+        psis, z, g2data, neighbors, use_iter=True, kappa=kappa)
     g1 = np.dot(g1star, z)
     g2 = np.dot(g2star, z)
     partial_1 = 1. / g2
     partial_2 = - g1 / g2**2
-    return calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data, neighbors, iat_method,kappa=kappa)
+    return calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data, neighbors, iat_method, kappa=kappa)
 
 
-def calc_log_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT,kappa=None):
+def calc_log_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
     g1star = emus._calculate_win_avgs(
-        psis, z, g1data, neighbors, use_iter=True,kappa=kappa)
+        psis, z, g1data, neighbors, use_iter=True, kappa=kappa)
     g2star = emus._calculate_win_avgs(
-        psis, z, g2data, neighbors, use_iter=True,kappa=kappa)
+        psis, z, g2data, neighbors, use_iter=True, kappa=kappa)
     g1 = np.dot(g1star, z)
     g2 = np.dot(g2star, z)
     partial_1 = 1. / g1
     partial_2 = - 1. / g2
-    return calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data, neighbors, iat_method,kappa=kappa)
-def calc_fe_avar(psis, z,partial1,partial2, win1,win2,neighbors=None, iat_method=DEFAULT_IAT,kappa=None):
+    return calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data, neighbors, iat_method, kappa=kappa)
+
+
+def calc_fe_avar(psis, z, partial1, partial2, win1, win2, neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
     L = len(z)
+    if kappa is None:
+        kappa = np.ones(L)
     fe_var = np.zeros(L)
     fe_var_iats = np.zeros(L)
     if isinstance(iat_method, str):
@@ -48,7 +54,7 @@ def calc_fe_avar(psis, z,partial1,partial2, win1,win2,neighbors=None, iat_method
             raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).' % (len(iats), L))
     if neighbors is None:  # If no neighborlist, assume all windows neighbor
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
-    B_ginv=lm.calculate_GI_from_QR(psis, z, neighbors, kappa)
+    B_ginv = lm.calculate_GI_from_QR(psis, z, neighbors, kappa)
     for i, psi_i in enumerate(psis):
         # Data cleaning
         psi_i_arr = np.array(psi_i)
@@ -59,7 +65,7 @@ def calc_fe_avar(psis, z,partial1,partial2, win1,win2,neighbors=None, iat_method
         for j in range(Lneighb):
             normedpsis[:, j] = psi_i_arr[:, j]*kappa[i]/z[neighbors[i][j]] / psi_sum
         # Calculate contribution to as. err. for each z_k
-        total_derivative=partial1*B_ginv[neighbors[i], win1]+partial2*B_ginv[neighbors[i], win2]
+        total_derivative = partial1*B_ginv[neighbors[i], win1]+partial2*B_ginv[neighbors[i], win2]
         err_t_series = np.dot(normedpsis, total_derivative)
         if iat_routine is not None:
             iat, mn, sigma = iat_routine(err_t_series)
@@ -71,7 +77,9 @@ def calc_fe_avar(psis, z,partial1,partial2, win1,win2,neighbors=None, iat_method
         fe_var_iats[i] = iat
     autocovars = np.sum(fe_var)
     return autocovars, fe_var, fe_var_iats
-def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT,kappa=None):
+
+
+def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
     """Estimates the asymptotic variance of a function of two averages.
     ----------
     psis : 3D data structure
@@ -95,7 +103,7 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
     """
     L = len(z)
     if kappa is None:
-        kappa=np.ones(L)
+        kappa = np.ones(L)
     z_var_iats = np.zeros(L)
     z_var_contribs = np.zeros(L)
     if isinstance(iat_method, str):
@@ -113,16 +121,16 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
     g1star = emus._calculate_win_avgs(
-        psis, z, g1data, neighbors, use_iter=True,kappa=kappa)
+        psis, z, g1data, neighbors, use_iter=True, kappa=kappa)
     g2star = emus._calculate_win_avgs(
-        psis, z, g2data, neighbors, use_iter=True,kappa=kappa)
+        psis, z, g2data, neighbors, use_iter=True, kappa=kappa)
     g1 = np.dot(g1star, z)
     g2 = np.dot(g2star, z)
     v = np.append(z, [g1, g2])
-    gs=[np.stack((np.array(g1data[i]), np.array(g2data[i])), axis=-1) for i in np.arange(L)]
-    B_ginv_expanded=lm.GI_expanded(psis, z, g1,g2,g1data,g2data,neighbors, kappa)
+    gs = [np.stack((np.array(g1data[i]), np.array(g2data[i])), axis=-1) for i in np.arange(L)]
+    B_ginv_expanded = lm.GI_expanded(psis, z, g1, g2, g1data, g2data, neighbors, kappa)
     for i, psi_i in enumerate(psis):
-        psi_i_arr = np.array(np.hstack((np.array(psi_i),gs[i])))
+        psi_i_arr = np.array(np.hstack((np.array(psi_i), gs[i])))
         Lneighb = len(neighbors[i])  # Number of neighbors
         # Normalize psi_j(x_i^t) for all j
         psi_sum = np.sum(np.array([psi_i_arr[:, j]*kappa[neighbors[i][j]]/z[neighbors[i][j]] for j in range(Lneighb)]), axis=0)
@@ -143,7 +151,9 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
     autocovars = np.sum(z_var_contribs)
 
     return autocovars, z_var_contribs, z_var_iats
-def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT,kappa=None):
+
+
+def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
     """Estimates the asymptotic variance of the partition function (normalization constant) for each window.  To get an estimate of the autocovariance of the free energy for each window, multiply the autocovariance of window :math:`i` by :math:` (k_B T / z_i)^2`.
     Parameters
     ----------
@@ -168,7 +178,7 @@ def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT,kap
     """
     L = len(z)
     if kappa is None:
-        kappa=np.ones(L)
+        kappa = np.ones(L)
     z_var_contribs = np.zeros((L, L))
     z_var_iats = np.zeros((L, L))
     if isinstance(iat_method, str):
@@ -183,7 +193,7 @@ def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT,kap
             raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).' % (len(iats), L))
     if neighbors is None:  # If no neighborlist, assume all windows neighbor
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
-    B_ginv=lm.calculate_GI_from_QR(psis, z, neighbors, kappa)
+    B_ginv = lm.calculate_GI_from_QR(psis, z, neighbors, kappa)
     # Iterate over windows, getting err contribution from sampling in each
     for i, psi_i in enumerate(psis):
         # Data cleaning

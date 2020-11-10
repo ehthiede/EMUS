@@ -11,7 +11,7 @@ from .usutils import unpack_nbrs
 from ._defaults import DEFAULT_KT, DEFAULT_ITER_TOL, DEFAULT_IAT
 
 
-def calculate_avg(psis, z, g1data, g2data=None, neighbors=None, use_iter=True,kappa=None):
+def calculate_avg(psis, z, g1data, g2data=None, neighbors=None, use_iter=True, kappa=None):
     """Estimates the value of an observable or ratio of observables.
 
     Parameters
