@@ -248,7 +248,7 @@ def data_from_meta(filepath, dim, T=DEFAULT_T, k_B=DEFAULT_K_B, nsig=None, perio
     # Load in the trajectories into the cv space
     trajs = []
     for i, trajloc in enumerate(trajlocs):
-        trajs.append(np.loadtxt(trajloc)[:, 1:+dim])
+        trajs.append(np.loadtxt(trajloc)[:, 1:1+dim])
 
     # Calculate psi values
     psis = []
