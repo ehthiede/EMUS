@@ -147,65 +147,6 @@ def groupInverse(M):
     return grpInvM
 
 
-def expanded_group_inv(B):
-    A = B[:-2, :-2]
-    v = B[:-2, -2:]
-    b = B[-2:, -2:]
-    B_inv = np.zeros(B.shape)
-
-    A_inv = groupInverse(A)
-    b_inv = inv(b)
-    B_inv[:-2, :-2] = A_inv
-    B_inv[-2:, -2:] = b_inv
-
-    # Build right column
-    h = (np.eye(len(A)) - A @ A_inv) @ v @ b_inv @ b_inv
-    right_col = - A_inv @ v @ b_inv + h
-    B_inv[:-2, -2:] = right_col
-    return B_inv
-
-
-def groupInverse_for_iteravar(M):
-    """
-    Computes the group inverse of a matrix using LU decomposition.
-
-    Parameters
-    ----------
-        M : ndarray
-            A square matrix with index 1.
-
-    Returns
-    -------
-        grpInvM : ndarray
-            The group inverse of M.
-    """
-    p, l, u = lu(M)
-    R = np.dot(p, l)
-    T = np.dot(u, R)
-    T_inv = groupInverse_partial(T)
-    R_inv = np.linalg.inv(R)
-    return np.dot(np.dot(R, T_inv), R_inv)
-
-
-def groupInverse_partial(T):
-    """
-    Computes the group inverse of a matrix with all zeros as the last row.
-    """
-    L = np.shape(T)[1]
-    T1 = T[0:(L-1), 0:(L-1)]
-    T1_inv = inv(T1)
-    T2 = T[0:(L-1), L-1]
-    T_inv = np.zeros((L, L))
-    T_inv[0:(L-1), 0:(L-1)] = T1_inv
-    T_inv[0:(L-1), L-1] = np.linalg.multi_dot([T1_inv, T1_inv, T2])
-    '''
-    print(np.linalg.norm(np.dot(T,T_inv)-np.dot(T_inv,T)))
-    print(np.linalg.norm(np.linalg.multi_dot([T,T_inv,T])-T))
-    print(np.linalg.norm(np.linalg.multi_dot([T_inv,T,T_inv])-T_inv))
-    '''
-    return T_inv
-
-
 def build_G(psis, z, neighbors, kappa):
     L = len(z)
     G = np.zeros((L, L))
@@ -215,18 +156,18 @@ def build_G(psis, z, neighbors, kappa):
         neighb_kappas = kappa[n_i]
         neighb_zs = z[n_i]
         # Build stochastic matrix
-        weighted_psis = psis_i * (neighb_kappas / neighb_zs)  # Weight by kappa and z
-        weighted_psis /= np.sum(weighted_psis, axis=1, keepdims=1)  # row normalize
+        # Weight by kappa and z
+        weighted_psis = psis_i * (neighb_kappas / neighb_zs)
+        weighted_psis /= np.sum(weighted_psis, axis=1,
+                                keepdims=1)  # row normalize
         Gi = np.mean(weighted_psis, axis=0)
         G[i] = uu.unpack_nbrs(Gi, n_i, L)
     return G.T
 
 
-def calculate_GI_from_QR(psis, z, neighbs, kappa=None, return_T=False, return_div_z=False):
+def calculate_GI_from_QR(psis, z, neighbs, kappa=None, return_T=False, return_div_z=False, verbose=False):
     L = len(z)
     avar_G_mat = build_G(psis, z, neighbs, kappa)
-
-    print("Checking that G is column stochastic: ||e(I-G)||=", norm(np.ones(L) @ (np.eye(L) - avar_G_mat)))
     B = np.diag(1. / z) @ (np.eye(L) - avar_G_mat)
     Q, R = qr_decompose(np.eye(L) - avar_G_mat)
     U = R[:-1, :-1]
@@ -237,17 +178,14 @@ def calculate_GI_from_QR(psis, z, neighbs, kappa=None, return_T=False, return_di
     projector_mat = np.eye(L) - np.outer(u, z) / zu_norm
     Uinv, info = invert_upper_triangular(U)
     if info != 0:
-        raise RuntimeError("Error in upper triangular inversion!  Error code %d" % info)
+        raise RuntimeError(
+            "Error in upper triangular inversion!  Error code %d" % info)
     B_inv = np.zeros((L, L))
     B_inv[:-1, :-1] = Uinv
     B_inv = B_inv @ Q.T
     B_inv = projector_mat @ (B_inv*z) @ projector_mat
-    B_ginv = B_inv
-    Bmat = B
-    print("new residues")
-    print(np.linalg.norm(np.dot(Bmat, B_ginv)-np.dot(B_ginv, Bmat)))
-    print(np.linalg.norm(np.linalg.multi_dot([Bmat, B_ginv, Bmat])-Bmat)/np.linalg.norm(Bmat))
-    print(np.linalg.norm(np.linalg.multi_dot([B_ginv, Bmat, B_ginv])-B_ginv)/np.linalg.norm(B_ginv))
+    if verbose:
+        check_GI_properties(B, B_inv)
     if return_div_z:
         return B_inv, projector_mat @ B_inv @ projector_mat, np.outer(u, z) / zu_norm
     elif return_T:
@@ -256,26 +194,36 @@ def calculate_GI_from_QR(psis, z, neighbs, kappa=None, return_T=False, return_di
         return B_inv
 
 
-def GI_expanded(psis, z, g1, g2, g1data, g2data, neighbors, kappa):
+def check_GI_properties(Bmat, B_ginv):
+    print("Checking that BB_ginv=B_ginvB: ||BB_ginv-B_ginvB||/||BB_ginv||=",
+          np.linalg.norm(np.dot(Bmat, B_ginv)-np.dot(B_ginv, Bmat))/np.linalg.norm(np.dot(Bmat, B_ginv)))
+    print("Checking that BB_ginvB=B: ||BB_ginvB-B||/||B||=",
+          np.linalg.norm(np.linalg.multi_dot([Bmat, B_ginv, Bmat])-Bmat)/np.linalg.norm(Bmat))
+    print("Checking that B_ginvBB_ginv=B_ginv: ||B_ginvBB_ginv-B_ginv||/||B_ginv||=",
+          np.linalg.norm(np.linalg.multi_dot([B_ginv, Bmat, B_ginv])-B_ginv)/np.linalg.norm(B_ginv))
+
+
+def GI_augmented(psis, z, g1, g2, g1data, g2data, neighbors, kappa, verbose=False):
+
     L = len(z)
     v = np.zeros((L, 2))
     for i in range(L):
         psis_i = np.array(psis[i])
         Lneighb = len(neighbors[i])
-        denom = np.sum(np.array([kappa[neighbors[i][j]]*psis_i[:, j]/z[neighbors[i][j]] for j in range(Lneighb)]), axis=0)
+        denom = np.sum(np.array(
+            [kappa[neighbors[i][j]]*psis_i[:, j]/z[neighbors[i][j]] for j in range(Lneighb)]), axis=0)
         v1 = -kappa[i]*g1data[i]/g1/denom/z[i]
         v[i, 0] = float(np.mean(v1, axis=0))
         v2 = -kappa[i]*g2data[i]/g2/denom/z[i]
         v[i, 1] = float(np.mean(v2, axis=0))
     b_inv = np.diag([g1, g2])
     avar_G_mat = build_G(psis, z, neighbors, kappa)
-    avar_G_mat = np.diag(1/z)@(np.eye(L)-avar_G_mat)
-    Bmat = np.vstack((np.hstack((avar_G_mat, v)), np.hstack((np.zeros((2, L)), np.diag([1/g1, 1/g2])))))
+    A = np.diag(1/z)@(np.eye(L)-avar_G_mat)
+    Bmat = np.vstack((np.hstack((A, v)), np.hstack(
+        (np.zeros((2, L)), np.diag([1/g1, 1/g2])))))
     G_inv, T = calculate_GI_from_QR(psis, z, neighbors, kappa, return_T=True)
     right_col = np.vstack((-G_inv@v@b_inv+T@v@b_inv@b_inv, b_inv))
     B_ginv = np.hstack((np.vstack((G_inv, np.zeros((2, L)))), right_col))
-    print("new residues of B")
-    print(np.linalg.norm(np.dot(Bmat, B_ginv)-np.dot(B_ginv, Bmat)))
-    print(np.linalg.norm(np.linalg.multi_dot([Bmat, B_ginv, Bmat])-Bmat)/np.linalg.norm(Bmat))
-    print(np.linalg.norm(np.linalg.multi_dot([B_ginv, Bmat, B_ginv])-B_ginv)/np.linalg.norm(B_ginv))
-    return np.vstack((-G_inv@v@b_inv+T@v@b_inv@b_inv, b_inv))
+    if verbose:
+        check_GI_properties(Bmat, B_ginv)
+    return B_ginv, right_col
