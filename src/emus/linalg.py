@@ -3,12 +3,10 @@
 Collection of linear algebra routines used in the EMUS algorithm and
 associated error analysis.
 """
-from scipy.linalg import lu
 from scipy.linalg import qr
 from scipy.linalg import inv
 from scipy.linalg import solve
 import numpy as np
-from numpy.linalg import norm
 from scipy.linalg import qr as qr_decompose
 from scipy.linalg import solve_triangular
 from scipy.linalg.lapack import dtrtri as invert_upper_triangular
@@ -46,7 +44,7 @@ def _stationary_distrib_QR(F, residtol=1.E-10, max_iter=1000):
 
     L = len(F)  # Number of states
     M = np.eye(L)-F
-    q, r = qr(M)
+    q = qr(M)[0]
     z = q[:, -1]  # Stationary dist. is last column of QR fact
     z /= np.sum(z)  # Normalize Trajectory
     # Polish solution using power method.
