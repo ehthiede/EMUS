@@ -5,14 +5,14 @@ from . import linalg as lm
 from . import emus
 from . import autocorrelation as ac
 from ._defaults import DEFAULT_IAT
-from .usutils import unpack_nbrs
 
 
 def calc_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
     """Estimates the asymptotic variance in the average of the ratio of two functions.
     ----------
     psis : 3D data structure
-        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+        The values of the bias functions evaluated each window and timepoint.
+        See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     z : 1D array
         Array containing the normalization constants
     g1data : 2D data structure
@@ -30,9 +30,11 @@ def calc_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=DEFA
     autocovars : ndarray
         Array of length L (no. windows) where the i'th value corresponds to the autocovariance estimate for :math:`z_i`
     z_var_contribs : ndarray
-        Two dimensional array, where element i,j corresponds to window j's contribution to the autocovariance of window i.
+        Two dimensional array, where element i,j corresponds to window j's contribution
+        to the autocovariance of window i.
     z_var_iats : ndarray
-        Two dimensional array, where element i,j corresponds to the autocorrelation time associated with window j's contribution to the autocovariance of window i.
+        Two dimensional array, where element i,j corresponds to the autocorrelation time associated with
+        window j's contribution to the autocovariance of window i.
     """
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
@@ -51,7 +53,8 @@ def calc_log_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=
     """Estimates the asymptotic variance in the average of log(g1/g2).
     ----------
     psis : 3D data structure
-        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+        The values of the bias functions evaluated each window and timepoint.
+        See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     z : 1D array
         Array containing the normalization constants
     g1data : 2D data structure
@@ -69,9 +72,11 @@ def calc_log_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=
     autocovars : ndarray
         Array of length L (no. windows) where the i'th value corresponds to the autocovariance estimate for :math:`z_i`
     z_var_contribs : ndarray
-        Two dimensional array, where element i,j corresponds to window j's contribution to the autocovariance of window i.
+        Two dimensional array, where element i,j corresponds to window j's contribution to the
+        autocovariance of window i.
     z_var_iats : ndarray
-        Two dimensional array, where element i,j corresponds to the autocorrelation time associated with window j's contribution to the autocovariance of window i.
+        Two dimensional array, where element i,j corresponds to the autocorrelation time associated with window j's
+        contribution to the autocovariance of window i.
     """
     if g2data is None:
         g2data = [np.ones(np.shape(g1data_i)) for g1data_i in g1data]
@@ -87,13 +92,18 @@ def calc_log_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=
 
 
 def calc_fe_avar(psis, z, partial1, partial2, win1, win2, neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
-    """Estimates the asymptotic variance in the free energy difference between two windows in the form of -log(z_win1/z_win2).
+    """
+    Estimates the asymptotic variance in the free energy difference between two windows in the form of 
+    -log(z_win1/z_win2).
+    
+    Parameters
     ----------
     psis : 3D data structure
-        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+        The values of the bias functions evaluated each window and timepoint.
+        See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     z : 1D array
         Array containing the normalization constants
-    partial1 : the partial derivative of the observable of interest wrt to g1 
+    partial1 : the partial derivative of the observable of interest wrt to g1
     partial2 : the partial derivative of the observable of interest wrt to g2
     win1 : the index of the first window
     win1 : the index of the second window
@@ -121,10 +131,13 @@ def calc_fe_avar(psis, z, partial1, partial2, win1, win2, neighbors=None, iat_me
         try:
             iats = np.array([float(v) for v in iat_method])
         except (ValueError, TypeError) as err:
-            err.message = "Was unable to interpret the input provided as a method to calculate the autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " + err.message
+            err.message = "Was unable to interpret the input provided as a method to calculate the " +\
+                "autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " +\
+                err.message
         iat_routine = None
         if len(iats) != L:
-            raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).' % (len(iats), L))
+            raise ValueError("IAT Input was interpreted to be a collection of precomputed autocorrelation times." +
+                "However, the number of autocorrelation times found (%d) is not equal to the number of states (%d)." % (len(iats), L))
     if neighbors is None:  # If no neighborlist, assume all windows neighbor
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
     B_ginv = lm.calculate_GI_from_QR(psis, z, neighbors, kappa)
@@ -155,14 +168,16 @@ def calc_fe_avar(psis, z, partial1, partial2, win1, win2, neighbors=None, iat_me
     return autocovars, fe_var, fe_var_iats
 
 
-def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
+def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None,
+                  neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
     """Estimates the asymptotic variance of a function of two averages.
     ----------
     psis : 3D data structure
-        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+        The values of the bias functions evaluated each window and timepoint.
+        See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     z : 1D array
         Array containing the normalization constants
-    partial1 : the partial derivative of the observable of interest wrt to g1 
+    partial1 : the partial derivative of the observable of interest wrt to g1
     partial2 : the partial derivative of the observable of interest wrt to g2
     g1data : 2D data structure
         The values of the function in the numerator, evaluated for sample points from all the windows.
@@ -177,9 +192,11 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
     autocovars : ndarray
         Array of length L (no. windows) where the i'th value corresponds to the autocovariance estimate for :math:`z_i`
     z_var_contribs : ndarray
-        Two dimensional array, where element i,j corresponds to window j's contribution to the autocovariance of window i.
+        Two dimensional array, where element i,j corresponds to window j's
+        contribution to the autocovariance of window i.
     z_var_iats : ndarray
-        Two dimensional array, where element i,j corresponds to the autocorrelation time associated with window j's contribution to the autocovariance of window i.
+        Two dimensional array, where element i,j corresponds to the autocorrelation time
+        associated with window j's contribution to the autocovariance of window i.
     """
     L = len(z)
     if kappa is None:
@@ -192,10 +209,15 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
         try:
             iats = np.array([float(v) for v in iat_method])
         except (ValueError, TypeError) as err:
-            err.message = "Was unable to interpret the input provided as a method to calculate the autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " + err.message
+            err.message = "Was unable to interpret the input provided as a method to calculate the " +\
+                "autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " +\
+                err.message
         iat_routine = None
         if len(iats) != L:
-            raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).' % (len(iats), L))
+            raise ValueError(
+                "IAT Input was interpreted to be a collection of precomputed autocorrelation times." +
+                "However, the number of autocorrelation times found (%d) is not equal to the number of states (%d)."
+                % (len(iats), L))
     if neighbors is None:  # If no neighborlist, assume all windows neighbor
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
     if g2data is None:
@@ -238,11 +260,16 @@ def calc_avg_avar(psis, z, partial_1, partial_2, g1data, g2data=None, neighbors=
 
 
 def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
-    """Estimates the asymptotic variance of the partition function (normalization constant) for each window.  To get an estimate of the autocovariance of the free energy for each window, multiply the autocovariance of window :math:`i` by :math:` (k_B T / z_i)^2`.
+    """
+    Estimates the asymptotic variance of the partition function (normalization constant) for each window.
+    To get an estimate of the autocovariance of the free energy for each window, multiply the autocovariance
+    of window :math:`i` by :math:` (k_B T / z_i)^2`.
+
     Parameters
     ----------
     psis : 3D data structure
-        The values of the bias functions evaluated each window and timepoint.  See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
+        The values of the bias functions evaluated each window and timepoint.
+        See `datastructures <../datastructures.html#data-from-sampling>`__ for more information.
     z : 1D array
         Array containing the normalization constants
     F : 2D array
@@ -256,9 +283,11 @@ def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT, ka
     autocovars : ndarray
         Array of length L (no. windows) where the i'th value corresponds to the autocovariance estimate for :math:`z_i`
     z_var_contribs : ndarray
-        Two dimensional array, where element i,j corresponds to window j's contribution to the autocovariance of window i.
+        Two dimensional array, where element i,j corresponds to window j's contribution
+        to the autocovariance of window i.
     z_var_iats : ndarray
-        Two dimensional array, where element i,j corresponds to the autocorrelation time associated with window j's contribution to the autocovariance of window i.
+        Two dimensional array, where element i,j corresponds to the autocorrelation time associated with
+        window j's contribution to the autocovariance of window i.
     """
     L = len(z)
     if kappa is None:
@@ -271,10 +300,15 @@ def calc_partition_functions(psis, z, neighbors=None, iat_method=DEFAULT_IAT, ka
         try:
             iats = np.array([float(v) for v in iat_method])
         except (ValueError, TypeError) as err:
-            err.message = "Was unable to interpret the input provided as a method to calculate the autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " + err.message
+            err.message = "Was unable to interpret the input provided as a method to calculate the " +\
+                "autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " +\
+                err.message
         iat_routine = None
         if len(iats) != L:
-            raise ValueError('IAT Input was interpreted to be a collection of precomputed autocorrelation times.  However, the number of autocorrelation times found (%d) is not equal to the number of states (%d).' % (len(iats), L))
+            raise ValueError(
+                "IAT Input was interpreted to be a collection of precomputed autocorrelation times." +
+                "However, the number of autocorrelation times found (%d) is not equal to the number of states (%d)."
+                % (len(iats), L))
     if neighbors is None:  # If no neighborlist, assume all windows neighbor
         neighbors = np.outer(np.ones(L), range(L)).astype(int)
     B_ginv = lm.calculate_GI_from_QR(psis, z, neighbors, kappa)
