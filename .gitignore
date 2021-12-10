@@ -27,6 +27,7 @@ pyvenv*/
 pip-log.txt
 
 # Unit test / coverage reports
+.pytest_cache
 .coverage
 .tox
 .coverage.*
@@ -48,6 +49,8 @@ htmlcov
 # Complexity
 output/*.html
 output/*/index.html
+
+*.ipynb_checkpoints/
 
 # Sphinx
 docs/_build

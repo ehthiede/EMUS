@@ -7,6 +7,7 @@ DEFAULT_K_B = 1.0  # Must be a numerical value.
 DEFAULT_T = 1.0  # Must be a numerical value.
 DEFAULT_KT = DEFAULT_K_B * DEFAULT_T
 DEFAULT_IAT = 'ipce'
+MIN_IAT = 1.0 # Minimum value that an autocorrelation time can take.
 
 ##### emus.py #####
 DEFAULT_ITER_TOL = 1E-8

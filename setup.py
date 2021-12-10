@@ -7,7 +7,7 @@ from os.path import basename, splitext
 setup(name='emus',
       version='0.9.4',
       description="Tools and Methods associated with the Eigenvector Method for Umbrella Sampling (EMUS)",
-      license='LGPL',
+      license='MIT',
       classifiers=[
           'Development Status :: 4 - Beta',
           'Topic :: Scientific/Engineering',

@@ -2,7 +2,7 @@
 """ Tools for analyzing the autocorrelation time of a time series.
 
 The ipce and icce routines are implementations of the initial positive correlation time estimator, and the initial convex correlation estimator proposed by Geyer [1]_.
-The acor algorithm was proposed by Sokal [2]_.  The associated code, as well as the code for constructiing autocorrelation functions is taken from the emcee package [3]_.
+The acor algorithm was proposed by Sokal [2]_.  The associated code, as well as the code for constructing autocorrelation functions is taken from the emcee package [3]_.
 
 .. [1] C.J. Geyer. Statistical Science (1992): 473-483.
 .. [2] A. Sokal, Functional Integration. Spring, Boston, MA, 1997. 131-192.
@@ -10,6 +10,8 @@ The acor algorithm was proposed by Sokal [2]_.  The associated code, as well as 
 """
 import numpy as np
 import logging
+import math
+from ._defaults import MIN_IAT
 
 
 def _next_pow_two(n):
@@ -52,6 +54,25 @@ def autocorrfxn(x):
     return acf
 
 
+def bootstrap(x):
+    total_len = len(x)
+    exp = []
+    mean = np.mean(x)
+    for trial in np.arange(50):
+        block_len = math.ceil(total_len/20)
+        starting_points = np.random.choice(np.arange(total_len-block_len), 20)
+        sample_index = np.array([np.arange(i, i+block_len) for i in starting_points]).flatten()
+        sub_traj = x[sample_index]
+        sub_traj = np.array(sub_traj[-total_len:])
+        exp.append(np.mean(sub_traj))
+    var = np.var(np.array(x))
+    sigma = np.sqrt(np.var(np.array(exp)))
+    tau = sigma**2*len(x)/var
+    tau_ref, mean_ref, sigma_ref = acor(x)
+    print("tau(acor vs bootstrap):", tau_ref, tau)
+    return tau, mean, sigma
+
+
 def ipce(x):
     """ The initial positive correlation time estimator for the autocorrelation time, as proposed by Geyer.
 
@@ -85,6 +106,7 @@ def ipce(x):
             t += gamma
         i += 1
     tau = 2*t - 1
+    tau = max(tau, MIN_IAT)  # Ensure positivity (may be broken numerically)
     var = np.var(x)
     sigma = np.sqrt(var * tau / len(x))
     return tau, mean, sigma
@@ -181,6 +203,7 @@ def acor(x, tol=10, quiet=True):
     """
     mean = np.average(x)
     tau = integrated_time(x, tol=tol, quiet=quiet)
+    tau = max(tau, MIN_IAT)  # Ensure positivity (may be broken numerically)
     var = np.var(x)
     sigma = np.sqrt(var * tau / len(x))
     return tau, mean, sigma
@@ -221,6 +244,7 @@ def icce(x):
             gamma = gammafuture
         i += 1
     tau = 2*t - 1
+    tau = max(tau, MIN_IAT)  # Ensure positivity (may be broken numerically)
     var = np.var(x)
     mean = np.average(x)
     sigma = np.sqrt(var * tau / len(x))
@@ -251,6 +275,8 @@ def _get_iat_method(iat_method):
     elif iat_method == 'icce':
         # from autocorrelation import icce
         iatroutine = icce
+    elif iat_method == 'bootstrap':
+        iatroutine = bootstrap
     else:
         raise ValueError('Method for calculation iat not recognized.')
     return iatroutine
