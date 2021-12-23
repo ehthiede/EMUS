@@ -106,9 +106,8 @@ def _calc_acovar_from_derivs(psis, state_fe, partial_1, partial_2, g1_data, g2_d
 
     partial_derivs = fixed_point_deriv @ partial_vec
     err_trajs = _build_err_trajs(normed_psis, normed_w1, normed_w2, partial_derivs, neighbors)
-    
-    err, contribs, iats = _get_iats_and_acov_from_traj(err_trajs, iat_method)
 
+    err, contribs, iats = _get_iats_and_acov_from_traj(err_trajs, iat_method)
 
 
 def _build_fixed_point_deriv(normed_psis, normed_w1, normed_w2, neighbors, kappa):
@@ -173,20 +172,42 @@ def _build_normed_trajs(psis, state_fe, g1_data, g2_data, neighbors, kappa):
 def _build_err_trajs(normed_psis, normed_w1, normed_w2, partial_derivs,
                      neighbors):
     xis = []
-    for n_psi_i, n_w1, n_w2 in zip(normed_psis, normed_w1, normed_w2):
-        N_i = len(n_psi_i)
-        n_w1 = n_w1.reshape(N_i, 1)
-        n_w2 = n_w2.reshape(N_i, 1)
+    for i, nbrs_i in enumerate(neighbors):
+        n_psi_i = normed_psis[i]
+        n_w1 = normed_w1[i]
+        n_w2 = normed_w2[i]
 
-        xi_i = np.dot(n_psi_i, partial_derivs[neighbors])
+        xi_i = np.dot(n_psi_i, partial_derivs[nbrs_i])
         xi_i += n_w1 * partial_derivs[-2]
         xi_i += n_w2 * partial_derivs[-1]
         xis.append(xi_i)
     return xis
 
 
-def _get_iats_and_acov_from_traj(err_traj, iat_method):
-    raise Exception
+def _get_iats_and_acov_from_traj(err_trajs, iat_method):
+    L = len(err_trajs)
+    # iat_routine, iats = _parse_iat_method(iat_method, L)
+
+    contribs = np.zeros(L)
+    iats = np.zeros(L)
+
+    if isinstance(iat_method, str):  # IATS need to be computed
+        for i, err_traj_i in enumerate(err_trajs):
+            iat_routine = ac._get_iat_method(iat_method)
+            iat_i, mn_i, sigma_i = iat_routine(err_traj_i)
+            contribs[i] = sigma_i * sigma_i
+            iats[i] = iat_i
+    else:  # IATS seem to be precomputed
+        try:
+            iats = np.array([float(v) for v in iat_method])
+        except (ValueError, TypeError) as err:
+            err.message = "Was unable to interpret the input provided as a method to calculate the " +\
+                "autocorrelation time or as a sequence of autocorrelation times.  Original error message follows: " +\
+                err.message
+        for i, err_traj_i in enumerate(err_trajs):
+            contribs[i] = np.var(err_traj_i) * (iats[i] / len(err_traj_i))
+
+    return np.sum(contribs), contribs, iats
 
 
 def calc_avg_avar(psis, state_fe, partial_1, partial_2, g1data, g2data=None,
