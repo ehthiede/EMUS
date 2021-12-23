@@ -91,30 +91,27 @@ def calc_log_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=
     return calc_avg_avar(psis, -np.log(z), partial_1, partial_2, g1data, g2data, neighbors, iat_method, kappa=kappa)
 
 
-def _calc_acovar_from_derivs(psis, state_fe, partial_1, partial_2, g1data, g2data=None,
+def _calc_acovar_from_derivs(psis, state_fe, partial_1, partial_2, g1_data, g2_data=None,
                              neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
     """
     Estimates the autocovariance from the individual derivative
     """
-    normed_psis, normed_ws = _build_normed_trajs(psis, g1_data, g2_data, neighbors, kappa)
-
-    fixed_point_deriv = _build_fixed_point_deriv(psis, g1_data, g2_data, neighbors, kappa)
-
     L = len(state_fe)
+    normed_psis, normed_w1, normed_w2 = _build_normed_trajs(psis, g1_data, g2_data, neighbors, kappa)
+    fixed_point_deriv = _build_fixed_point_deriv(normed_psis, normed_w1, normed_w2, neighbors, kappa)
+
     partial_vec = np.zeros(L+2)
     partial_vec[L+1] = partial_1
     partial_vec[L+2] = partial_2
 
     partial_derivs = fixed_point_deriv @ partial_vec
+    err_trajs = _build_err_trajs(normed_psis, normed_w1, normed_w2, partial_derivs, neighbors)
+    
+    err, contribs, iats = _get_iats_and_acov_from_traj(err_trajs, iat_method)
 
-    err_traj = _build_err_traj(psis, g1_data, g2_data, partial_derivs,
-                               neighbors, kappa)
 
 
-def _build_fixed_point_deriv(psis, state_fe, g1_data, g2_data, neighbors, kappa):
-    normed_trajs = _build_normed_trajs(psis, state_fe, g1_data2,
-                                       g2_data, neighbors, kappa)
-    normed_psis, normed_w1, normed_w2 = normed_trajs
+def _build_fixed_point_deriv(normed_psis, normed_w1, normed_w2, neighbors, kappa):
     H, omega = _build_fixed_deriv_mats(normed_psis, normed_w1, normed_w2, neighbors, kappa)
 
     H_ginv = lm.groupInverse(H)
@@ -129,7 +126,6 @@ def _build_fixed_point_deriv(psis, state_fe, g1_data, g2_data, neighbors, kappa)
     return total_deriv
 
 
-# def _build_fixed_deriv_mats(psis, state_fe, g1_data, g2_data, neighbors, kappa):
 def _build_fixed_deriv_mats(normed_psis, normed_w1, normed_w2, neighbors, kappa):
     L = len(normed_psis)
 
@@ -174,11 +170,23 @@ def _build_normed_trajs(psis, state_fe, g1_data, g2_data, neighbors, kappa):
     return normed_psis, normed_w1, normed_w2
 
 
-# def _build_err_traj(psis, g1_data2, g2_data, partial_derivs,
-#                     neighbors, kappa):
+def _build_err_trajs(normed_psis, normed_w1, normed_w2, partial_derivs,
+                     neighbors):
+    xis = []
+    for n_psi_i, n_w1, n_w2 in zip(normed_psis, normed_w1, normed_w2):
+        N_i = len(n_psi_i)
+        n_w1 = n_w1.reshape(N_i, 1)
+        n_w2 = n_w2.reshape(N_i, 1)
 
-#     xi_psi = 
-#     raise
+        xi_i = np.dot(n_psi_i, partial_derivs[neighbors])
+        xi_i += n_w1 * partial_derivs[-2]
+        xi_i += n_w2 * partial_derivs[-1]
+        xis.append(xi_i)
+    return xis
+
+
+def _get_iats_and_acov_from_traj(err_traj, iat_method):
+    raise Exception
 
 
 def calc_avg_avar(psis, state_fe, partial_1, partial_2, g1data, g2data=None,
