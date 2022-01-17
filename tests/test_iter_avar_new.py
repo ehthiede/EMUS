@@ -75,7 +75,8 @@ class TestBuildErrTrajs():
 
         partial_derivs = np.zeros(L+2)
         partial_derivs[:L] += 1
-        err_trajs = iter_avar._build_err_trajs(psis, g1, g2, partial_derivs, nbrs)
+        kappa = np.ones(L)
+        err_trajs = iter_avar._build_err_trajs(psis, g1, g2, partial_derivs, kappa, nbrs)
         for j in range(L):
             xi_j = err_trajs[j]
             assert(np.allclose(xi_j, np.sum(psis[j], axis=1)))
@@ -91,7 +92,8 @@ class TestBuildErrTrajs():
         partial_derivs = np.zeros(L+2)
         partial_derivs[-2:] += np.array([1, 2])
 
-        err_trajs = iter_avar._build_err_trajs(psis, g1, g2, partial_derivs, nbrs)
+        kappa = np.ones(L)
+        err_trajs = iter_avar._build_err_trajs(psis, g1, g2, partial_derivs, kappa, nbrs)
 
         for j in range(L):
             xi_j = err_trajs[j]
