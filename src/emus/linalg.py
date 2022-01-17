@@ -134,6 +134,7 @@ def groupInverse(M):
     q, r = qr(M)
     piDist = q[:, L-1]
     piDist = (1/np.sum(piDist))*piDist
+    print(piDist, 'pidist')
     specProjector = np.identity(L)-np.outer(np.ones(L), piDist)
     u = r[0:(L-1), 0:(L-1)]  # remember 0:(L-1) actually means 0 to L-2!
     uInv = inv(u)  # REPLACE W. lapack, invert triangular matrix ROUTINE

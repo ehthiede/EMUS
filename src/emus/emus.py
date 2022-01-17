@@ -197,6 +197,8 @@ def calculate_pmf(cv_trajs, psis, domain, z, neighbors=None, nbins=100, kT=DEFAU
 def calculate_zs(psis, neighbors=None, n_iter=0, tol=DEFAULT_ITER_TOL, use_iats=False, iat_method=DEFAULT_IAT, kappa=None):
     """Calculates the normalization constants for the windows.
 
+    TODO: FIX KAPPA
+
     Parameters
     ----------
     n_iter : int, optional (default 0)

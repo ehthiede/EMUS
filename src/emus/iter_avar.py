@@ -93,7 +93,7 @@ def calc_log_avg_ratio(psis, z, g1data, g2data=None, neighbors=None, iat_method=
 
 def calc_fe_avar(psis, z, partial1, partial2, win1, win2, neighbors=None, iat_method=DEFAULT_IAT, kappa=None):
     """
-    Estimates the asymptotic variance in the free energy difference between two windows in the form of 
+    Estimates the asymptotic variance in the free energy difference between two windows in the form of
     -log(z_win1/z_win2).
     
     Parameters
