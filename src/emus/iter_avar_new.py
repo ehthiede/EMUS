@@ -70,11 +70,6 @@ def _calc_acovar_from_derivs(psis, state_fe, partial_1, partial_2, g1_data, g2_d
 
     normed_psis, normed_w1, normed_w2 = _build_normed_trajs(psis, state_fe, g1_data, g2_data, neighbors, kappa)
 
-    # DEBUG
-    psi_means = np.array([np.mean(psi_i, axis=0) for psi_i in normed_psis])
-
-    # BEDUG
-
     fixed_point_deriv = _build_fixed_point_deriv(normed_psis, normed_w1, normed_w2, neighbors, kappa)
 
     partial_vec = np.zeros(L+2)
@@ -89,23 +84,14 @@ def _calc_acovar_from_derivs(psis, state_fe, partial_1, partial_2, g1_data, g2_d
 
 def _build_fixed_point_deriv(normed_psis, normed_w1, normed_w2, neighbors, kappa):
     H, omega = _build_fixed_deriv_mats(normed_psis, normed_w1, normed_w2, neighbors, kappa)
-    
     H_ginv = lm.groupInverse(H)
-    H_o = - omega @ H_ginv  # CHECK INDICES
-
-
+    H_o = - omega @ H_ginv
 
     # Put submatrices in the correct position
     L = H_ginv.shape[0]
     total_deriv = np.eye(L+2)
     total_deriv[:L, :L] = H_ginv
     total_deriv[L:, :L] = H_o
-
-    #### DEBUG
-    B = np.eye(L+2)
-    B[:L, :L] = H
-    B[L:, :L] = omega
-    
     return total_deriv
 
 
