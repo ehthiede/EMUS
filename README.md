@@ -16,10 +16,13 @@ will be updated with a link once that is accomplished.
 If you are using this code, please also cite the EMUS paper, which can be
 found at [Journal of Chemical
 Physics](http://aip.scitation.org/doi/abs/10.1063/1.4960649?journalCode=jcp).
+In addition, the code for the asymtotic variance of MBAR in iter_avar.py
+is based on research in the [following preprint.](https://t.co/XZwakvGI8N).
+The data used in the preprint can be found [here.](https://drive.google.com/drive/folders/1BpeSdypdhxngLY9ANHV231AL1zyJ5Mmm?usp=sharing).
 
 The code is released under the MIT license.  
 
-Copyright (c) 2017 Erik Henning Thiede, Brian Van Koten, Jonathan Weare, Aaron R. Dinner.
+Copyright (c) 2022 Erik Henning Thiede, Sherry Li, Brian Van Koten, Jonathan Weare, Aaron R. Dinner.
 
 ------------
 Installation
