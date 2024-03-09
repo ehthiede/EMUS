@@ -111,15 +111,15 @@ def calculate_avg_on_pmf(cv_trajs, psis, domain, z, g1data, g2data=None, neighbo
             z_nbr = z[nbrs_i]
             weights = 1. / (z[i] * np.dot(psis[i], 1. / z_nbr))
             hist_g1_i, edges = np.histogramdd(
-                xtraj_i, nbins, domain, normed=False, weights=weights * g1_data_i)
+                xtraj_i, nbins, domain, density=False, weights=weights * g1_data_i)
             hist_g2_i, edges = np.histogramdd(
-                xtraj_i, nbins, domain, normed=False, weights=weights * g2_data_i)
+                xtraj_i, nbins, domain, density=False, weights=weights * g2_data_i)
         else:
             psi_sum = np.sum(psis[i], axis=1)
             hist_g1_i, edges = np.histogramdd(
-                xtraj_i, nbins, domain, normed=False, weights=1. / psi_sum * g1_data_i)
+                xtraj_i, nbins, domain, density=False, weights=1. / psi_sum * g1_data_i)
             hist_g2_i, edges = np.histogramdd(
-                xtraj_i, nbins, domain, normed=False, weights=1. / psi_sum * g2_data_i)
+                xtraj_i, nbins, domain, density=False, weights=1. / psi_sum * g2_data_i)
         hist_g1 += hist_g1_i / len(xtraj_i) * z[i]
         hist_g2 += hist_g2_i / len(xtraj_i) * z[i]
     return hist_g1 / hist_g2, edges
@@ -180,11 +180,11 @@ def calculate_pmf(cv_trajs, psis, domain, z, neighbors=None, nbins=100, kT=DEFAU
             win_nbr = kappa[nbrs_i]
             weights = 1. / (z[i]*kappa[i] * np.dot(psis[i], win_nbr / z_nbr))
             hist_i, edges = np.histogramdd(
-                xtraj_i, nbins, domain, normed=False, weights=weights)
+                xtraj_i, nbins, domain, density=False, weights=weights)
         else:
             psi_sum = np.sum(psis[i], axis=1)
             hist_i, edges = np.histogramdd(
-                xtraj_i, nbins, domain, normed=False, weights=1. / psi_sum)
+                xtraj_i, nbins, domain, density=False, weights=1. / psi_sum)
         hist += hist_i / len(xtraj_i) * z[i]
     # Calculate area of each histogram bin
     dA = np.prod([(edg_i[1] - edg_i[0]) for edg_i in edges])
